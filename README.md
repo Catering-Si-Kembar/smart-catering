@@ -5,7 +5,7 @@
 <h1 align="center">Smart Catering</h1>
 
 <p align="center">
-  <em>Fondasi platform manajemen katering untuk Katering Si Kembar — Capstone Project Asah led by Dicoding dengan layanan operasional dan AI yang terpisah secara modular.</em>
+  <em>Fondasi platform manajemen katering untuk Catering Si Kembar — Capstone Project Asah led by Dicoding dengan layanan operasional dan AI yang terpisah secara modular.</em>
 </p>
 
 <p align="center">
@@ -40,11 +40,11 @@
 
 ## Deskripsi proyek
 
-**Smart Catering** adalah proyek capstone program **Asah led by Dicoding** yang dikembangkan untuk mendukung transformasi operasional mitra **Katering Si Kembar**.
+**Smart Catering** adalah proyek capstone program **Asah led by Dicoding** yang dikembangkan untuk mendukung transformasi operasional mitra **Catering Si Kembar**.
 
 Usaha katering dengan volume pesanan harian dan acara membutuhkan koordinasi yang presisi antara pencatatan pesanan pelanggan, penjadwalan dapur serta pengantaran, ketersediaan bahan baku, pencatatan pembayaran bertahap (uang muka/DP hingga pelunasan), serta komunikasi pengingat yang tepat waktu. Pengelolaan manual yang terpisah-pisah berisiko menimbulkan selisih stok dapur, keterlambatan tindak lanjut pesanan, dan rekapitulasi kas yang lambat.
 
-**Visi produk Smart Catering** adalah membangun platform manajemen katering terpadu bagi **Katering Si Kembar** yang mencakup lima pilar kapabilitas pada fase pengembangan berikutnya (sesuai kebutuhan dan persetujuan mitra):
+**Visi produk Smart Catering** adalah membangun platform manajemen katering terpadu bagi **Catering Si Kembar** yang mencakup lima pilar kapabilitas pada fase pengembangan berikutnya (sesuai kebutuhan dan persetujuan mitra):
 
 1. **Manajemen Pesanan & Penjadwalan (`orders`):** pencatatan siklus pesanan pelanggan, konfigurasi paket menu katering, jadwal acara/pengantaran, dan pemantauan status produksi.
 2. **Manajemen Persediaan Bahan Baku (`inventory`):** pemantauan stok bahan baku dapur, satuan inventaris, mutasi keluar-masuk bahan, dan peringatan dini ketersediaan stok.
@@ -403,7 +403,7 @@ Reverse proxy, TLS, DNS, backup, rahasia, dan akses server dikelola operator. Sc
 
 ### Tim dan kontributor
 
-**Smart Catering** dikembangkan oleh tim Capstone **Asah led by Dicoding** bekerja sama dengan mitra **Katering Si Kembar**.
+**Smart Catering** dikembangkan oleh tim Capstone **Asah led by Dicoding** bekerja sama dengan mitra **Catering Si Kembar**.
 
 [Kontributor GitHub](https://github.com/Catering-Si-Kembar/smart-catering-/graphs/contributors) · [Pull requests](https://github.com/Catering-Si-Kembar/smart-catering-/pulls) · [Repository resmi](https://github.com/Catering-Si-Kembar/smart-catering-)
 
@@ -420,7 +420,7 @@ Reverse proxy, TLS, DNS, backup, rahasia, dan akses server dikelola operator. Sc
 ### Pelaporan bug dan permintaan fitur
 
 - **Report Bug (Laporan Bug):** Sertakan command yang dijalankan (misalnya `npm run dev:backend` atau `npm run smoke`), sistem operasi, output `node --version`, `npm --version`, dan `uv --version`, serta pesan error lengkap. **Jangan pernah** menyertakan isi file `.env`, password database, `WAHA_API_KEY`, atau `DOCS_PASSWORD` di dalam laporan.
-- **Request Feature (Permintaan Fitur):** Jelaskan masalah operasional di **Katering Si Kembar** yang ingin diselesaikan, workspace yang terdampak (`web`, `api`, `ai-service`, `worker`, `db`, atau `types`), serta kesesuaiannya dengan boundary arsitektur di [PRD Fase 0](docs/PRD_FASE_0.md) dan [ADR](docs/decisions/README.md).
+- **Request Feature (Permintaan Fitur):** Jelaskan masalah operasional di **Catering Si Kembar** yang ingin diselesaikan, workspace yang terdampak (`web`, `api`, `ai-service`, `worker`, `db`, atau `types`), serta kesesuaiannya dengan boundary arsitektur di [PRD Fase 0](docs/PRD_FASE_0.md) dan [ADR](docs/decisions/README.md).
 
 ### Alur kontribusi teknis
 
@@ -431,4 +431,4 @@ Reverse proxy, TLS, DNS, backup, rahasia, dan akses server dikelola operator. Sc
 
 ## Identitas mitra
 
-Nama platform adalah **Smart Catering**, dengan **Katering Si Kembar** sebagai mitra proyek. Logo resmi pada header berasal dari aset yang diberikan mitra dan disimpan tanpa mengubah desainnya di [`docs/assets/logo-katering-si-kembar.png`](docs/assets/logo-katering-si-kembar.png). Penyertaan logo bukan penetapan lisensi kode atau izin penggunaan ulang merek di luar proyek.
+Nama platform adalah **Smart Catering**, dengan **Catering Si Kembar** sebagai mitra proyek. Logo resmi pada header berasal dari aset yang diberikan mitra dan disimpan tanpa mengubah desainnya di [`docs/assets/logo-katering-si-kembar.png`](docs/assets/logo-katering-si-kembar.png). Penyertaan logo bukan penetapan lisensi kode atau izin penggunaan ulang merek di luar proyek.
