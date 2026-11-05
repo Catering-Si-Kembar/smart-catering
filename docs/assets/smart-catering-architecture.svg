@@ -1,0 +1,229 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1285" viewBox="0 0 1000 1285" role="img" aria-labelledby="diagram-title diagram-description">
+  <title id="diagram-title">Arsitektur Smart Catering — Hybrid Minimal Monorepo Fase 0</title>
+  <desc id="diagram-description">Enam workspace: web Next.js ditargetkan ke Vercel; API Next.js, AI service FastAPI, dan worker Node.js ditargetkan ke VPS. PostgreSQL melalui Prisma, ChromaDB, dan WAHA opsional berada di jaringan container VPS. Garis putus-putus menunjukkan integrasi yang belum aktif. API dan AI service memiliki health, Scalar, OpenAPI 3.1, serta helper REST. Worker independen hanya memiliki liveness. Redis dan BullMQ belum diinstal. Deployment cloud dan runtime container belum diverifikasi.</desc>
+  <defs>
+    <style>
+      text { font-family: Inter, "Segoe UI", Arial, sans-serif; fill: var(--fg, #172b43); font-size: 14px; }
+      .title { font-size: 29px; font-weight: 750; letter-spacing: -.6px; }
+      .subtitle { font-size: 15px; fill: var(--muted, #53657b); }
+      .heading { font-size: 17px; font-weight: 700; }
+      .label { font-weight: 650; }
+      .small { font-size: 13px; }
+      .muted { fill: var(--muted, #53657b); }
+      .mono { font-family: "Cascadia Code", Consolas, monospace; font-size: 13px; }
+      .panel { fill: var(--surface, #ffffff); stroke: var(--border, #cbd5e1); stroke-width: 1.2; }
+      .blue { fill: var(--c1, #1764ad); }
+      .green { fill: var(--c2, #14745b); }
+      .purple { fill: var(--c3, #7550ae); }
+      .orange { fill: var(--c4, #a46916); }
+      .rose { fill: var(--c5, #ab4772); }
+      .line { fill: none; stroke: var(--accent, #1764ad); stroke-width: 1.8; marker-end: url(#arrow); }
+      .future { fill: none; stroke: var(--muted, #53657b); stroke-width: 1.6; stroke-dasharray: 5 4; marker-end: url(#future-arrow); }
+      .rule { stroke: var(--border, #cbd5e1); stroke-width: 1; }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent, #1764ad)"/>
+    </marker>
+    <marker id="future-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted, #53657b)"/>
+    </marker>
+  </defs>
+
+  <text x="20" y="42" class="title">Arsitektur Smart Catering</text>
+  <text x="20" y="68" class="subtitle">Hybrid Minimal Monorepo · Fase 0 — Project Setup &amp; Architecture Foundation</text>
+  <path d="M20 98 H57" class="line"/>
+  <text x="68" y="103" class="small">Fondasi / dependency tersedia</text>
+  <path d="M315 98 H352" class="future"/>
+  <text x="363" y="103" class="small">Integrasi belum aktif</text>
+  <text x="635" y="103" class="small muted">Vercel &amp; VPS = target; belum dideploy</text>
+
+  <!-- Actors and browser entry -->
+  <g data-card="actors" data-label="Pengguna">
+    <rect x="20" y="140" width="150" height="196" rx="10" class="panel"/>
+    <rect x="20" y="140" width="150" height="6" rx="3" fill="var(--c3, #7550ae)"/>
+    <text x="36" y="174" class="heading purple">Pengguna</text>
+    <g fill="none" stroke="var(--c3, #7550ae)" stroke-width="2" aria-hidden="true">
+      <circle cx="95" cy="204" r="10"/>
+      <path d="M76 238 V229 C76 213 114 213 114 229 V238 Z"/>
+    </g>
+    <text x="36" y="265" class="label">Pemilik / manajer</text>
+    <text x="36" y="287">Staf operasional</text>
+    <text x="36" y="316" class="small muted">Kini: landing setup</text>
+  </g>
+  <path d="M170 236 H190" class="line"/>
+
+  <g data-card="web" data-label="Frontend Next.js">
+    <rect x="190" y="140" width="250" height="196" rx="10" class="panel"/>
+    <rect x="190" y="140" width="250" height="6" rx="3" fill="var(--c1, #1764ad)"/>
+    <text x="208" y="174" class="heading blue">Frontend · Next.js 16</text>
+    <text x="208" y="199" class="mono">apps/web · app/</text>
+    <text x="208" y="227">React 19 · TypeScript · CSS</text>
+    <text x="208" y="250" class="label blue">Target: Vercel</text>
+    <text x="208" y="273">Landing setup Fase 0 tersedia</text>
+    <line x1="208" y1="287" x2="422" y2="287" class="rule"/>
+    <text x="208" y="308" class="small muted">SSR → API_BASE_URL: rencana</text>
+    <text x="208" y="325" class="small muted">Tidak akses DB / AI langsung</text>
+  </g>
+
+  <!-- Shared HTTP contract, not a runtime hop -->
+  <g data-card="contract" data-label="Kontrak REST bersama">
+    <rect x="460" y="140" width="520" height="196" rx="10" class="panel"/>
+    <rect x="460" y="140" width="520" height="6" rx="3" fill="var(--c2, #14745b)"/>
+    <text x="478" y="174" class="heading green">Dua backend · Satu standar REST</text>
+    <text x="478" y="200" class="mono">2xx: { data, meta: { requestId } }</text>
+    <text x="478" y="223">RFC 9457 errors · UUID · validation · pagination · 204 kosong</text>
+    <line x1="478" y1="237" x2="962" y2="237" class="rule"/>
+    <text x="478" y="260" class="label">Scalar + OpenAPI 3.1</text>
+    <text x="478" y="282" class="mono">Next: /docs + /api/openapi</text>
+    <text x="478" y="302" class="mono">FastAPI: /docs + /openapi.json</text>
+    <text x="478" y="323" class="small muted">Produksi: default tertutup; jika aktif → Basic Auth + TLS</text>
+  </g>
+
+  <!-- Phase boundary -->
+  <g data-card="phase" data-label="Cakupan fase nol">
+    <rect x="20" y="370" width="150" height="510" rx="10" class="panel"/>
+    <text x="36" y="402" class="heading">Status Fase 0</text>
+    <text x="36" y="435" class="label green">Sudah tersedia</text>
+    <text x="36" y="460">Setup monorepo</text>
+    <text x="36" y="484">Health &amp; docs</text>
+    <text x="36" y="508">Helper REST</text>
+    <text x="36" y="532">Unit test &amp; CI</text>
+    <line x1="36" y1="553" x2="154" y2="553" class="rule"/>
+    <text x="36" y="582" class="label muted">Belum aktif</text>
+    <text x="36" y="608" class="muted">Login pengguna</text>
+    <text x="36" y="634" class="muted">CRUD bisnis</text>
+    <text x="36" y="660" class="muted">Chatbot / RAG</text>
+    <text x="36" y="686" class="muted">Training ML</text>
+    <text x="36" y="712" class="muted">Job / reminder</text>
+    <text x="36" y="738" class="muted">Kirim WhatsApp</text>
+    <line x1="36" y1="759" x2="154" y2="759" class="rule"/>
+    <text x="36" y="790" class="small muted">Redis + BullMQ:</text>
+    <text x="36" y="810" class="small muted">opsi, tidak diinstal</text>
+    <text x="36" y="846" class="small muted">Tanpa Telegram</text>
+  </g>
+
+  <!-- Deployment boundary: application and data containers -->
+  <rect x="190" y="370" width="790" height="510" rx="12" fill="var(--surface, #ffffff)" stroke="var(--c1, #1764ad)" stroke-width="1.4"/>
+  <text x="210" y="400" class="heading blue">Target VPS · Docker Compose · jaringan container bersama</text>
+  <rect x="210" y="420" width="490" height="46" rx="7" fill="var(--surface, #ffffff)" stroke="var(--border, #cbd5e1)" stroke-dasharray="5 4"/>
+  <text x="228" y="449" class="label">Reverse proxy TLS · disiapkan operator VPS</text>
+  <path d="M190 300 H180 V445 H210" class="future"/>
+  <text x="208" y="358" class="small muted">HTTPS SSR → reverse proxy · fase lanjut</text>
+  <path d="M325 466 V491" class="future"/>
+
+  <g data-card="api" data-label="Backend API Next.js">
+    <rect x="210" y="491" width="230" height="179" rx="9" class="panel"/>
+    <rect x="210" y="491" width="230" height="5" rx="2" fill="var(--c2, #14745b)"/>
+    <text x="226" y="520" class="heading green">Backend API · Next.js</text>
+    <text x="226" y="544" class="mono">apps/api · :3001</text>
+    <text x="226" y="569" class="label">/health + kontrak REST</text>
+    <text x="226" y="591" class="small">Zod + zod-to-openapi</text>
+    <text x="226" y="615" class="small muted">Boundary: auth, orders,</text>
+    <text x="226" y="634" class="small muted">inventory, finance, WAHA</text>
+    <text x="226" y="657" class="small green">Import: types + db (Prisma)</text>
+  </g>
+
+  <g data-card="ai" data-label="Python AI service">
+    <rect x="460" y="491" width="240" height="179" rx="9" class="panel"/>
+    <rect x="460" y="491" width="240" height="5" rx="2" fill="var(--c3, #7550ae)"/>
+    <text x="476" y="520" class="heading purple">AI Service · FastAPI</text>
+    <text x="476" y="544" class="mono">apps/ai-service · :8001</text>
+    <text x="476" y="569" class="label">/health + kontrak REST</text>
+    <text x="476" y="591" class="small">Python 3.12 · uv · Pydantic</text>
+    <text x="476" y="615" class="small muted">Boundary: RAG, ML, Chroma</text>
+    <text x="476" y="636" class="small muted">Extras: LangChain / scikit-learn</text>
+    <text x="476" y="657" class="small purple">Dikunci; tidak diinstal default</text>
+  </g>
+  <path d="M440 600 H460" class="future"/>
+
+  <g data-card="postgres" data-label="PostgreSQL">
+    <rect x="730" y="420" width="230" height="128" rx="9" class="panel"/>
+    <g fill="none" stroke="var(--c4, #a46916)" stroke-width="1.8" aria-hidden="true">
+      <ellipse cx="756" cy="449" rx="11" ry="5"/>
+      <path d="M745 449 V468 C745 475 767 475 767 468 V449 M745 458 C745 465 767 465 767 458"/>
+    </g>
+    <text x="779" y="453" class="heading orange">PostgreSQL 17</text>
+    <text x="748" y="494" class="mono">:5432 · internal VPS</text>
+    <text x="748" y="517" class="small">Via packages/db · Prisma 7</text>
+    <text x="748" y="537" class="small muted">Belum ada schema bisnis</text>
+  </g>
+  <path d="M440 530 H450 V480 H714 V484 H730" class="future"/>
+
+  <g data-card="chroma" data-label="ChromaDB">
+    <rect x="730" y="566" width="230" height="128" rx="9" class="panel"/>
+    <g fill="none" stroke="var(--c3, #7550ae)" stroke-width="1.8" aria-hidden="true">
+      <circle cx="750" cy="590" r="3"/><circle cx="769" cy="590" r="3"/><circle cx="750" cy="609" r="3"/><circle cx="769" cy="609" r="3"/>
+      <path d="M753 590 H766 M750 593 V606 M769 593 V606 M753 609 H766 M753 592 L766 606"/>
+    </g>
+    <text x="781" y="601" class="heading purple">ChromaDB</text>
+    <text x="748" y="642" class="mono">:8000 · internal VPS</text>
+    <text x="748" y="665" class="small">Vector store milik AI service</text>
+    <text x="748" y="685" class="small muted">Belum ada embedding / retrieval</text>
+  </g>
+  <path d="M700 606 H730" class="future"/>
+
+  <g data-card="waha" data-label="WAHA opsional">
+    <rect x="730" y="712" width="230" height="126" rx="9" class="panel"/>
+    <g fill="none" stroke="var(--c2, #14745b)" stroke-width="1.8" aria-hidden="true">
+      <path d="M744 733 H769 V752 H754 L745 759 V752 H744 Z"/>
+      <path d="M750 740 H763 M750 746 H760"/>
+    </g>
+    <text x="781" y="748" class="heading green">WAHA · opsional</text>
+    <text x="748" y="783" class="mono">:3000 · profile waha</text>
+    <text x="748" y="806" class="small">WhatsApp · pemilik: Node API</text>
+    <text x="748" y="826" class="small muted">Belum ada sesi / kirim pesan</text>
+  </g>
+  <path d="M325 670 V700 H714 V775 H730" class="future"/>
+
+  <g data-card="worker" data-label="Worker independen">
+    <rect x="210" y="718" width="490" height="120" rx="9" class="panel"/>
+    <rect x="210" y="718" width="490" height="5" rx="2" fill="var(--c5, #ab4772)"/>
+    <text x="228" y="751" class="heading rose">Worker independen · Node.js 24 + TypeScript</text>
+    <text x="228" y="777" class="mono">apps/worker · :3002/health · import: types</text>
+    <text x="228" y="801">Liveness + graceful shutdown; belum ada scheduler / job</text>
+    <text x="228" y="824" class="small muted">Tidak impor internal API / AI; tanpa koneksi DB atau queue</text>
+  </g>
+  <text x="210" y="861" class="small muted">Host VPS: hanya API 127.0.0.1:3001; AI, worker &amp; data tanpa host port. Health ≠ readiness DB.</text>
+
+  <!-- Repository structure -->
+  <g data-card="repository" data-label="Struktur monorepo">
+    <rect x="20" y="910" width="360" height="315" rx="10" class="panel"/>
+    <text x="38" y="944" class="heading blue">Struktur Monorepo · 6 workspace</text>
+    <text x="38" y="976" class="mono label">smart-catering/</text>
+    <text x="38" y="999" class="mono">├─ apps/</text>
+    <text x="38" y="1020" class="mono">│  ├─ web/app/</text>
+    <text x="38" y="1041" class="mono">│  ├─ api/{app,lib,modules,integrations}/</text>
+    <text x="38" y="1062" class="mono">│  ├─ ai-service/{app,tests}/</text>
+    <text x="38" y="1083" class="mono">│  └─ worker/src/</text>
+    <text x="38" y="1104" class="mono">├─ packages/{db,types}/src/</text>
+    <text x="38" y="1125" class="mono">├─ infra/docker/ · docs/</text>
+    <text x="38" y="1146" class="mono">├─ package.json · package-lock.json</text>
+    <text x="38" y="1167" class="mono">└─ turbo.json</text>
+    <text x="38" y="1200" class="small muted">Next &amp; FastAPI tanpa src; tanpa .gitkeep.</text>
+  </g>
+
+  <!-- Packages, tooling and CI -->
+  <g data-card="tooling" data-label="Shared packages dan tech stack">
+    <rect x="400" y="910" width="580" height="145" rx="10" class="panel"/>
+    <text x="418" y="944" class="heading green">Shared Packages &amp; Tech Stack</text>
+    <text x="418" y="973" class="label">packages/db</text>
+    <text x="685" y="973" class="label">packages/types</text>
+    <text x="418" y="995" class="small">Prisma 7 + pg · server-only · API</text>
+    <text x="685" y="995" class="small">DTO TypeScript · web / API / worker</text>
+    <text x="418" y="1025" class="small muted">Node 24 · npm Workspaces 12 · Turborepo 2 · Python 3.12 · uv</text>
+    <text x="418" y="1044" class="small muted">ESLint · Prettier · TypeScript strict · Ruff · Mypy · Vitest · Pytest</text>
+  </g>
+
+  <g data-card="ci" data-label="CI khusus branch dev">
+    <rect x="400" y="1075" width="580" height="150" rx="10" class="panel"/>
+    <text x="418" y="1107" class="heading purple">GitHub Actions · CI khusus branch dev</text>
+    <text x="418" y="1133">Trigger: push ke dev + pull request dengan target dev</text>
+    <line x1="418" y1="1147" x2="962" y2="1147" class="rule"/>
+    <text x="418" y="1172" class="small">Install → Test / coverage → Lint / types → Build → Smoke</text>
+    <text x="418" y="1194" class="small">Compose validation + image build · bukan auto-deploy</text>
+    <text x="418" y="1214" class="small muted">Vitest + Pytest · threshold coverage ≥ 80% pada scope suite</text>
+  </g>
+
+  <text x="20" y="1253" class="small muted">Bukti lokal: build, test, startup &amp; docs tervalidasi. Container runtime, CI remote &amp; deployment belum diverifikasi.</text>
+  <text x="20" y="1274" class="small muted">Sumber: manifests workspace, infra/docker/compose.vps.yaml, .github/workflows/ci.yml &amp; docs/architecture.md.</text>
+</svg>

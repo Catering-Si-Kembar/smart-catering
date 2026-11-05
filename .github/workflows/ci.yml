@@ -1,0 +1,91 @@
+name: CI Dev
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-dev-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  NEXT_TELEMETRY_DISABLED: '1'
+  TURBO_TELEMETRY_DISABLED: '1'
+  DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/smart_catering?schema=public
+
+jobs:
+  unit-tests:
+    name: unit-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm install --global npm@12.1.0
+      - run: npm ci
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: '0.13.7'
+          working-directory: apps/ai-service
+          enable-cache: true
+      - run: npm run ai:sync
+      - run: npm run test:coverage
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: unit-coverage
+          path: |
+            coverage/
+            apps/ai-service/coverage.xml
+          if-no-files-found: warn
+          retention-days: 7
+
+  quality:
+    name: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm install --global npm@12.1.0
+      - run: npm ci
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: '0.13.7'
+          working-directory: apps/ai-service
+          enable-cache: true
+      - run: npm run ai:sync
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run db:validate
+      - run: npm run db:generate
+      - run: npm run typecheck
+      - run: npm run build -- --force
+      - run: npm run smoke
+      - name: Validate development and VPS Compose models
+        env:
+          POSTGRES_PASSWORD: ci-compose-validation-only
+          WAHA_API_KEY: ci-compose-validation-only
+          VPS_DATABASE_URL: postgresql://smartcatering:ci-compose-validation-only@postgres:5432/smart_catering?schema=public
+        run: |
+          docker compose --env-file .env.example -f infra/docker/compose.dev.yaml --profile waha config --quiet
+          docker compose --env-file .env.example -f infra/docker/compose.vps.yaml --profile waha config --quiet
+      - name: Build VPS images without deploying
+        env:
+          POSTGRES_PASSWORD: ci-compose-validation-only
+          WAHA_API_KEY: ci-compose-validation-only
+          VPS_DATABASE_URL: postgresql://smartcatering:ci-compose-validation-only@postgres:5432/smart_catering?schema=public
+        run: docker compose --env-file .env.example -f infra/docker/compose.vps.yaml build api ai-service worker

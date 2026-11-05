@@ -1,0 +1,91 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "globalPassThroughEnv": ["UV_*"],
+  "globalDependencies": [
+    "eslint.config.mjs",
+    "tsconfig.base.json",
+    ".npmrc",
+    ".nvmrc",
+    "scripts/service-environment.mjs",
+    "scripts/run-service.mjs"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
+      "env": ["NEXT_PUBLIC_APP_NAME", "API_BASE_URL"],
+      "passThroughEnv": ["DATABASE_URL"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"]
+    },
+    "dev": {
+      "persistent": true,
+      "cache": false,
+      "passThroughEnv": [
+        "API_HOST",
+        "API_PORT",
+        "AI_HOST",
+        "AI_PORT",
+        "DATABASE_URL",
+        "NODE_ENV",
+        "DOCS_ENABLED",
+        "DOCS_USERNAME",
+        "DOCS_PASSWORD",
+        "AI_SERVICE_URL",
+        "CHROMA_URL",
+        "WAHA_BASE_URL",
+        "WAHA_API_KEY",
+        "WORKER_HOST",
+        "WORKER_PORT",
+        "API_BASE_URL",
+        "NEXT_PUBLIC_APP_NAME"
+      ]
+    },
+    "start": {
+      "persistent": true,
+      "cache": false,
+      "passThroughEnv": [
+        "API_HOST",
+        "API_PORT",
+        "AI_HOST",
+        "AI_PORT",
+        "DATABASE_URL",
+        "NODE_ENV",
+        "DOCS_ENABLED",
+        "DOCS_USERNAME",
+        "DOCS_PASSWORD",
+        "AI_SERVICE_URL",
+        "CHROMA_URL",
+        "WAHA_BASE_URL",
+        "WAHA_API_KEY",
+        "WORKER_HOST",
+        "WORKER_PORT",
+        "API_BASE_URL",
+        "NEXT_PUBLIC_APP_NAME"
+      ]
+    },
+    "@smart-catering/api#build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**"],
+      "passThroughEnv": ["DATABASE_URL"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.env"]
+    },
+    "@smart-catering/db#build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"],
+      "passThroughEnv": ["DATABASE_URL"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.env"]
+    },
+    "@smart-catering/db#typecheck": {
+      "dependsOn": ["^build"],
+      "passThroughEnv": ["DATABASE_URL"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.env"]
+    },
+    "lint": {},
+    "typecheck": {
+      "dependsOn": ["^build"]
+    },
+    "db:generate": {
+      "cache": false
+    }
+  }
+}

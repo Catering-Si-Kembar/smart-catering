@@ -1,0 +1,16 @@
+{
+  "name": "@smart-catering/ai-service",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node ../../scripts/run-service.mjs ai dev",
+    "start": "node ../../scripts/run-service.mjs ai start",
+    "build": "uv build",
+    "lint": "uv run --frozen ruff check .",
+    "typecheck": "uv run --frozen mypy app",
+    "test": "uv run --frozen pytest",
+    "test:coverage": "uv run --frozen pytest --cov=app --cov-report=term-missing --cov-report=xml --cov-fail-under=80",
+    "format": "uv run --frozen ruff format app tests",
+    "format:check": "uv run --frozen ruff format --check app tests"
+  }
+}

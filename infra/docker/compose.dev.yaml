@@ -1,0 +1,93 @@
+name: smart-catering-dev
+
+services:
+  postgres:
+    image: postgres:17.11-alpine3.23@sha256:05aa77262db9277fde6374bb2f901c9604b8a9373029e1a7993440c6aae48736
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:${POSTGRES_PORT:-5432}:5432'
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-smartcatering}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-smart_catering}
+    volumes:
+      - smart_catering_dev_postgres_data:/var/lib/postgresql/data
+    networks:
+      - smart_catering_dev_net
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'pg_isready -U $${POSTGRES_USER:-smartcatering} -d $${POSTGRES_DB:-smart_catering}',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  chroma:
+    image: chromadb/chroma:1.5.9@sha256:1e0b73a187a28757c572acba508c46f48c9e8b0acaf5c20e6d95cdedce1acdf6
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:${CHROMA_PORT:-8000}:8000'
+    environment:
+      IS_PERSISTENT: 'TRUE'
+      ANONYMIZED_TELEMETRY: 'FALSE'
+    volumes:
+      - smart_catering_dev_chroma_data:/data
+    networks:
+      - smart_catering_dev_net
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'bash -c "exec 3<>/dev/tcp/127.0.0.1/8000 && printf \"GET /api/v2/heartbeat HTTP/1.0\r\nHost: 127.0.0.1\r\n\r\n\" >&3 && grep -Eq \"^HTTP/1\\.[01] 200 \" <&3"',
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  waha:
+    image: devlikeapro/waha:latest-2026.10.1@sha256:2fc1787ddbd343ed2e7d59482846d1b22aa5ca134e29aa8d42d0e88c54e24779
+    profiles:
+      - waha
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:${WAHA_PORT:-3003}:3000'
+    environment:
+      WHATSAPP_API_PORT: '3000'
+      WHATSAPP_DEFAULT_ENGINE: 'NOWEB'
+      WAHA_API_KEY: ${WAHA_API_KEY:?WAHA_API_KEY must be set in .env}
+      WHATSAPP_API_KEY_EXCLUDE_PATH: 'ping,health'
+      WAHA_DASHBOARD_ENABLED: 'false'
+      WHATSAPP_SWAGGER_ENABLED: 'false'
+      WAHA_PRINT_QR: 'false'
+      WHATSAPP_RESTART_ALL_SESSIONS: 'false'
+      WAHA_WORKER_RESTART_SESSIONS: 'false'
+      WAHA_APPS_ENABLED: 'false'
+    volumes:
+      - smart_catering_dev_waha_sessions:/app/.sessions
+      - smart_catering_dev_waha_files:/tmp/whatsapp-files
+    networks:
+      - smart_catering_dev_net
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'node -e "fetch(\"http://127.0.0.1:3000/ping\").then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"',
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+networks:
+  smart_catering_dev_net:
+    driver: bridge
+
+volumes:
+  smart_catering_dev_postgres_data:
+  smart_catering_dev_chroma_data:
+  smart_catering_dev_waha_sessions:
+  smart_catering_dev_waha_files:

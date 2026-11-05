@@ -1,0 +1,69 @@
+{
+  "name": "smart-catering",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "npm@12.1.0",
+  "engines": {
+    "node": ">=24.15.0 <25",
+    "npm": ">=12.1.0 <13"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build:packages": "turbo run build --filter=@smart-catering/db --filter=@smart-catering/types",
+    "dev": "npm run build:packages && turbo run dev --filter=@smart-catering/web --filter=@smart-catering/api",
+    "dev:all": "npm run build:packages && turbo run dev --filter=@smart-catering/web --filter=@smart-catering/api --filter=@smart-catering/worker --filter=@smart-catering/ai-service",
+    "dev:backend": "npm run build:packages && turbo run dev --filter=@smart-catering/api --filter=@smart-catering/ai-service --filter=@smart-catering/worker",
+    "dev:web": "npm run build --workspace=@smart-catering/types && npm run dev --workspace=@smart-catering/web",
+    "dev:api": "npm run build:packages && npm run dev --workspace=@smart-catering/api",
+    "dev:worker": "npm run build --workspace=@smart-catering/types && npm run dev --workspace=@smart-catering/worker",
+    "dev:ai": "npm run dev --workspace=@smart-catering/ai-service",
+    "ai:sync": "uv sync --project apps/ai-service --frozen",
+    "build": "turbo run build",
+    "lint": "eslint scripts/*.mjs *.mjs *.ts && turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "vitest run && npm run test --workspace=@smart-catering/ai-service",
+    "test:coverage": "vitest run --coverage && npm run test:coverage --workspace=@smart-catering/ai-service",
+    "format": "prettier --write . && npm run format --workspace=@smart-catering/ai-service",
+    "format:check": "prettier --check . && npm run format:check --workspace=@smart-catering/ai-service",
+    "db:generate": "npm run db:generate --workspace=@smart-catering/db",
+    "db:validate": "npm run db:validate --workspace=@smart-catering/db",
+    "infra:up": "docker compose --env-file .env -f infra/docker/compose.dev.yaml up -d",
+    "infra:down": "docker compose --env-file .env -f infra/docker/compose.dev.yaml --profile waha down",
+    "infra:config": "docker compose --env-file .env -f infra/docker/compose.dev.yaml config --quiet",
+    "infra:waha": "docker compose --env-file .env -f infra/docker/compose.dev.yaml --profile waha up -d",
+    "start": "turbo run start --filter=@smart-catering/web --filter=@smart-catering/api",
+    "start:all": "turbo run start --filter=@smart-catering/web --filter=@smart-catering/api --filter=@smart-catering/worker --filter=@smart-catering/ai-service",
+    "start:backend": "turbo run start --filter=@smart-catering/api --filter=@smart-catering/worker --filter=@smart-catering/ai-service",
+    "start:web": "npm run start --workspace=@smart-catering/web",
+    "start:api": "npm run start --workspace=@smart-catering/api",
+    "start:worker": "npm run start --workspace=@smart-catering/worker",
+    "start:ai": "npm run start --workspace=@smart-catering/ai-service",
+    "smoke": "node scripts/smoke.mjs"
+  },
+  "allowScripts": {
+    "@prisma/engines@7.10.1": true,
+    "esbuild@0.28.2": true,
+    "prisma@7.10.1": true
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.5",
+    "@types/node": "24.19.2",
+    "@types/pg": "8.23.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitest/coverage-v8": "5.1.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.4.5",
+    "globals": "17.14.0",
+    "prettier": "3.9.10",
+    "tsx": "4.23.15",
+    "turbo": "2.11.10",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.72.1",
+    "vitest": "5.1.0"
+  }
+}

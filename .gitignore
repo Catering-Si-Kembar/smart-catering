@@ -1,0 +1,45 @@
+# Dependency Node.js yang dipasang melalui npm
+node_modules/
+
+# Output build aplikasi dan cache Turborepo
+.next/
+dist/
+.turbo/
+
+# Laporan coverage otomatis (HTML/LCOV), termasuk di dalam workspace
+coverage/
+
+# Environment lokal dan rahasia; template .env.example tetap boleh di-commit
+.env
+.env.*
+!.env.example
+
+# Artefak TypeScript/Next.js dan Prisma Client hasil generate
+*.tsbuildinfo
+next-env.d.ts
+packages/db/src/generated/
+
+# Log aplikasi dan metadata sistem operasi
+*.log
+.DS_Store
+# Dump crash shell lokal, bukan source project
+*.stackdump
+
+# Virtual environment dan cache interpreter Python
+__pycache__/
+.venv/
+
+# Artefak model machine learning lokal
+*.pkl
+*.joblib
+
+# Cache tooling, bytecode, dan hasil packaging Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+*.py[cod]
+
+# Laporan coverage Python dari pytest-cov
+.coverage
+coverage.xml

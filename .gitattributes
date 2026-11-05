@@ -1,0 +1,5 @@
+# Pertahankan LF agar format source konsisten pada Windows dan Linux/CI.
+* text=auto eol=lf
+
+# Aset gambar diperlakukan sebagai binary, tanpa konversi newline.
+*.png binary

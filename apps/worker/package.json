@@ -1,0 +1,16 @@
+{
+  "name": "@smart-catering/worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node ../../scripts/run-service.mjs worker dev",
+    "build": "tsc -p tsconfig.json",
+    "start": "node ../../scripts/run-service.mjs worker start",
+    "lint": "eslint src",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@smart-catering/types": "0.0.0"
+  }
+}
