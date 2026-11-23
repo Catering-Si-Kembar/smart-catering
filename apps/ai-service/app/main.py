@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import json
 import logging
+import time
 from collections.abc import Mapping
 from pathlib import Path
-from typing import Any
+from typing import Any, Final
 
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
@@ -30,6 +32,7 @@ from app.routers import v1_router
 from app.schemas import HealthData, HealthResponse
 
 logger = logging.getLogger("smart_catering.ai_service")
+PROCESS_TIME_HEADER: Final[str] = "X-Process-Time-Ms"
 
 
 class SmartCateringFastAPI(FastAPI):
@@ -52,6 +55,7 @@ class RequestContextAndSafetyMiddleware:
             await self.app(scope, receive, send)
             return
 
+        started_at = time.perf_counter()
         raw_request_id: str | None = None
         for header_name, header_val in scope.get("headers", ()):
             if header_name.lower() == b"x-request-id":
@@ -62,7 +66,8 @@ class RequestContextAndSafetyMiddleware:
         scope = {**scope, "state": {**scope.get("state", {}), "request_id": request_id}}
 
         token = set_current_request_id(request_id)
-        is_head_request = scope.get("method", "GET").upper() == "HEAD"
+        method = str(scope.get("method", "GET")).upper()
+        is_head_request = method == "HEAD"
         pathname = scope.get("path") or "/"
         is_docs_path = pathname in DOCS_PATHS
         response_started = False
@@ -78,7 +83,7 @@ class RequestContextAndSafetyMiddleware:
                 filtered_headers: list[tuple[bytes, bytes]] = []
                 for k, v in raw_headers:
                     lower_k = k.lower()
-                    if lower_k == b"x-request-id":
+                    if lower_k in {b"x-request-id", b"x-process-time-ms"}:
                         continue
                     if current_status_code == 204 and lower_k in {
                         b"content-type",
@@ -93,8 +98,15 @@ class RequestContextAndSafetyMiddleware:
                     filtered_headers.append((b"cache-control", b"private, no-store"))
                     filtered_headers.append((b"vary", b"Authorization"))
 
+                duration_ms = round((time.perf_counter() - started_at) * 1000.0, 2)
                 filtered_headers.append(
                     (REQUEST_ID_HEADER.lower().encode("ascii"), request_id.encode("ascii"))
+                )
+                filtered_headers.append(
+                    (
+                        PROCESS_TIME_HEADER.lower().encode("ascii"),
+                        f"{duration_ms:.2f}".encode("ascii"),
+                    )
                 )
                 message = {**message, "headers": filtered_headers}
                 await send(message)
@@ -119,9 +131,24 @@ class RequestContextAndSafetyMiddleware:
             )
             if response_started:
                 raise
+            current_status_code = 500
             error_response = create_problem_response(Request(scope), status_code=500)
             await error_response(scope, receive, send_wrapper)
         finally:
+            duration_ms = round((time.perf_counter() - started_at) * 1000.0, 2)
+            log_payload = {
+                "event": "http_request",
+                "method": method,
+                "path": pathname,
+                "status": current_status_code,
+                "durationMs": duration_ms,
+                "requestId": request_id,
+            }
+            log_line = json.dumps(log_payload, separators=(",", ":"))
+            if current_status_code >= 500:
+                logger.error(log_line)
+            else:
+                logger.info(log_line)
             reset_current_request_id(token)
 
 

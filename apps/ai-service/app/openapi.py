@@ -187,7 +187,10 @@ def _add_protocol_responses(paths: dict[str, Any]) -> dict[str, Any]:
                     **responses,
                     "200": {
                         **success,
-                        "headers": {"X-Request-Id": {"$ref": "#/components/headers/X-Request-Id"}},
+                        "headers": {
+                            "X-Request-Id": {"$ref": "#/components/headers/X-Request-Id"},
+                            "X-Process-Time-Ms": {"$ref": "#/components/headers/X-Process-Time-Ms"},
+                        },
                         "content": {
                             "application/json": {
                                 **success_content,
@@ -240,7 +243,10 @@ def _add_protocol_responses(paths: dict[str, Any]) -> dict[str, Any]:
                     **responses,
                     "200": {
                         **success,
-                        "headers": {"X-Request-Id": {"$ref": "#/components/headers/X-Request-Id"}},
+                        "headers": {
+                            "X-Request-Id": {"$ref": "#/components/headers/X-Request-Id"},
+                            "X-Process-Time-Ms": {"$ref": "#/components/headers/X-Process-Time-Ms"},
+                        },
                         "content": {
                             "application/json": {
                                 **success_content,
@@ -269,6 +275,7 @@ def build_openapi_schema(document: dict[str, Any]) -> dict[str, Any]:
     """Extend FastAPI's route-derived schema with the shared REST protocol components."""
     component_schemas = _collect_pydantic_component_schemas()
     request_id_header_ref = {"$ref": "#/components/headers/X-Request-Id"}
+    process_time_header_ref = {"$ref": "#/components/headers/X-Process-Time-Ms"}
 
     def _problem_response_spec(
         *,
@@ -291,7 +298,10 @@ def build_openapi_schema(document: dict[str, Any]) -> dict[str, Any]:
         if errors is not None:
             example_body["errors"] = errors
 
-        headers: dict[str, Any] = {"X-Request-Id": request_id_header_ref}
+        headers: dict[str, Any] = {
+            "X-Request-Id": request_id_header_ref,
+            "X-Process-Time-Ms": process_time_header_ref,
+        }
         if extra_headers:
             headers.update(extra_headers)
 
@@ -438,7 +448,14 @@ def build_openapi_schema(document: dict[str, Any]) -> dict[str, Any]:
                         "format": "uuid",
                         "examples": [EXAMPLE_REQUEST_ID],
                     },
-                }
+                },
+                "X-Process-Time-Ms": {
+                    "description": "Total request processing duration in milliseconds.",
+                    "schema": {
+                        "type": "string",
+                        "examples": ["1.42"],
+                    },
+                },
             },
             "schemas": {
                 **component_schemas,
@@ -449,6 +466,7 @@ def build_openapi_schema(document: dict[str, Any]) -> dict[str, Any]:
                     "description": "204 No Content response with empty body and X-Request-Id.",
                     "headers": {
                         "X-Request-Id": request_id_header_ref,
+                        "X-Process-Time-Ms": process_time_header_ref,
                     },
                 },
                 "BadRequestProblem": _problem_response_spec(

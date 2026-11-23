@@ -87,6 +87,7 @@ Untuk menyelesaikan masalah di atas, sistem Smart Catering mengintegrasikan laya
 
 3. **Keamanan & Guardrail Autentikasi:**
    - **`X-Request-Id`:** Setiap permintaan menerima atau menghasilkan UUID kanonik versi 1–8 lowercase RFC untuk penelusuran terdistribusi.
+   - **`X-Process-Time-Ms` & Structured Logging:** Setiap respons menyertakan header `X-Process-Time-Ms` yang mencatat durasi pemrosesan dalam milidetik, disertai pencatatan request log berformat JSON terstruktur (`event`, `method`, `path`, `status`, `durationMs`, `requestId`) tanpa merekam query string, kredensial autentikasi, atau secret.
    - **`X-Internal-Token`:** Endpoint internal `/api/v1/ml/*`, `/api/v1/rag/*`, dan `/api/v1/insight/*` diproteksi menggunakan pembandingan waktu konstan `hmac.compare_digest` terhadap `INTERNAL_SERVICE_SECRET`.
    - **Gerbang Dokumentasi (`DOCS_ENABLED`):** Di lingkungan produksi (`APP_ENV=production`), rute `/docs` dan `/openapi.json` dinonaktifkan secara _fail-closed_ kecuali jika `DOCS_ENABLED=true` dengan autentikasi HTTP Basic (`DocsBasicAuth`, `DOCS_PASSWORD` minimal 32 karakter di balik TLS).
 
