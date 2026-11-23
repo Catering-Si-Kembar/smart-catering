@@ -26,6 +26,7 @@ from app.errors import (
 )
 from app.openapi import build_openapi_schema
 from app.responses import create_success_response
+from app.routers import v1_router
 from app.schemas import HealthData, HealthResponse
 
 logger = logging.getLogger("smart_catering.ai_service")
@@ -146,6 +147,7 @@ def create_app(
 
     register_exception_handlers(app)
     app.add_middleware(RequestContextAndSafetyMiddleware)
+    app.include_router(v1_router)
 
     @app.get(
         "/health",

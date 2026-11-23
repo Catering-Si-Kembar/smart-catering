@@ -29,7 +29,10 @@ HTTP_STATUS_TITLES: Final[dict[int, str]] = {
     404: "Not Found",
     405: "Method Not Allowed",
     422: "Unprocessable Content",
+    429: "Too Many Requests",
     500: "Internal Server Error",
+    503: "Service Unavailable",
+    504: "Gateway Timeout",
 }
 
 SAFE_STATUS_DETAILS: Final[dict[int, str]] = {
@@ -39,7 +42,10 @@ SAFE_STATUS_DETAILS: Final[dict[int, str]] = {
     404: "The requested resource was not found.",
     405: "The HTTP method is not allowed for this resource.",
     422: "Request validation failed.",
+    429: "Too many requests. Please try again later.",
     500: "An unexpected error occurred.",
+    503: "The AI service capability is temporarily unavailable.",
+    504: "The upstream AI inference service timed out.",
 }
 
 _LOC_PREFIXES_TO_STRIP: Final[frozenset[str]] = frozenset(
@@ -188,7 +194,8 @@ def create_problem_response(
 def _log_controlled_server_problem(request: Request, status_code: int) -> None:
     if status_code >= 500:
         logger.error(
-            "Server problem status=500 requestId=%s instance=%s",
+            "Server problem status=%s requestId=%s instance=%s",
+            status_code,
             get_request_id(request),
             request.url.path,
         )
