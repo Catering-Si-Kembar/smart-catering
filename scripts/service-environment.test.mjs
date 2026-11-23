@@ -22,6 +22,19 @@ const backendValues = Object.freeze({
   API_PORT: '3101',
   AI_PORT: '8101',
   WORKER_PORT: '3102',
+  INTERNAL_SERVICE_SECRET: 'private-internal-secret',
+  LLM_API_KEY: 'private-llm-key',
+  LLM_BASE_URL: 'https://api.openai.com/v1',
+  LLM_MODEL: 'gpt-4o',
+  EMBEDDING_MODEL: 'text-embedding-3-small',
+  MODAL_SLM_BASE_URL: 'https://modal.run/v1',
+  MODAL_API_KEY: 'private-modal-key',
+  MODAL_SLM_MODEL: 'qwen-2.5-7b',
+  SMTP_HOST: 'smtp.example.com',
+  SMTP_PORT: '587',
+  SMTP_USER: 'user@example.com',
+  SMTP_PASS: 'private-smtp-pass',
+  SMTP_FROM: 'noreply@example.com',
 });
 
 const inherited = Object.freeze({
@@ -36,6 +49,10 @@ const inherited = Object.freeze({
   API_BASE_URL: 'http://frontend-api:3101',
   NEXT_PUBLIC_APP_NAME: 'Frontend name',
   UV_CACHE_DIR: '/uv-cache',
+  INTERNAL_SERVICE_SECRET: 'injected-internal-secret',
+  LLM_API_KEY: 'injected-llm-key',
+  MODAL_API_KEY: 'injected-modal-key',
+  SMTP_PASS: 'injected-smtp-pass',
 });
 
 describe('service environment ownership', () => {
@@ -53,6 +70,11 @@ describe('service environment ownership', () => {
       'UV_CACHE_DIR',
       'PORT',
       'HOSTNAME',
+      'INTERNAL_SERVICE_SECRET',
+      'LLM_API_KEY',
+      'MODAL_API_KEY',
+      'SMTP_PASS',
+      'SMTP_HOST',
     ]) {
       expect(environment).not.toHaveProperty(key);
     }
@@ -61,10 +83,14 @@ describe('service environment ownership', () => {
     expect(rootOnly).not.toHaveProperty('NEXT_PUBLIC_APP_NAME');
   });
 
-  test('worker receives listener configuration but no service credentials', () => {
+  test('worker receives listener, internal auth, reminder target and SMTP configuration without AI/DB credentials', () => {
     const environment = createServiceEnvironment('worker', 'start', backendValues, inherited);
     expect(environment.WORKER_PORT).toBe('3102');
     expect(environment.NODE_ENV).toBe('production');
+    expect(environment.INTERNAL_SERVICE_SECRET).toBe('injected-internal-secret');
+    expect(environment.API_BASE_URL).toBe('http://frontend-api:3101');
+    expect(environment.SMTP_PASS).toBe('injected-smtp-pass');
+    expect(environment.SMTP_HOST).toBe('smtp.example.com');
     for (const key of [
       'DATABASE_URL',
       'DOCS_PASSWORD',
@@ -73,7 +99,13 @@ describe('service environment ownership', () => {
       'WAHA_API_KEY',
       'AI_SERVICE_URL',
       'CHROMA_URL',
-      'API_BASE_URL',
+      'LLM_API_KEY',
+      'LLM_BASE_URL',
+      'LLM_MODEL',
+      'EMBEDDING_MODEL',
+      'MODAL_SLM_BASE_URL',
+      'MODAL_API_KEY',
+      'MODAL_SLM_MODEL',
       'UNKNOWN_SECRET',
       'UNRELATED_SECRET',
       'UV_CACHE_DIR',
@@ -89,9 +121,19 @@ describe('service environment ownership', () => {
     expect(environment.WAHA_API_KEY).toBe('injected-whatsapp-key');
     expect(environment.API_PORT).toBe('3101');
     expect(environment.NODE_ENV).toBe('development');
+    expect(environment.INTERNAL_SERVICE_SECRET).toBe('injected-internal-secret');
+    expect(environment.SMTP_PASS).toBe('injected-smtp-pass');
+    expect(environment.SMTP_HOST).toBe('smtp.example.com');
     for (const key of [
       'CHROMA_URL',
       'WORKER_PORT',
+      'LLM_API_KEY',
+      'LLM_BASE_URL',
+      'LLM_MODEL',
+      'EMBEDDING_MODEL',
+      'MODAL_SLM_BASE_URL',
+      'MODAL_API_KEY',
+      'MODAL_SLM_MODEL',
       'UNKNOWN_SECRET',
       'UNRELATED_SECRET',
       'UV_CACHE_DIR',
@@ -109,10 +151,20 @@ describe('service environment ownership', () => {
     expect(environment.APP_ENV).toBe('production');
     expect(environment.AI_PORT).toBe('8101');
     expect(environment.UV_CACHE_DIR).toBe('/uv-cache');
+    expect(environment.INTERNAL_SERVICE_SECRET).toBe('injected-internal-secret');
+    expect(environment.LLM_API_KEY).toBe('injected-llm-key');
+    expect(environment.LLM_MODEL).toBe('gpt-4o');
+    expect(environment.MODAL_API_KEY).toBe('injected-modal-key');
+    expect(environment.MODAL_SLM_MODEL).toBe('qwen-2.5-7b');
     for (const key of [
       'DATABASE_URL',
       'WAHA_API_KEY',
       'AI_SERVICE_URL',
+      'SMTP_HOST',
+      'SMTP_PORT',
+      'SMTP_USER',
+      'SMTP_PASS',
+      'SMTP_FROM',
       'UNKNOWN_SECRET',
       'UNRELATED_SECRET',
       'API_BASE_URL',
