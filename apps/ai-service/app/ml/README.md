@@ -1,6 +1,10 @@
 # Modul `ml` (`apps/ai-service/app/ml`)
 
-Batas modul untuk fitur machine learning (seperti proyeksi permintaan menu, estimasi porsi, dan prediksi kebutuhan bahan baku) yang dimiliki oleh layanan Python AI (`@smart-catering/ai-service`).
+Batas modul untuk fitur machine learning yang dimiliki oleh layanan Python AI (`@smart-catering/ai-service`), dibagi menjadi tiga sub-boundary:
+
+- `relevance/` — Klasifikasi relevansi pertanyaan dua kelas sebelum masuk ke alur chatbot.
+- `forecasting/` — Estimasi permintaan menu dan kebutuhan bahan baku (baseline Moving Average dan Random Forest).
+- `sentiment/` — Klasifikasi sentimen feedback pelanggan (positif/negatif) untuk dasbor analitik.
 
 ## Dependensi Opsional
 

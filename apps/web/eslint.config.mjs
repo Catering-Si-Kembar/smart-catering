@@ -8,7 +8,14 @@ const eslintConfig = [
   ...nextVitals,
   ...nextTs,
   {
-    files: ['app/**/*.ts', 'app/**/*.tsx'],
+    files: [
+      'app/**/*.ts',
+      'app/**/*.tsx',
+      'components/**/*.ts',
+      'components/**/*.tsx',
+      'lib/**/*.ts',
+      'lib/**/*.tsx',
+    ],
     rules: {
       'no-restricted-imports': [
         'error',
@@ -25,7 +32,7 @@ const eslintConfig = [
                 '**/packages/db/**',
                 '**/apps/api/**',
                 '**/apps/worker/**',
-                '**/api/app/**',
+                '**/api/src/**',
                 '**/api/modules/**',
                 '**/api/integrations/**',
                 '**/worker/src/**',

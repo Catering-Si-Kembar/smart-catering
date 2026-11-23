@@ -17,6 +17,14 @@ ALLOWED_SETTING_KEYS: Final[frozenset[str]] = frozenset(
         "DOCS_ENABLED",
         "DOCS_USERNAME",
         "DOCS_PASSWORD",
+        "INTERNAL_SERVICE_SECRET",
+        "LLM_API_KEY",
+        "LLM_BASE_URL",
+        "LLM_MODEL",
+        "EMBEDDING_MODEL",
+        "MODAL_SLM_BASE_URL",
+        "MODAL_API_KEY",
+        "MODAL_SLM_MODEL",
     }
 )
 
@@ -30,6 +38,14 @@ class AppSettings:
     docs_enabled_raw: str | None = None
     docs_username: str = ""
     docs_password: str = ""
+    internal_service_secret: str = ""
+    llm_api_key: str = ""
+    llm_base_url: str = ""
+    llm_model: str = ""
+    embedding_model: str = ""
+    modal_slm_base_url: str = ""
+    modal_api_key: str = ""
+    modal_slm_model: str = ""
 
     def __repr__(self) -> str:
         return (
@@ -37,7 +53,15 @@ class AppSettings:
             f"chroma_url={self.chroma_url!r}, "
             f"docs_enabled_raw={self.docs_enabled_raw!r}, "
             f"docs_username={self.docs_username!r}, "
-            "docs_password='[REDACTED]')"
+            "docs_password='[REDACTED]', "
+            "internal_service_secret='[REDACTED]', "
+            "llm_api_key='[REDACTED]', "
+            f"llm_base_url={self.llm_base_url!r}, "
+            f"llm_model={self.llm_model!r}, "
+            f"embedding_model={self.embedding_model!r}, "
+            f"modal_slm_base_url={self.modal_slm_base_url!r}, "
+            "modal_api_key='[REDACTED]', "
+            f"modal_slm_model={self.modal_slm_model!r})"
         )
 
     def __str__(self) -> str:
@@ -94,10 +118,27 @@ def load_settings(
     docs_username = merged.get("DOCS_USERNAME") or ""
     docs_password = merged.get("DOCS_PASSWORD") or ""
 
+    internal_service_secret = merged.get("INTERNAL_SERVICE_SECRET") or ""
+    llm_api_key = merged.get("LLM_API_KEY") or ""
+    llm_base_url = (merged.get("LLM_BASE_URL") or "").strip()
+    llm_model = (merged.get("LLM_MODEL") or "").strip()
+    embedding_model = (merged.get("EMBEDDING_MODEL") or "").strip()
+    modal_slm_base_url = (merged.get("MODAL_SLM_BASE_URL") or "").strip()
+    modal_api_key = merged.get("MODAL_API_KEY") or ""
+    modal_slm_model = (merged.get("MODAL_SLM_MODEL") or "").strip()
+
     return AppSettings(
         app_env=app_env,
         chroma_url=chroma_url,
         docs_enabled_raw=docs_enabled_raw,
         docs_username=docs_username,
         docs_password=docs_password,
+        internal_service_secret=internal_service_secret,
+        llm_api_key=llm_api_key,
+        llm_base_url=llm_base_url,
+        llm_model=llm_model,
+        embedding_model=embedding_model,
+        modal_slm_base_url=modal_slm_base_url,
+        modal_api_key=modal_api_key,
+        modal_slm_model=modal_slm_model,
     )

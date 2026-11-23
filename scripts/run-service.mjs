@@ -46,22 +46,25 @@ function createLaunchSpec(environment) {
       environment,
     };
   }
-  if (service === 'api' && mode === 'start') {
+  if (service === 'api') {
+    const args =
+      mode === 'dev' ? ['--import', 'tsx', '--watch', 'src/index.ts'] : ['dist/src/index.js'];
     return {
       directory,
       command: process.execPath,
-      args: ['.next/standalone/apps/api/server.js', ...extraArguments],
-      environment: { ...environment, PORT: String(listener.port), HOSTNAME: listener.host },
+      args: [...args, ...extraArguments],
+      environment: {
+        ...environment,
+        PORT: String(listener.port),
+        HOSTNAME: listener.host,
+        API_PORT: String(listener.port),
+        API_HOST: listener.host,
+      },
     };
   }
   const workspaceRequire = createRequire(resolve(directory, 'package.json'));
   const args = [workspaceRequire.resolve('next/dist/bin/next'), mode];
-  const listenerArgs =
-    mode === 'build'
-      ? []
-      : service === 'web'
-        ? ['--port', '3000']
-        : ['--hostname', listener.host, '--port', String(listener.port)];
+  const listenerArgs = mode === 'build' ? [] : ['--port', '3000'];
   return {
     directory,
     command: process.execPath,

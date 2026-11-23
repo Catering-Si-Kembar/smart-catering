@@ -43,3 +43,10 @@ __pycache__/
 # Laporan coverage Python dari pytest-cov
 .coverage
 coverage.xml
+
+# Data mentah UMKM (tetap pertahankan panduan README.md)
+data/raw/*
+!data/raw/README.md
+
+# Checkpoint Jupyter notebook
+.ipynb_checkpoints/

@@ -34,6 +34,7 @@ export default tseslint.config(
                 '**/apps/api/**',
                 '**/api/app/**',
                 '**/api/lib/**',
+                '**/api/src/**',
                 '**/api/modules/**',
                 '**/api/integrations/**',
                 '**/api/dist/**',

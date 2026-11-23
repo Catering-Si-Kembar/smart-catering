@@ -5,7 +5,7 @@
 <h1 align="center">Smart Catering</h1>
 
 <p align="center">
-  <em>Fondasi platform manajemen katering untuk Katering Si Kembar — Capstone Project Asah led by Dicoding dengan layanan operasional dan AI yang terpisah secara modular.</em>
+  <em>Fondasi platform manajemen katering untuk Catering Si Kembar — Capstone Project Asah led by Dicoding dengan layanan operasional dan AI yang terpisah secara modular.</em>
 </p>
 
 <p align="center">
@@ -32,31 +32,31 @@
 
 <p align="center">
   <a href="CHANGELOG.md">Changelog</a> ·
-  <a href="https://github.com/Catering-Si-Kembar/smart-catering-/issues/new?title=%5BBug%5D%20">Report Bug</a> ·
-  <a href="https://github.com/Catering-Si-Kembar/smart-catering-/issues/new?title=%5BFeature%5D%20">Request Feature</a>
+  <a href="https://github.com/Catering-Si-Kembar/smart-catering/issues/new?title=%5BBug%5D%20">Report Bug</a> ·
+  <a href="https://github.com/Catering-Si-Kembar/smart-catering/issues/new?title=%5BFeature%5D%20">Request Feature</a>
 </p>
 
 > **Status: Fase 0 — Project Setup & Architecture Foundation.** Repository ini menyediakan fondasi pengembangan, bukan aplikasi katering dengan fitur bisnis yang sudah siap digunakan. Target deployment dan fitur fase berikutnya tidak berarti sudah aktif.
 
 ## Deskripsi proyek
 
-**Smart Catering** adalah proyek capstone program **Asah led by Dicoding** yang dikembangkan untuk mendukung transformasi operasional mitra **Katering Si Kembar**.
+**Smart Catering** adalah proyek capstone program **Asah led by Dicoding** yang dikembangkan untuk mendukung transformasi operasional mitra **Catering Si Kembar**.
 
-Usaha katering dengan volume pesanan harian dan acara membutuhkan koordinasi yang presisi antara pencatatan pesanan pelanggan, penjadwalan dapur serta pengantaran, ketersediaan bahan baku, pencatatan pembayaran bertahap (uang muka/DP hingga pelunasan), serta komunikasi pengingat yang tepat waktu. Pengelolaan manual yang terpisah-pisah berisiko menimbulkan selisih stok dapur, keterlambatan tindak lanjut pesanan, dan rekapitulasi kas yang lambat.
+Usaha katering dengan volume pesanan harian dan acara membutuhkan koordinasi yang presisi antara pencatatan pesanan pelanggan, penjadwalan dapur serta pengantaran, ketersediaan bahan baku, pencatatan pembayaran bertahap (uang muka/DP hingga pelunasan), serta komunikasi pengingat yang tepat waktu. Pengelolaan manual yang terpisah-pisah berisiko menimbulkan selisih kalkulasi bahan dapur, keterlambatan tindak lanjut pesanan, dan rekapitulasi kas yang lambat.
 
-**Visi produk Smart Catering** adalah membangun platform manajemen katering terpadu bagi **Katering Si Kembar** yang mencakup lima pilar kapabilitas pada fase pengembangan berikutnya (sesuai kebutuhan dan persetujuan mitra):
+**Visi produk Smart Catering** adalah membangun platform manajemen katering terpadu bagi **Catering Si Kembar** yang mencakup lima pilar kapabilitas pada fase pengembangan berikutnya (sesuai kebutuhan dan persetujuan mitra):
 
 1. **Manajemen Pesanan & Penjadwalan (`orders`):** pencatatan siklus pesanan pelanggan, konfigurasi paket menu katering, jadwal acara/pengantaran, dan pemantauan status produksi.
-2. **Manajemen Persediaan Bahan Baku (`inventory`):** pemantauan stok bahan baku dapur, satuan inventaris, mutasi keluar-masuk bahan, dan peringatan dini ketersediaan stok.
+2. **Katalog Menu, Resep & Kalkulasi Bahan Baku (`menus`):** pengelolaan katalog menu katering, standarisasi resep dan porsi, kalkulator kebutuhan bahan baku per pesanan, serta estimasi biaya produksi.
 3. **Manajemen Keuangan (`finance`):** pencatatan tagihan pesanan, status pembayaran uang muka (DP) maupun pelunasan, arus kas pesanan, dan ringkasan transaksi keuangan.
-4. **Bantuan AI — RAG & Machine Learning (`ai-service`):** pencarian konteks menu, FAQ, dan pengetahuan internal berbasis Retrieval-Augmented Generation (LangChain + ChromaDB) serta proyeksi permintaan menu, estimasi porsi, dan prediksi kebutuhan bahan baku berbasis Machine Learning (scikit-learn).
-5. **Reminder & Integrasi Pesan (`worker` + `waha`):** eksekusi pengingat pesanan, jadwal produksi, dan tindak lanjut pembayaran melalui background worker mandiri serta adapter WhatsApp HTTP API (WAHA).
+4. **Bantuan AI & Analitik Bisnis (`ai-service` + `analytics`):** pencarian konteks menu, FAQ, dan pengetahuan internal berbasis Retrieval-Augmented Generation (LangChain + ChromaDB), analitik performa menu dan penjualan (`analytics`, `insight`), serta proyeksi permintaan menu dan analisis review berbasis Machine Learning (scikit-learn).
+5. **Reminder & Integrasi Pesan (`worker` + `waha` + `email`):** eksekusi pengingat pesanan, jadwal produksi, dan tindak lanjut pembayaran melalui background worker mandiri serta adapter WhatsApp HTTP API (WAHA) dan email.
 
 Repository menggunakan **Hybrid Minimal Monorepo** agar frontend, backend operasional, layanan AI, dan proses background dapat dikembangkan bersama tanpa mencampurkan tanggung jawab maupun ruang lingkup rahasianya. Ekosistem Node.js dikelola dengan **npm Workspaces + Turborepo**, sedangkan layanan Python dikelola dengan **uv**.
 
 ### Status pengembangan
 
-Fase saat ini (**Fase 0 — Project Setup & Architecture Foundation**) berfokus pada struktur monorepo enam workspace, arsitektur environment dua sumber (`.env` root dan `apps/web/.env`), kontrak wire REST, dokumentasi OpenAPI 3.1.0 + Scalar, konfigurasi infrastruktur container, dan pemeriksaan kualitas lintas bahasa. **Seluruh modul bisnis (`auth`, `orders`, `inventory`, `finance`), pipeline RAG/ML, jadwal reminder, dan pengiriman pesan WhatsApp di atas masih berupa batas arsitektur (skeleton struktural) dan belum diimplementasikan pada Fase 0.** Halaman web yang tersedia adalah **landing setup**, bukan dashboard operasional. Belum ada layanan publik/deployment yang diverifikasi melalui README ini; lihat [hasil validasi dan batas buktinya](docs/README.md#status-dan-batas-bukti).
+Fase saat ini (**Fase 0 — Project Setup & Architecture Foundation**) berfokus pada struktur monorepo enam workspace, arsitektur environment dua sumber (`.env` root dan `apps/web/.env`), kontrak wire REST, dokumentasi OpenAPI 3.1.0 + Scalar, konfigurasi infrastruktur container, dan pemeriksaan kualitas lintas bahasa. **Seluruh modul bisnis (`auth`, `menus`, `orders`, `finance`, `analytics`, `chat`, `reminders`), pipeline RAG/ML, jadwal reminder, dan pengiriman pesan WhatsApp di atas masih berupa batas arsitektur (skeleton struktural) dan belum diimplementasikan pada Fase 0.** Halaman web yang tersedia adalah **landing setup**, bukan dashboard operasional. Belum ada layanan publik/deployment yang diverifikasi melalui README ini; lihat [hasil validasi dan batas buktinya](docs/README.md#status-dan-batas-bukti).
 
 ## Fitur
 
@@ -65,10 +65,10 @@ Fase saat ini (**Fase 0 — Project Setup & Architecture Foundation**) berfokus 
 | Area                   | Fondasi yang tersedia                                                                                      |
 | ---------------------- | ---------------------------------------------------------------------------------------------------------- |
 | Monorepo               | Enam workspace, satu lockfile npm root, task development/build melalui Turborepo                           |
-| Frontend               | Next.js App Router dengan landing setup Smart Catering                                                     |
-| Backend operasional    | Next.js Route Handlers, health endpoint, boundary modul bisnis dan WAHA                                    |
-| Backend AI             | FastAPI dengan health endpoint serta boundary RAG, ML, dan Chroma                                          |
-| Kontrak REST           | Success envelope, RFC 9457 errors, UUID request ID, validasi, pagination helpers, dan helper 204           |
+| Frontend               | Next.js App Router dengan Tailwind CSS, shadcn/ui, dan Axios BFF                                           |
+| Backend operasional    | Express 5.3.0, TypeScript, health endpoint (/health, /api/v1/health), boundary modul bisnis dan integrasi  |
+| Backend AI             | FastAPI dengan health endpoint serta boundary RAG, ML, Insight, dan Chroma                                 |
+| Kontrak REST           | Success envelope, RFC 9457 errors, UUID request ID, validasi Joi, pagination helpers, dan helper 204       |
 | Dokumentasi API        | Scalar + OpenAPI 3.1 pada kedua backend, dengan gerbang akses produksi                                     |
 | Worker                 | Proses Node.js independen dengan liveness dan graceful shutdown                                            |
 | Data dan infrastruktur | Dua sumber `.env` (root + `apps/web`), Prisma server-only, PostgreSQL/Chroma, WAHA opt-in, Compose dev/VPS |
@@ -77,7 +77,7 @@ Fase saat ini (**Fase 0 — Project Setup & Architecture Foundation**) berfokus 
 ### Rencana pengembangan — belum diimplementasikan
 
 - Autentikasi dan otorisasi pengguna bisnis.
-- Pengelolaan pesanan, persediaan bahan baku, dan keuangan.
+- Pengelolaan pesanan, katalog menu, resep bahan baku, dan keuangan.
 - Chatbot/RAG, embedding/retrieval, serta training atau inference model ML.
 - Job terjadwal dan reminder; WAHA untuk prototipe hanya setelah mendapat persetujuan mitra.
 
@@ -87,14 +87,14 @@ Fase saat ini (**Fase 0 — Project Setup & Architecture Foundation**) berfokus 
 
 Frontend ditargetkan ke **Vercel**. API, AI service, worker, dan infrastruktur internal ditargetkan ke **VPS**. Pembagian ini tidak menjalankan worker terus-menerus di Vercel.
 
-| Workspace         | Tanggung jawab                                       | Target penggunaan          |
-| ----------------- | ---------------------------------------------------- | -------------------------- |
-| `apps/web`        | Frontend Next.js; future server-side API fetch       | Vercel                     |
-| `apps/api`        | Backend operasional dan pemilik integrasi WAHA       | VPS, Next.js standalone    |
-| `apps/ai-service` | Backend Python; pemilik boundary RAG, ML, dan Chroma | VPS, FastAPI/Uvicorn       |
-| `apps/worker`     | Proses background independen; saat ini liveness saja | VPS, Node.js               |
-| `packages/db`     | Prisma schema/config dan akses database lazy         | Shared package server-only |
-| `packages/types`  | Kontrak TypeScript bersama                           | Web, API, dan worker       |
+| Workspace         | Tanggung jawab                                                 | Target penggunaan          |
+| ----------------- | -------------------------------------------------------------- | -------------------------- |
+| `apps/web`        | Frontend Next.js; future server-side API fetch                 | Vercel                     |
+| `apps/api`        | Backend operasional Express dan pemilik integrasi WAHA & email | VPS, Express + TypeScript  |
+| `apps/ai-service` | Backend Python; pemilik boundary RAG, ML, Insight, dan Chroma  | VPS, FastAPI/Uvicorn       |
+| `apps/worker`     | Proses background independen; saat ini liveness saja           | VPS, Node.js               |
+| `packages/db`     | Prisma schema/config dan akses database lazy                   | Shared package server-only |
+| `packages/types`  | Kontrak TypeScript bersama                                     | Web, API, dan worker       |
 
 <details>
 <summary><strong>Lihat diagram arsitektur lengkap</strong></summary>
@@ -110,8 +110,8 @@ Garis putus-putus menunjukkan integrasi yang belum aktif. Diagram menjelaskan fo
 **Boundary utama:**
 
 - Browser/web hanya membaca `apps/web/.env` (`NEXT_PUBLIC_APP_NAME` dan `API_BASE_URL` server-only) dan tidak mengakses root `.env`, database, Chroma, atau AI service secara langsung.
-- API memiliki modul `auth`, `orders`, `inventory`, `finance`, serta integrasi `waha`. `AI_SERVICE_URL` disiapkan untuk komunikasi internal, tetapi belum dipanggil pada Fase 0.
-- AI service memiliki boundary `rag`, `ml`, dan `chroma`. Extras LangChain/Chroma SDK dan scikit-learn dikunci dalam `uv.lock`, tetapi **tidak diinstal secara default**.
+- API memiliki modul `auth`, `menus`, `orders`, `finance`, `analytics`, `chat`, `reminders`, serta integrasi `waha` dan `email`. `AI_SERVICE_URL` disiapkan untuk komunikasi internal, tetapi belum dipanggil pada Fase 0.
+- AI service memiliki boundary `rag`, `insight`, `ml`, dan `chroma`. Extras LangChain/Chroma SDK dan scikit-learn dikunci dalam `uv.lock`, tetapi **tidak diinstal secara default**.
 - Worker tidak mengimpor internal API/AI dan belum memiliki job, koneksi database, maupun queue.
 - Di VPS, hanya API dipetakan ke host `127.0.0.1:3001` di belakang reverse proxy TLS. AI, worker, PostgreSQL, Chroma, dan WAHA tetap di jaringan container tanpa host port.
 
@@ -121,15 +121,16 @@ Garis putus-putus menunjukkan integrasi yang belum aktif. Diagram menjelaskan fo
 ./
 ├── apps/
 │   ├── web/
-│   │   ├── app/                         # Next.js frontend
+│   │   ├── app/                         # Next.js frontend (Tailwind + shadcn/ui)
+│   │   ├── components/
+│   │   ├── lib/                         # Axios client dan helper UI
 │   │   └── .env.example                 # Template env khusus frontend
 │   ├── api/
-│   │   ├── app/                         # Route handlers, health, docs
-│   │   ├── lib/                         # Kontrak REST dan OpenAPI
-│   │   ├── modules/                     # Boundary bisnis
-│   │   └── integrations/waha/           # Boundary WhatsApp
+│   │   ├── src/                         # Express app, rute /api/v1, kontrak REST Joi
+│   │   ├── modules/                     # Boundary bisnis (menus, orders, finance, dll)
+│   │   └── integrations/                # Boundary WAHA dan email
 │   ├── ai-service/
-│   │   ├── app/                         # FastAPI dan boundary AI
+│   │   ├── app/                         # FastAPI dan boundary AI (rag, ml, insight, chroma)
 │   │   ├── tests/
 │   │   ├── pyproject.toml
 │   │   └── uv.lock
@@ -137,9 +138,13 @@ Garis putus-putus menunjukkan integrasi yang belum aktif. Diagram menjelaskan fo
 ├── packages/
 │   ├── db/                              # Prisma, konfigurasi, src/
 │   └── types/src/                       # Shared TypeScript types
+├── data/                                # Riset dan kamus bahan katering
+├── notebooks/                           # Eksperimen model data
+├── infra/
+│   ├── docker/                          # Compose dan Dockerfiles
+│   └── modal/                           # Konfigurasi GPU serverless Modal (vLLM)
+├── docs/                                # PRD, ADR, panduan, spec/ (27 issue)
 ├── scripts/                             # Launcher layanan, isolasi env, dan smoke test
-├── infra/docker/                        # Compose dan Dockerfiles
-├── docs/                                # PRD, ADR, panduan, aset
 ├── .github/workflows/ci.yml
 ├── .env.example                         # Template env root (backend, Prisma, Compose)
 ├── package.json
@@ -147,20 +152,21 @@ Garis putus-putus menunjukkan integrasi yang belum aktif. Diagram menjelaskan fo
 └── turbo.json
 ```
 
-Next.js dan FastAPI menggunakan layout tanpa `src` tambahan; worker dan shared packages tetap memakai `src`. Lihat [peta repository](docs/repository-structure.md) dan [keputusan arsitektur](docs/decisions/README.md) untuk detail.
+Aplikasi web memakai layout `app/` di root workspace; API memakai `src/` (`apps/api/src/` -> `dist/src/index.js`); worker dan shared packages tetap memakai `src`. Ruang kerja `data/`, `notebooks/`, `infra/modal/`, dan `docs/spec/` mendukung kegiatan tim engineering dan riset. Lihat [peta repository](docs/repository-structure.md) dan [keputusan arsitektur](docs/decisions/README.md) untuk detail.
 
 ## Teknologi
 
-| Lapisan                   | Teknologi                                                         |
-| ------------------------- | ----------------------------------------------------------------- |
-| Workspace dan task runner | npm **12.1.0**, npm Workspaces, Turborepo **2.11.10**             |
-| Runtime dan bahasa Node   | Node.js **24.15.0**, TypeScript **5.9.3**                         |
-| Frontend dan API          | Next.js **16.4.5**, React **19.3.1**, CSS biasa                   |
-| Runtime dan backend AI    | Python **3.12**, uv **0.13.7**, FastAPI, Pydantic, Uvicorn        |
-| Data                      | PostgreSQL **17**, Prisma **7.10.1** + adapter `pg`, ChromaDB     |
-| Kontrak API               | Zod + zod-to-openapi, Pydantic, OpenAPI **3.1**, Scalar           |
-| Quality                   | ESLint, Prettier, Vitest/V8, Ruff, Mypy, Pytest/pytest-cov        |
-| Deployment dan integrasi  | Vercel untuk web; Docker Compose/VPS untuk backend; WAHA opsional |
+| Lapisan                   | Teknologi                                                            |
+| ------------------------- | -------------------------------------------------------------------- |
+| Workspace dan task runner | npm **12.1.0**, npm Workspaces, Turborepo **2.11.10**                |
+| Runtime dan bahasa Node   | Node.js **24.15.0**, TypeScript **5.9.3**                            |
+| Frontend Web              | Next.js **16.4.5**, React **19.3.1**, Tailwind CSS, shadcn/ui, Axios |
+| Backend Operasional       | Express **5.3.0**, TypeScript, Node.js                               |
+| Runtime dan backend AI    | Python **3.12**, uv **0.13.7**, FastAPI, Pydantic, Uvicorn           |
+| Data                      | PostgreSQL **17**, Prisma **7.10.1** + adapter `pg`, ChromaDB        |
+| Kontrak API               | Joi **18.3.2**, Pydantic, OpenAPI **3.1**, Scalar                    |
+| Quality                   | ESLint, Prettier, Vitest/V8, Ruff, Mypy, Pytest/pytest-cov           |
+| Deployment dan integrasi  | Vercel untuk web; Docker Compose/VPS untuk backend; WAHA opsional    |
 
 Dependency Node dikunci pada `package-lock.json` root, dependency Python pada `apps/ai-service/uv.lock`. Jangan menggunakan pnpm/Yarn atau membuat lockfile npm per workspace. Detail versi Python/extras tersedia di [pyproject.toml](apps/ai-service/pyproject.toml).
 
@@ -175,85 +181,76 @@ Dependency Node dikunci pada `package-lock.json` root, dependency Python pada `a
 
 Landing, health, dokumentasi API, generation Prisma, test, dan build dapat dijalankan **tanpa PostgreSQL/Chroma/WAHA online**. UI Scalar memerlukan koneksi browser ke bundle jsDelivr yang dipin; endpoint skema mentah tidak membutuhkan CDN.
 
+### Prasyarat singkat per OS
+
+Pastikan **Node.js `24.15.0`** (sesuai `.nvmrc`), **npm `12.1.0`**, dan **`uv`** (mengelola Python 3.12 otomatis) sudah terpasang:
+
+- **macOS / Linux:**
+
+  ```sh
+  # Node 24 (lewat nvm)
+  nvm install && nvm use
+  # uv (Python package manager) — macOS bisa juga: brew install uv
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  ```
+
+- **Windows (PowerShell):**
+  ```powershell
+  # Pasang Node.js 24.15.0 (nvm-windows / fnm / installer resmi) lalu uv:
+  powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+  ```
+
 ### Quick start
 
-**1. Install dependency Node dan Python.**
+**1. Salin 2 file environment:**
+
+- **macOS / Linux / Windows PowerShell:**
+  ```sh
+  cp .env.example .env
+  cp apps/web/.env.example apps/web/.env
+  ```
+- **Windows Command Prompt (CMD):**
+  ```bat
+  copy .env.example .env
+  copy apps\web\.env.example apps\web\.env
+  ```
+
+Hanya ada 2 file `.env` di repo ini (root `.env` untuk backend/Compose dan `apps/web/.env` untuk frontend). Jangan commit file `.env` nyata; detail seluruh variabel dan allowlist ada di [panduan environment](docs/environment.md).
+
+**2. Install dependency & generate Prisma Client** (sama untuk Windows, macOS, & Linux):
 
 ```sh
 npm ci
 npm run ai:sync
-```
-
-`ai:sync` menggunakan `uv sync --project apps/ai-service --frozen` tanpa extras RAG/ML. npm 12 membatasi lifecycle scripts melalui `allowScripts` root; jangan memberikan persetujuan blanket atau menghapus lockfile untuk menyamarkan error dependency.
-
-**2. Siapkan dua file environment tanpa menimpa file yang sudah diisi.**
-
-<details open>
-<summary>Windows PowerShell</summary>
-
-```powershell
-@(
-  '.env'
-  'apps/web/.env'
-) | ForEach-Object {
-  if (-not (Test-Path -LiteralPath $_)) {
-    Copy-Item -LiteralPath "$_.example" -Destination $_
-  }
-}
-```
-
-</details>
-
-<details>
-<summary>macOS / Linux</summary>
-
-```sh
-for file in .env apps/web/.env; do
-  if [ ! -e "$file" ]; then
-    cp "$file.example" "$file"
-  fi
-done
-```
-
-</details>
-
-Repository ini hanya memakai **dua sumber environment** (`.env` di root dan `apps/web/.env`); tidak ada file `.env` atau `.env.example` tambahan di dalam `apps/api`, `apps/ai-service`, `apps/worker`, maupun `packages/db`:
-
-- **Root `.env` (`.env.example` → `.env`):** sumber terpusat untuk konfigurasi native backend (`API_HOST`/`API_PORT`, `AI_HOST`/`AI_PORT`, `WORKER_HOST`/`WORKER_PORT`, `DATABASE_URL`, `AI_SERVICE_URL`, `CHROMA_URL`, `WAHA_BASE_URL`/`WAHA_API_KEY`, `DOCS_ENABLED`/`DOCS_USERNAME`/`DOCS_PASSWORD`), Prisma CLI (`db:generate` / `db:validate`), serta interpolasi Docker Compose. Launcher layanan hanya meneruskan variabel sesuai allowlist masing-masing service (dan tidak pernah memuat root `.env` ke `apps/web`).
-- **Frontend `apps/web/.env` (`apps/web/.env.example` → `apps/web/.env`):** dimuat oleh Next.js frontend dan hanya berisi `NEXT_PUBLIC_APP_NAME` serta `API_BASE_URL` (server-only).
-
-Variabel konfigurasi service yang diinjeksikan langsung pada proses/shell menang di atas nilai file `.env`; mode `NODE_ENV`/`APP_ENV` tetap dikendalikan command launcher. Pada `.env.example` root, nilai kredensial, URL database, dan `DOCS_ENABLED` sengaja dikosongkan; lihat [panduan environment](docs/environment.md). Jangan commit `.env` nyata.
-
-**3. Generate Prisma Client dan jalankan aplikasi.**
-
-```sh
 npm run db:generate
-npm run dev:all
 ```
 
-Pilihan command development dari root repository:
+`ai:sync` menyinkronkan virtualenv Python dari `uv.lock`. Extras RAG/ML (`langgraph`, `pandas`, `httpx`, dll.) sudah terkunci di `uv.lock` dan siap diinstal saat diperlukan.
 
-- **Semua aplikasi (4 layanan — `web` + `api` + `ai-service` + `worker`):** `npm run dev:all`
-- **Default (2 layanan — `web` + `api`):** `npm run dev`
-- **Hanya frontend (`web`):** `npm run dev:web`
-- **Semua layanan backend (`api` + `ai-service` + `worker`):** `npm run dev:backend`
-- **Layanan individual:** `npm run dev:api`, `npm run dev:ai`, atau `npm run dev:worker`
+**3. Jalankan layanan satu per satu** (buka terminal/tab terpisah sesuai area yang sedang dikerjakan — sama di Windows, macOS, & Linux):
 
-Setiap command `dev*` menetapkan mode `development` secara otomatis (`NODE_ENV=development` untuk Node dan `APP_ENV=development` untuk AI service). Hentikan proses foreground dengan **Ctrl+C**.
+```sh
+npm run dev:web      # Frontend Next.js (http://localhost:3000)
+npm run dev:api      # Backend Express /api/v1 (http://localhost:3001)
+npm run dev:ai       # AI Service FastAPI (http://127.0.0.1:8001)
+npm run dev:worker   # Background Worker (http://127.0.0.1:3002)
+```
+
+Atau jalankan bersama: `npm run dev` (`web` + `api`) atau `npm run dev:all` (semua 4 layanan sekaligus). Pilihan tambahan: `npm run dev:backend` (menjalankan `api` + `ai-service` + `worker`). Setiap command `dev*` menetapkan mode `development` secara otomatis (`NODE_ENV=development` untuk Node dan `APP_ENV=development` untuk AI service). Hentikan proses foreground dengan **Ctrl+C**.
 
 ### Akses lokal dan dokumentasi OpenAPI/Scalar
 
-| Komponen                     | Alamat default                                                      |
-| ---------------------------- | ------------------------------------------------------------------- |
-| Web                          | <http://localhost:3000>                                             |
-| API health                   | <http://localhost:3001/health>                                      |
-| API Scalar / OpenAPI         | <http://localhost:3001/docs> · <http://localhost:3001/api/openapi>  |
-| AI health                    | <http://127.0.0.1:8001/health>                                      |
-| AI Scalar / OpenAPI          | <http://127.0.0.1:8001/docs> · <http://127.0.0.1:8001/openapi.json> |
-| Worker liveness              | <http://127.0.0.1:3002/health>                                      |
-| PostgreSQL, jika infra aktif | `127.0.0.1:5432`                                                    |
-| Chroma, jika infra aktif     | <http://127.0.0.1:8000>                                             |
-| WAHA, jika profil aktif      | <http://127.0.0.1:3003>                                             |
+| Komponen                     | Alamat default                                                         |
+| ---------------------------- | ---------------------------------------------------------------------- |
+| Web                          | <http://localhost:3000>                                                |
+| API health                   | <http://localhost:3001/health> · <http://localhost:3001/api/v1/health> |
+| API Scalar / OpenAPI         | <http://localhost:3001/docs> · <http://localhost:3001/api/openapi>     |
+| AI health                    | <http://127.0.0.1:8001/health>                                         |
+| AI Scalar / OpenAPI          | <http://127.0.0.1:8001/docs> · <http://127.0.0.1:8001/openapi.json>    |
+| Worker liveness              | <http://127.0.0.1:3002/health>                                         |
+| PostgreSQL, jika infra aktif | `127.0.0.1:5432`                                                       |
+| Chroma, jika infra aktif     | <http://127.0.0.1:8000>                                                |
+| WAHA, jika profil aktif      | <http://127.0.0.1:3003>                                                |
 
 Endpoint health hanya membuktikan **liveness proses**, bukan readiness database, vector store, atau WhatsApp. Port di tabel ini adalah port development host; port dan eksposur VPS berbeda.
 
@@ -297,7 +294,7 @@ npm run start:ai
 npm run start:worker
 ```
 
-Launcher `start*` menjalankan proses dalam mode produksi (`NODE_ENV=production` untuk Node, `APP_ENV=production` untuk AI service). Built API dijalankan sebagai **standalone server** dengan memetakan `API_HOST` dan `API_PORT` (default `127.0.0.1:3001`) ke `HOSTNAME`/`PORT` internal tanpa memercayai `HOSTNAME`/`PORT` warisan shell; `start:ai` menjalankan Uvicorn tanpa reload pada `AI_HOST`:`AI_PORT` (default `127.0.0.1:8001`); `start:worker` menjalankan worker pada `WORKER_HOST`:`WORKER_PORT` (default `127.0.0.1:3002`). Di container VPS, layanan hanya menerima variabel `environment` yang dideklarasikan secara eksplisit pada file Compose. Panduan ini bukan instruksi provisioning server; lihat [deployment VPS](docs/deployment-vps.md) untuk host, rahasia, TLS, dan container.
+Launcher `start*` menjalankan proses dalam mode produksi (`NODE_ENV=production` untuk Node, `APP_ENV=production` untuk AI service). Built API dijalankan sebagai server Express Node.js dengan memetakan `API_HOST` dan `API_PORT` (default `127.0.0.1:3001`) ke `HOSTNAME`/`PORT` internal tanpa memercayai `HOSTNAME`/`PORT` warisan shell; `start:ai` menjalankan Uvicorn tanpa reload pada `AI_HOST`:`AI_PORT` (default `127.0.0.1:8001`); `start:worker` menjalankan worker pada `WORKER_HOST`:`WORKER_PORT` (default `127.0.0.1:3002`). Di container VPS, layanan hanya menerima variabel `environment` yang dideklarasikan secara eksplisit pada file Compose. Panduan ini bukan instruksi provisioning server; lihat [deployment VPS](docs/deployment-vps.md) untuk host, rahasia, TLS, dan container.
 
 ## Standar kontrak REST, OpenAPI 3.1, dan keamanan
 
@@ -325,7 +322,7 @@ Jika diaktifkan melalui `DOCS_ENABLED=true`, produksi mewajibkan `DOCS_USERNAME`
 
 Scalar memakai bundle yang dipin; AI agent, telemetry, persistensi auth, remote proxy, dan font eksternal dinonaktifkan. Kredensial tidak disisipkan ke HTML, URL, atau request CDN.
 
-Kontrak helper berlaku pada request yang mencapai handler. Penolakan transport sebelum handler—misalnya `TRACE` pada Next.js—harus ditangani oleh kebijakan reverse proxy. Detail validasi, pagination, dan batas framework ada di [kontrak arsitektur](docs/architecture.md#kontrak-wire-rest-openapi-310-dan-keamanan-dokumentasi).
+Kontrak helper berlaku pada request yang mencapai handler. Penolakan transport sebelum handler harus ditangani oleh kebijakan reverse proxy. Detail validasi, pagination, dan batas framework ada di [kontrak arsitektur](docs/architecture.md#kontrak-wire-rest-openapi-310-dan-keamanan-dokumentasi).
 
 ## Perintah utama
 
@@ -370,7 +367,7 @@ npm run build
 npm run smoke
 ```
 
-Bebaskan port `3000`, `3001`, `3002`, dan `8001` sebelum `smoke`. Vitest V8 memeriksa helper API, environment worker, dan loader environment layanan (`scripts/service-environment.mjs`); Pytest memeriksa `apps/ai-service/app`. Threshold minimum coverage **80% berlaku pada scope suite**, bukan klaim seluruh UI/repository sudah tercakup.
+Bebaskan port `3000`, `3001`, `3002`, dan `8001` sebelum `smoke`. Vitest V8 memeriksa helper kontrak REST di `apps/api/src`, environment worker, dan loader environment layanan (`scripts/service-environment.mjs`); Pytest memeriksa `apps/ai-service/app`. Threshold minimum coverage **80% berlaku pada scope suite**, bukan klaim seluruh UI/repository sudah tercakup.
 
 Workflow [CI Dev](.github/workflows/ci.yml) hanya terpicu pada **push ke `dev`** dan **pull request bertarget `dev`**. Workflow mencakup test/coverage, quality checks, Prisma, build, smoke, validasi Compose, serta build image VPS tanpa deployment. Coverage diunggah sebagai artifact CI.
 
@@ -387,25 +384,26 @@ Reverse proxy, TLS, DNS, backup, rahasia, dan akses server dikelola operator. Sc
 
 ## Struktur dan dokumentasi
 
-| Dokumen                                                                            | Isi                                                |
-| ---------------------------------------------------------------------------------- | -------------------------------------------------- |
-| [Indeks dokumentasi](docs/README.md)                                               | Navigasi dan bukti validasi                        |
-| [PRD Fase 0](docs/PRD_FASE_0.md)                                                   | Scope dan acceptance criteria                      |
-| [Struktur repository](docs/repository-structure.md)                                | Pemilik source, entry point, dan artefak generated |
-| [Arsitektur](docs/architecture.md)                                                 | Diagram, boundary, kontrak API, dan topologi       |
-| [Development](docs/development.md)                                                 | Setup lengkap, script, dan troubleshooting         |
-| [Environment](docs/environment.md)                                                 | File env, variabel, dan keamanan                   |
-| [Architecture Decision Records](docs/decisions/README.md)                          | Alasan keputusan arsitektur                        |
-| [Rencana implementasi](docs/superpowers/plans/2026-11-04-fase-0-setup-monorepo.md) | Rencana Fase 0 yang diterima                       |
-| [Changelog](CHANGELOG.md)                                                          | Riwayat perubahan                                  |
+| Dokumen                                                                            | Isi                                                     |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| [Indeks dokumentasi](docs/README.md)                                               | Navigasi dan bukti validasi                             |
+| [PRD Fase 0](docs/PRD_FASE_0.md)                                                   | Scope dan acceptance criteria                           |
+| [Spesifikasi teknis & issues](docs/spec/README.md)                                 | Indeks spesifikasi teknis dan 27 issue untuk 4 area tim |
+| [Struktur repository](docs/repository-structure.md)                                | Pemilik source, entry point, dan artefak generated      |
+| [Arsitektur](docs/architecture.md)                                                 | Diagram, boundary, kontrak API, dan topologi            |
+| [Development](docs/development.md)                                                 | Setup lengkap, script, dan troubleshooting              |
+| [Environment](docs/environment.md)                                                 | File env, variabel, dan keamanan                        |
+| [Architecture Decision Records](docs/decisions/README.md)                          | Alasan keputusan arsitektur                             |
+| [Rencana implementasi](docs/superpowers/plans/2026-11-04-fase-0-setup-monorepo.md) | Rencana Fase 0 yang diterima                            |
+| [Changelog](CHANGELOG.md)                                                          | Riwayat perubahan                                       |
 
 ## Kontribusi
 
 ### Tim dan kontributor
 
-**Smart Catering** dikembangkan oleh tim Capstone **Asah led by Dicoding** bekerja sama dengan mitra **Katering Si Kembar**.
+**Smart Catering** dikembangkan oleh tim Capstone **Asah led by Dicoding** bekerja sama dengan mitra **Catering Si Kembar**.
 
-[Kontributor GitHub](https://github.com/Catering-Si-Kembar/smart-catering-/graphs/contributors) · [Pull requests](https://github.com/Catering-Si-Kembar/smart-catering-/pulls) · [Repository resmi](https://github.com/Catering-Si-Kembar/smart-catering-)
+[Kontributor GitHub](https://github.com/Catering-Si-Kembar/smart-catering/graphs/contributors) · [Pull requests](https://github.com/Catering-Si-Kembar/smart-catering/pulls) · [Repository resmi](https://github.com/Catering-Si-Kembar/smart-catering)
 
 | Area kepemilikan                       | Cakupan workspace & artefak                                          |
 | -------------------------------------- | -------------------------------------------------------------------- |
@@ -420,15 +418,15 @@ Reverse proxy, TLS, DNS, backup, rahasia, dan akses server dikelola operator. Sc
 ### Pelaporan bug dan permintaan fitur
 
 - **Report Bug (Laporan Bug):** Sertakan command yang dijalankan (misalnya `npm run dev:backend` atau `npm run smoke`), sistem operasi, output `node --version`, `npm --version`, dan `uv --version`, serta pesan error lengkap. **Jangan pernah** menyertakan isi file `.env`, password database, `WAHA_API_KEY`, atau `DOCS_PASSWORD` di dalam laporan.
-- **Request Feature (Permintaan Fitur):** Jelaskan masalah operasional di **Katering Si Kembar** yang ingin diselesaikan, workspace yang terdampak (`web`, `api`, `ai-service`, `worker`, `db`, atau `types`), serta kesesuaiannya dengan boundary arsitektur di [PRD Fase 0](docs/PRD_FASE_0.md) dan [ADR](docs/decisions/README.md).
+- **Request Feature (Permintaan Fitur):** Jelaskan masalah operasional di **Catering Si Kembar** yang ingin diselesaikan, workspace yang terdampak (`web`, `api`, `ai-service`, `worker`, `db`, atau `types`), serta kesesuaiannya dengan boundary arsitektur di [PRD Fase 0](docs/PRD_FASE_0.md) dan [ADR](docs/decisions/README.md).
 
 ### Alur kontribusi teknis
 
 1. Tempatkan perubahan pada workspace pemiliknya; jangan mengimpor DB/secret ke `apps/web` atau internal API/AI ke `apps/worker`.
 2. Pertahankan `package-lock.json` root dan `apps/ai-service/uv.lock`, serta gunakan hanya dua sumber environment lokal (`.env` dan `apps/web/.env`) tanpa meng-commit secret, cache, atau laporan coverage.
-3. Jalankan [pemeriksaan sebelum PR](docs/development.md#pemeriksaan-sebelum-pr), lalu ajukan PR ke branch `dev` sesuai kebijakan tim.
+3. Jalankan [pemeriksaan sebelum PR](docs/development.md#pemeriksaan-sebelum-pr), lalu ajukan PR ke branch `dev` sesuai template [.github/pull_request_template.md](.github/pull_request_template.md) dengan menyertakan `Closes #<nomor-issue>` merujuk [27 spesifikasi issue](docs/spec/issues/README.md) di [repository resmi](https://github.com/Catering-Si-Kembar/smart-catering).
 4. Perbarui dokumentasi dan ADR bila kontrak wire, skrip, variabel environment, atau keputusan arsitektur berubah.
 
 ## Identitas mitra
 
-Nama platform adalah **Smart Catering**, dengan **Katering Si Kembar** sebagai mitra proyek. Logo resmi pada header berasal dari aset yang diberikan mitra dan disimpan tanpa mengubah desainnya di [`docs/assets/logo-katering-si-kembar.png`](docs/assets/logo-katering-si-kembar.png). Penyertaan logo bukan penetapan lisensi kode atau izin penggunaan ulang merek di luar proyek.
+Nama platform adalah **Smart Catering**, dengan **Catering Si Kembar** sebagai mitra proyek. Logo resmi pada header berasal dari aset yang diberikan mitra dan disimpan tanpa mengubah desainnya di [`docs/assets/logo-katering-si-kembar.png`](docs/assets/logo-katering-si-kembar.png). Penyertaan logo bukan penetapan lisensi kode atau izin penggunaan ulang merek di luar proyek.

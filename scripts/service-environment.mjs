@@ -4,6 +4,16 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT_ENV_PATH = fileURLToPath(new URL('../.env', import.meta.url));
 const DOCS_KEYS = ['DOCS_ENABLED', 'DOCS_USERNAME', 'DOCS_PASSWORD'];
+const SMTP_KEYS = ['SMTP_HOST', 'SMTP_PORT', 'SMTP_USER', 'SMTP_PASS', 'SMTP_FROM'];
+const AI_KEYS = [
+  'LLM_API_KEY',
+  'LLM_BASE_URL',
+  'LLM_MODEL',
+  'EMBEDDING_MODEL',
+  'MODAL_SLM_BASE_URL',
+  'MODAL_API_KEY',
+  'MODAL_SLM_MODEL',
+];
 const SERVICE_KEYS = {
   web: ['API_BASE_URL', 'NEXT_PUBLIC_APP_NAME'],
   api: [
@@ -13,10 +23,12 @@ const SERVICE_KEYS = {
     'AI_SERVICE_URL',
     'WAHA_BASE_URL',
     'WAHA_API_KEY',
+    'INTERNAL_SERVICE_SECRET',
+    ...SMTP_KEYS,
     ...DOCS_KEYS,
   ],
-  ai: ['AI_HOST', 'AI_PORT', 'CHROMA_URL', ...DOCS_KEYS],
-  worker: ['WORKER_HOST', 'WORKER_PORT'],
+  ai: ['AI_HOST', 'AI_PORT', 'CHROMA_URL', 'INTERNAL_SERVICE_SECRET', ...AI_KEYS, ...DOCS_KEYS],
+  worker: ['WORKER_HOST', 'WORKER_PORT', 'INTERNAL_SERVICE_SECRET', 'API_BASE_URL', ...SMTP_KEYS],
 };
 const MODES = new Set(['dev', 'build', 'start']);
 const SYSTEM_KEYS = new Set([

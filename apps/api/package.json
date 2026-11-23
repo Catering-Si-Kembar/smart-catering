@@ -3,24 +3,25 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "main": "./dist/src/index.js",
   "scripts": {
     "dev": "node ../../scripts/run-service.mjs api dev",
-    "build": "node ../../scripts/run-service.mjs api build",
+    "build": "tsc -p tsconfig.json",
     "start": "node ../../scripts/run-service.mjs api start",
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@asteasolutions/zod-to-openapi": "9.1.0",
-    "@scalar/nextjs-api-reference": "0.12.15",
     "@smart-catering/db": "0.0.0",
     "@smart-catering/types": "0.0.0",
-    "next": "16.4.5",
-    "react": "19.3.1",
-    "react-dom": "19.3.1",
-    "zod": "4.6.7"
+    "cors": "2.8.6",
+    "express": "5.3.0",
+    "helmet": "8.3.0",
+    "joi": "18.3.2"
   },
   "devDependencies": {
+    "@types/cors": "2.8.19",
+    "@types/express": "5.0.6",
     "openapi3-ts": "4.6.2"
   }
 }

@@ -65,7 +65,7 @@
     },
     "@smart-catering/api#build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**"],
+      "outputs": ["dist/**"],
       "passThroughEnv": ["DATABASE_URL"],
       "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/.env"]
     },

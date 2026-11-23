@@ -250,3 +250,64 @@ def test_existing_directory_cannot_silently_replace_backend_dotenv(tmp_path: Pat
 
     with pytest.raises(OSError):
         load_settings(env={}, env_file=invalid_source)
+
+
+def test_settings_loads_ai_and_internal_secrets_and_redacts_all_secrets(tmp_path: Path) -> None:
+    env_file = tmp_path / ".env"
+    secret_internal = "super-secret-internal-token-12345"
+    secret_llm = "sk-llm-super-secret-token-67890"
+    secret_modal = "modal-super-secret-key-abcdef"
+    secret_docs = "D" * 36
+
+    env_file.write_text(
+        f'INTERNAL_SERVICE_SECRET="{secret_internal}"\n'
+        f'LLM_API_KEY="{secret_llm}"\n'
+        'LLM_BASE_URL="https://api.openai.com/v1"\n'
+        'LLM_MODEL="gpt-4o-mini"\n'
+        'EMBEDDING_MODEL="text-embedding-3-small"\n'
+        'MODAL_SLM_BASE_URL="https://modal.example.com/v1"\n'
+        f'MODAL_API_KEY="{secret_modal}"\n'
+        'MODAL_SLM_MODEL="qwen-2.5-7b-instruct"\n'
+        f'DOCS_PASSWORD="{secret_docs}"\n'
+        'DATABASE_URL="postgresql://should-be-filtered"\n'
+        'WAHA_API_KEY="waha-should-be-filtered"\n'
+        'SMTP_HOST="smtp.should-be-filtered"\n'
+        'SMTP_PASS="pass.should-be-filtered"\n',
+        encoding="utf-8",
+    )
+
+    settings = load_settings(env={}, env_file=env_file)
+
+    assert settings.internal_service_secret == secret_internal
+    assert settings.llm_api_key == secret_llm
+    assert settings.llm_base_url == "https://api.openai.com/v1"
+    assert settings.llm_model == "gpt-4o-mini"
+    assert settings.embedding_model == "text-embedding-3-small"
+    assert settings.modal_slm_base_url == "https://modal.example.com/v1"
+    assert settings.modal_api_key == secret_modal
+    assert settings.modal_slm_model == "qwen-2.5-7b-instruct"
+    assert settings.docs_password == secret_docs
+
+    # Check that secrets are redacted in __repr__ and __str__
+    rep = repr(settings)
+    s = str(settings)
+    assert secret_internal not in rep
+    assert secret_llm not in rep
+    assert secret_modal not in rep
+    assert secret_docs not in rep
+    assert secret_internal not in s
+    assert secret_llm not in s
+    assert secret_modal not in s
+    assert secret_docs not in s
+
+    assert "docs_password='[REDACTED]'" in rep
+    assert "internal_service_secret='[REDACTED]'" in rep
+    assert "llm_api_key='[REDACTED]'" in rep
+    assert "modal_api_key='[REDACTED]'" in rep
+
+    # Verify non-allowlisted keys are not read from env file
+    parsed = _read_env_file(env_file)
+    assert "DATABASE_URL" not in parsed
+    assert "WAHA_API_KEY" not in parsed
+    assert "SMTP_HOST" not in parsed
+    assert "SMTP_PASS" not in parsed
