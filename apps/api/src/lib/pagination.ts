@@ -1,5 +1,6 @@
 import type { PaginationMeta, ValidationIssue } from '@smart-catering/types';
-import { createValidationError } from './errors';
+import type { Request as ExpressRequest } from 'express';
+import { createValidationError } from './errors.js';
 
 export const DEFAULT_PAGE = 1;
 export const DEFAULT_LIMIT = 20;
@@ -25,10 +26,6 @@ export type PaginationMetaInput = Readonly<{
   total: unknown;
 }>;
 
-/**
- * Parses a nonnegative safe integer from a JS number or a strict decimal digit string.
- * Rejects booleans, floats/fractions, negative numbers, -0, hex/scientific strings, and > MAX_SAFE_PAGINATION_INT.
- */
 export function parseStrictSafeInteger(value: unknown): number | null {
   if (typeof value === 'number') {
     if (Object.is(value, -0) || !Number.isSafeInteger(value)) {
@@ -51,12 +48,18 @@ export function parseStrictSafeInteger(value: unknown): number | null {
   return null;
 }
 
-function extractRawQueryParams(input?: PaginationQueryInput | URLSearchParams | URL | Request): {
+function extractRawQueryParams(
+  input?: PaginationQueryInput | URLSearchParams | URL | Request | ExpressRequest | string,
+): {
   rawPage: unknown;
   rawLimit: unknown;
 } {
   if (input === undefined) {
     return { rawPage: undefined, rawLimit: undefined };
+  }
+
+  if (typeof input === 'string') {
+    return extractRawQueryParams(new URL(input, 'http://127.0.0.1').searchParams);
   }
 
   if (input instanceof Request) {
@@ -82,14 +85,24 @@ function extractRawQueryParams(input?: PaginationQueryInput | URLSearchParams | 
     };
   }
 
-  if (typeof input !== 'object' || input === null || Array.isArray(input)) {
-    throw createValidationError([{ path: '$', code: 'invalid_value', message: 'Invalid value' }]);
+  if (typeof input === 'object' && input !== null) {
+    const candidate = input as Record<string, unknown>;
+    if (typeof candidate['originalUrl'] === 'string' || typeof candidate['url'] === 'string') {
+      const urlString = (candidate['originalUrl'] ?? candidate['url']) as string;
+      return extractRawQueryParams(new URL(urlString, 'http://127.0.0.1').searchParams);
+    }
+
+    if (Array.isArray(input)) {
+      throw createValidationError([{ path: '$', code: 'invalid_value', message: 'Invalid value' }]);
+    }
+
+    return {
+      rawPage: candidate['page'],
+      rawLimit: candidate['limit'],
+    };
   }
 
-  return {
-    rawPage: input.page,
-    rawLimit: input.limit,
-  };
+  throw createValidationError([{ path: '$', code: 'invalid_value', message: 'Invalid value' }]);
 }
 
 function validatePageAndLimit(
@@ -141,7 +154,7 @@ function validatePageAndLimit(
 }
 
 export function parsePaginationQuery(
-  input?: PaginationQueryInput | URLSearchParams | URL | Request,
+  input?: PaginationQueryInput | URLSearchParams | URL | Request | ExpressRequest | string,
 ): PaginationQuery {
   const { rawPage, rawLimit } = extractRawQueryParams(input);
   const { page, limit, offset, issues } = validatePageAndLimit(rawPage, rawLimit);

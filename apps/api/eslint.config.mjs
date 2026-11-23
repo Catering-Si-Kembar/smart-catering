@@ -1,23 +1,18 @@
-import nextVitals from 'eslint-config-next/core-web-vitals';
-import nextTs from 'eslint-config-next/typescript';
+import js from '@eslint/js';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
-const eslintConfig = [
+const eslintConfig = tseslint.config(
   {
-    ignores: ['**/node_modules/**', '**/.next/**', '**/dist/**', '**/coverage/**', 'next-env.d.ts'],
+    ignores: ['**/node_modules/**', '**/dist/**', '**/coverage/**'],
   },
-  ...nextVitals,
-  ...nextTs,
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
   {
-    files: [
-      'app/**/*.ts',
-      'app/**/*.tsx',
-      'lib/**/*.ts',
-      'lib/**/*.tsx',
-      'modules/**/*.ts',
-      'modules/**/*.tsx',
-      'integrations/**/*.ts',
-      'integrations/**/*.tsx',
-    ],
+    languageOptions: { globals: globals.nodeBuiltin },
+  },
+  {
+    files: ['src/**/*.ts', 'modules/**/*.ts', 'integrations/**/*.ts'],
     rules: {
       'no-restricted-imports': [
         'error',
@@ -45,6 +40,6 @@ const eslintConfig = [
       ],
     },
   },
-];
+);
 
 export default eslintConfig;

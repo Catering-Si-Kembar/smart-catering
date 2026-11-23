@@ -1,11 +1,9 @@
 import { randomUUID } from 'node:crypto';
+import type { Request as ExpressRequest } from 'express';
 
 export const REQUEST_ID_HEADER = 'X-Request-Id';
 export const MAX_REQUEST_ID_HEADER_LENGTH = 64;
 
-/**
- * Canonical RFC 9562 / RFC 4122 UUID (versions 1–8, RFC variant 8/9/a/b).
- */
 export const CANONICAL_UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -14,7 +12,7 @@ export type RequestContext = Readonly<{
   instance: string;
 }>;
 
-const requestContextCache = new WeakMap<Request, RequestContext>();
+const requestContextCache = new WeakMap<object, RequestContext>();
 
 export function isValidRequestId(value: unknown): value is string {
   if (typeof value !== 'string') {
@@ -62,10 +60,12 @@ export function isRequestContext(value: unknown): value is RequestContext {
     return false;
   }
   const candidate = value as Record<string, unknown>;
-  return typeof candidate.requestId === 'string' && typeof candidate.instance === 'string';
+  return typeof candidate['requestId'] === 'string' && typeof candidate['instance'] === 'string';
 }
 
-export function resolveRequestContext(requestOrContext: Request | RequestContext): RequestContext {
+export function resolveRequestContext(
+  requestOrContext: Request | ExpressRequest | RequestContext | object,
+): RequestContext {
   if (isRequestContext(requestOrContext)) {
     return requestOrContext;
   }
@@ -75,10 +75,28 @@ export function resolveRequestContext(requestOrContext: Request | RequestContext
     return cached;
   }
 
+  let rawHeader: string | null | undefined;
+  let rawUrl: string | URL = '/';
+
+  if (requestOrContext instanceof Request) {
+    rawHeader = requestOrContext.headers.get('x-request-id');
+    rawUrl = requestOrContext.url;
+  } else if (typeof requestOrContext === 'object' && requestOrContext !== null) {
+    const candidate = requestOrContext as Record<string, unknown>;
+    if (typeof candidate['get'] === 'function') {
+      rawHeader = (candidate['get'] as (header: string) => string | undefined)('x-request-id');
+    } else if (candidate['headers'] && typeof candidate['headers'] === 'object') {
+      const headers = candidate['headers'] as Record<string, unknown>;
+      rawHeader = (headers['x-request-id'] ?? headers['X-Request-Id']) as string | undefined;
+    }
+    rawUrl = (candidate['originalUrl'] ?? candidate['url'] ?? '/') as string;
+  }
+
   const context: RequestContext = Object.freeze({
-    requestId: normalizeRequestId(requestOrContext.headers.get('x-request-id')),
-    instance: extractInstancePath(requestOrContext.url),
+    requestId: normalizeRequestId(rawHeader),
+    instance: extractInstancePath(rawUrl),
   });
+
   requestContextCache.set(requestOrContext, context);
   return context;
 }

@@ -1,8 +1,12 @@
-import { NextResponse } from 'next/server';
+import type { Response as ExpressResponse, Request as ExpressRequest, NextFunction } from 'express';
 import type { ProblemDetails, ValidationIssue } from '@smart-catering/types';
-import { z } from 'zod';
-import { REQUEST_ID_HEADER, type RequestContext, resolveRequestContext } from './request-context';
-import { formatZodIssues } from './validation-issues';
+import Joi from 'joi';
+import {
+  REQUEST_ID_HEADER,
+  type RequestContext,
+  resolveRequestContext,
+} from './request-context.js';
+import { formatJoiIssues } from './validation-issues.js';
 
 export const PROBLEM_CONTENT_TYPE = 'application/problem+json; charset=utf-8';
 
@@ -206,41 +210,10 @@ export function buildProblemDetails(input: BuildProblemDetailsInput): ProblemDet
   return Object.freeze(base);
 }
 
-export type CreateProblemResponseOptions = Readonly<{
-  status: number;
-  detail?: string;
-  errors?: readonly ValidationIssue[];
-  headers?: HeadersInit;
-}>;
-
-export function createProblemResponse(
-  requestOrContext: Request | RequestContext,
-  options: CreateProblemResponseOptions,
-): NextResponse<ProblemDetails> {
-  const context = resolveRequestContext(requestOrContext);
-  const status = normalizeProblemStatus(options.status);
-  const problem = buildProblemDetails({
-    status,
-    ...(options.detail !== undefined ? { detail: options.detail } : {}),
-    ...(options.errors !== undefined ? { errors: options.errors } : {}),
-    instance: context.instance,
-    requestId: context.requestId,
-  });
-
-  const headers = new Headers(options.headers);
-  headers.set('Content-Type', PROBLEM_CONTENT_TYPE);
-  if (!headers.has('Cache-Control')) {
-    headers.set('Cache-Control', 'no-store');
-  }
-  headers.set(REQUEST_ID_HEADER, context.requestId);
-
-  return new NextResponse(JSON.stringify(problem), {
-    status,
-    headers,
-  }) as NextResponse<ProblemDetails>;
-}
-
-function logServerFailure(error: unknown, requestOrContext: Request | RequestContext): void {
+export function logServerFailure(
+  error: unknown,
+  requestOrContext: Request | ExpressRequest | RequestContext | object,
+): void {
   const context = resolveRequestContext(requestOrContext);
   console.error(
     JSON.stringify({
@@ -253,41 +226,96 @@ function logServerFailure(error: unknown, requestOrContext: Request | RequestCon
   );
 }
 
+export function sendProblemResponse(
+  res: ExpressResponse,
+  problem: ProblemDetails,
+  headers?: Readonly<Record<string, string>>,
+): void {
+  if (res.headersSent) {
+    return;
+  }
+  res.status(problem.status);
+  res.setHeader('Content-Type', PROBLEM_CONTENT_TYPE);
+  if (!res.hasHeader('Cache-Control')) {
+    res.setHeader('Cache-Control', 'no-store');
+  }
+  res.setHeader(REQUEST_ID_HEADER, problem.requestId);
+
+  if (headers) {
+    for (const [key, value] of Object.entries(headers)) {
+      res.setHeader(key, value);
+    }
+  }
+
+  if (res.req?.method === 'HEAD') {
+    res.end();
+    return;
+  }
+
+  res.send(JSON.stringify(problem));
+}
+
 export function handleApiError(
   error: unknown,
-  requestOrContext: Request | RequestContext,
-  defaultHeaders?: HeadersInit,
-): NextResponse<ProblemDetails> {
-  const mergedHeaders = new Headers(defaultHeaders);
+  req: ExpressRequest,
+  res: ExpressResponse,
+  next?: NextFunction,
+): void {
+  if (res.headersSent) {
+    if (next) next(error);
+    return;
+  }
+
+  const context = resolveRequestContext(req);
 
   if (error instanceof ApiHttpError) {
-    if (error.status === 500) logServerFailure(error, requestOrContext);
-    if (error.headers) {
-      for (const [key, value] of Object.entries(error.headers)) {
-        mergedHeaders.set(key, value);
-      }
+    if (error.status === 500) {
+      logServerFailure(error, context);
     }
-    return createProblemResponse(requestOrContext, {
+    const problem = buildProblemDetails({
       status: error.status,
       detail: error.detail,
       ...(error.errors !== undefined ? { errors: error.errors } : {}),
-      headers: mergedHeaders,
+      instance: context.instance,
+      requestId: context.requestId,
     });
+    sendProblemResponse(res, problem, error.headers);
+    return;
   }
 
-  if (error instanceof z.ZodError) {
-    return createProblemResponse(requestOrContext, {
+  if (Joi.isError(error)) {
+    const problem = buildProblemDetails({
       status: 422,
       detail: DEFAULT_PROBLEM_DETAILS[422],
-      errors: formatZodIssues(error),
-      headers: mergedHeaders,
+      errors: formatJoiIssues(error),
+      instance: context.instance,
+      requestId: context.requestId,
     });
+    sendProblemResponse(res, problem);
+    return;
   }
 
-  logServerFailure(error, requestOrContext);
-  return createProblemResponse(requestOrContext, {
+  if (
+    error instanceof SyntaxError &&
+    (('status' in error && (error as { status: unknown }).status === 400) ||
+      ('type' in error && (error as { type: unknown }).type === 'entity.parse.failed'))
+  ) {
+    const problem = buildProblemDetails({
+      status: 400,
+      detail: 'The request body contains malformed JSON.',
+      instance: context.instance,
+      requestId: context.requestId,
+    });
+    sendProblemResponse(res, problem);
+    return;
+  }
+
+  logServerFailure(error, context);
+  const problem = buildProblemDetails({
     status: 500,
     detail: DEFAULT_PROBLEM_DETAILS[500],
-    headers: mergedHeaders,
+    instance: context.instance,
+    requestId: context.requestId,
   });
+  sendProblemResponse(res, problem);
 }

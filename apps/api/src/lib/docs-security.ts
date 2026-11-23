@@ -1,25 +1,30 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
+import type {
+  Request as ExpressRequest,
+  Response as ExpressResponse,
+  NextFunction,
+  RequestHandler,
+} from 'express';
 import {
   createInternalServerError,
   createMethodNotAllowedError,
   createNotFoundError,
   createUnauthorizedError,
-} from './errors';
-import { type ApiRouteHandler, withApiRoute } from './route-handler';
+} from './errors.js';
 
 export const DOCS_BASIC_REALM = 'Basic realm="Smart Catering Docs", charset="UTF-8"';
 export const SCALAR_CDN_URL = 'https://cdn.jsdelivr.net/npm/@scalar/api-reference@1.76.4';
 export const MIN_DOCS_PASSWORD_CODEPOINTS = 32;
 
-export const DOCS_SECURITY_HEADERS: Readonly<Record<string, string>> = Object.freeze({
+export const DOCS_SECURITY_HEADERS = Object.freeze({
   'Cache-Control': 'private, no-store',
   Vary: 'Authorization',
-});
+} as const);
 
 const STRICT_BASE64_REGEX = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
 const CRLF_REGEX = /[\r\n]/;
 
-type DocsEnvironment = Readonly<Record<string, string | undefined>>;
+export type DocsEnvironment = Readonly<Record<string, string | undefined>>;
 
 function getRuntimeEnv(envOverride?: DocsEnvironment): DocsEnvironment {
   return envOverride ?? process.env;
@@ -52,8 +57,8 @@ function isValidConfiguredPassword(password: string): boolean {
   return true;
 }
 
-function parseBasicAuthHeader(
-  rawHeader: string | null,
+export function parseBasicAuthHeader(
+  rawHeader: string | null | undefined,
 ): Readonly<{ username: string; password: string }> | null {
   if (typeof rawHeader !== 'string' || CRLF_REGEX.test(rawHeader)) {
     return null;
@@ -92,7 +97,24 @@ function parseBasicAuthHeader(
   });
 }
 
-export function evaluateDocsAccess(request: Request, envOverride?: DocsEnvironment): void {
+function extractAuthorizationHeader(target: unknown): string | null | undefined {
+  if (target instanceof Request) {
+    return target.headers.get('authorization');
+  }
+  if (typeof target === 'object' && target !== null) {
+    const candidate = target as Record<string, unknown>;
+    if (typeof candidate['get'] === 'function') {
+      return (candidate['get'] as (name: string) => string | undefined)('authorization');
+    }
+    if (candidate['headers'] && typeof candidate['headers'] === 'object') {
+      const headers = candidate['headers'] as Record<string, unknown>;
+      return (headers['authorization'] ?? headers['Authorization']) as string | undefined;
+    }
+  }
+  return undefined;
+}
+
+export function evaluateDocsAccess(request: unknown, envOverride?: DocsEnvironment): void {
   const env = getRuntimeEnv(envOverride);
   const rawNodeEnv = env['NODE_ENV']?.trim() ?? 'development';
   const isDevOrTest = rawNodeEnv === 'development' || rawNodeEnv === 'test';
@@ -133,7 +155,8 @@ export function evaluateDocsAccess(request: Request, envOverride?: DocsEnvironme
       throw createInternalServerError();
     }
 
-    const parsedCredentials = parseBasicAuthHeader(request.headers.get('authorization'));
+    const authHeader = extractAuthorizationHeader(request);
+    const parsedCredentials = parseBasicAuthHeader(authHeader);
     const candidateUsername = parsedCredentials?.username ?? '';
     const candidatePassword = parsedCredentials?.password ?? '';
 
@@ -149,58 +172,49 @@ export function evaluateDocsAccess(request: Request, envOverride?: DocsEnvironme
   }
 }
 
-function enforceDocsHeaders(response: Response): Response {
-  if (
-    response.headers.get('cache-control') === 'private, no-store' &&
-    response.headers.get('vary') === 'Authorization'
-  )
-    return response;
-  const headers = new Headers(response.headers);
-  headers.set('Cache-Control', 'private, no-store');
-  headers.set('Vary', 'Authorization');
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers,
-  });
-}
+export function docsSecurityMiddleware(envOverride?: DocsEnvironment): RequestHandler {
+  return (req: ExpressRequest, res: ExpressResponse, next: NextFunction): void => {
+    try {
+      evaluateDocsAccess(req, envOverride);
 
-export function withDocsSecurity(
-  handler: ApiRouteHandler,
-  envOverride?: DocsEnvironment,
-): (request: Request, routeContext?: unknown) => Promise<Response> {
-  const wrapped = withApiRoute(
-    (request, context, routeContext) => {
-      evaluateDocsAccess(request, envOverride);
-      return handler(request, context, routeContext);
-    },
-    {
-      allowedMethods: ['GET', 'HEAD'],
-      defaultHeaders: DOCS_SECURITY_HEADERS,
-    },
-  );
+      const originalSetHeader = res.setHeader.bind(res);
+      res.setHeader = function (
+        name: string,
+        value: string | number | readonly string[],
+      ): ExpressResponse {
+        const lower = name.toLowerCase();
+        if (lower === 'cache-control') {
+          return originalSetHeader('Cache-Control', DOCS_SECURITY_HEADERS['Cache-Control']);
+        }
+        if (lower === 'vary') {
+          return originalSetHeader('Vary', DOCS_SECURITY_HEADERS.Vary);
+        }
+        return originalSetHeader(name, value);
+      };
 
-  return async function docsGuardedRoute(
-    request: Request,
-    routeContext?: unknown,
-  ): Promise<Response> {
-    const response = await wrapped(request, routeContext);
-    return enforceDocsHeaders(response);
+      const originalWriteHead = res.writeHead.bind(res);
+      res.writeHead = function (statusCode: number, ...args: unknown[]): ExpressResponse {
+        originalSetHeader('Cache-Control', DOCS_SECURITY_HEADERS['Cache-Control']);
+        originalSetHeader('Vary', DOCS_SECURITY_HEADERS.Vary);
+        return (originalWriteHead as (...a: unknown[]) => ExpressResponse)(statusCode, ...args);
+      };
+
+      res.setHeader('Cache-Control', DOCS_SECURITY_HEADERS['Cache-Control']);
+      res.setHeader('Vary', DOCS_SECURITY_HEADERS.Vary);
+
+      next();
+    } catch (error) {
+      res.setHeader('Cache-Control', DOCS_SECURITY_HEADERS['Cache-Control']);
+      res.setHeader('Vary', DOCS_SECURITY_HEADERS.Vary);
+      next(error);
+    }
   };
 }
 
-export function createDocsMethodNotAllowedHandler(): (request: Request) => Promise<Response> {
-  const wrapped = withApiRoute(
-    () => {
-      throw createMethodNotAllowedError(['GET', 'HEAD']);
-    },
-    {
-      defaultHeaders: DOCS_SECURITY_HEADERS,
-    },
-  );
-
-  return async function docsMethodNotAllowed(request: Request): Promise<Response> {
-    const response = await wrapped(request);
-    return enforceDocsHeaders(response);
+export function docsMethodNotAllowedHandler(): RequestHandler {
+  return (_req: ExpressRequest, res: ExpressResponse, next: NextFunction): void => {
+    res.setHeader('Cache-Control', DOCS_SECURITY_HEADERS['Cache-Control']);
+    res.setHeader('Vary', DOCS_SECURITY_HEADERS.Vary);
+    next(createMethodNotAllowedError(['GET', 'HEAD']));
   };
 }

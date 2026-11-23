@@ -209,6 +209,28 @@ async function verifyHealth(target) {
   const wrongMethod = await request(target, '/health', { method: 'POST' });
   assert.match(wrongMethod.headers.get('allow') ?? '', /GET/);
   await assertProblem(wrongMethod, 405, '/health');
+  if (target.name === 'api') {
+    const v1Response = await request(target, '/api/v1/health', {
+      headers: { 'X-Request-Id': REQUEST_ID },
+    });
+    assert.equal(v1Response.status, 200);
+    assert.match(v1Response.headers.get('content-type') ?? '', /application\/json/);
+    assert.match(v1Response.headers.get('cache-control') ?? '', /no-store/);
+    assert.deepEqual(await v1Response.json(), {
+      data: { status: 'ok', service: 'api' },
+      meta: { requestId: REQUEST_ID },
+    });
+    assert.equal(v1Response.headers.get('x-request-id'), REQUEST_ID);
+
+    const v1Head = await request(target, '/api/v1/health', { method: 'HEAD' });
+    assert.equal(v1Head.status, 200);
+    assert.equal(await v1Head.text(), '');
+
+    const v1WrongMethod = await request(target, '/api/v1/health', { method: 'POST' });
+    assert.match(v1WrongMethod.headers.get('allow') ?? '', /GET/);
+    await assertProblem(v1WrongMethod, 405, '/api/v1/health');
+    console.log('PASS api: /api/v1/health');
+  }
   console.log(`PASS ${target.name}: envelope, requestId, HEAD, RFC9457 404/405, query redaction`);
 }
 
