@@ -1,6 +1,6 @@
 # Arsitektur — Hybrid Minimal Monorepo
 
-**Diperbarui:** 2026-11-05 · **Keputusan:** diterima untuk Fase 0 (6-Workspace REST/OpenAPI & Python AI Foundation)
+**Diperbarui:** 2026-11-23 · **Keputusan:** diterima untuk Fondasi Arsitektur, Express + Joi + Rute /api/v1, dan Ruang Kerja Tim
 
 ## Diagram arsitektur
 
@@ -8,7 +8,7 @@
 
 [PNG resolusi tinggi](assets/smart-catering-architecture.png) · [SVG vektor yang dapat diedit](assets/smart-catering-architecture.svg)
 
-Garis putus-putus menunjukkan integrasi yang **belum aktif**, bukan alur bisnis yang sudah berjalan. Vercel dan VPS adalah target deployment; diagram tidak mengklaim deployment cloud atau runtime container sudah diverifikasi. Port pada panel VPS adalah port internal container; hanya API dipetakan ke loopback host. Worker tetap independen dari internal API/AI.
+Garis putus-putus menunjukkan integrasi yang **belum aktif**, bukan alur bisnis yang sudah berjalan. Vercel dan VPS adalah target deployment; diagram tidak mengklaim deployment cloud atau runtime container sudah diverifikasi. Berkas diagram PNG dan SVG merupakan snapshot visual arsitektur Fase 0 dan akan diperbarui secara terpisah mengikuti topologi Express, Joi, dan ruang kerja tim. Port pada panel VPS adalah port internal container; hanya API dipetakan ke loopback host. Worker tetap independen dari internal API/AI.
 
 ## Topologi deployment
 
@@ -23,14 +23,19 @@ apps/web — Vercel (satu project)
 Reverse proxy TLS — VPS (dikelola operator)
   │ loopback host 127.0.0.1:3001
   ▼
-apps/api — Next.js standalone (:3001) ──────► PostgreSQL (internal :5432)
-  │  (/health, /docs, /api/openapi)           WAHA (internal :3000, profile opsional)
+apps/api — Express + TypeScript (:3001) ──────► PostgreSQL (internal :5432)
+  │  (/health, /api/v1/health, /docs,          WAHA (internal :3000, profile opsional)
+  │   /api/openapi)
   │
   │ future internal HTTP melalui AI_SERVICE_URL (http://ai-service:8001)
   │ (belum ada pemanggilan antar-layanan pada Fase 0)
   ▼
 apps/ai-service — Python FastAPI/Uvicorn (:8001, internal VPS saja)
-     (/health, /docs, /openapi.json)  ──────► Chroma (internal :8000)
+  │  (/health, /docs, /openapi.json)  ──────► Chroma (internal :8000)
+  │
+  │ future inference endpoint ke SLM di infra/modal/
+  ▼
+infra/modal/ — Target GPU serverless Modal (vLLM) untuk AI Business Insight
 
 apps/worker — proses Node.js always-on independen pada VPS
   └─ liveness internal :3002 di jaringan container; belum ada job/koneksi eksternal
@@ -52,15 +57,15 @@ Hanya API (`127.0.0.1:3001`) yang dipetakan ke loopback host VPS untuk diteruska
 ```
 
 - **Kepemilikan Domain & AI yang Terpisah**:
-  - `@smart-catering/api` memiliki modul bisnis transaksional (`apps/api/modules/{auth,orders,inventory,finance}`) dan integrasi WhatsApp (`apps/api/integrations/waha`). API menyimpan variabel konfigurasi `AI_SERVICE_URL` untuk mendelegasikan operasi AI ke `@smart-catering/ai-service` pada fase mendatang, namun tidak memanggilnya dan tidak membutuhkan `ai-service` hidup saat startup/health Fase 0.
-  - `@smart-catering/ai-service` memiliki seluruh boundary RAG (`app/rag`), ML (`app/ml`), dan Chroma (`app/chroma`), serta variabel `CHROMA_URL`. Direktori placeholder lama `rag`, `ml`, dan `chroma` di dalam `apps/api` telah dihapus agar tidak ada arsitektur ganda.
+  - `@smart-catering/api` memiliki modul bisnis transaksional (`apps/api/modules/{auth,menus,orders,finance,analytics,chat,reminders}`) dan integrasi (`apps/api/integrations/{waha,email}`). API menyimpan variabel konfigurasi `AI_SERVICE_URL` untuk mendelegasikan operasi AI ke `@smart-catering/ai-service` pada fase mendatang, namun tidak memanggilnya dan tidak membutuhkan `ai-service` hidup saat startup/health Fase 0.
+  - `@smart-catering/ai-service` memiliki seluruh boundary RAG (`app/rag`), Chroma (`app/chroma`), Business Insight (`app/insight`), serta model Machine Learning (`app/ml/{relevance,forecasting,sentiment}`), serta variabel `CHROMA_URL`. Direktori placeholder lama di dalam `apps/api` telah dihapus agar tidak ada arsitektur ganda. Untuk beban kerja inferensi model bahasa kecil (SLM) berkinerja tinggi, konfigurasi deployment GPU serverless disiapkan di `infra/modal/`.
   - Optional extras Python (`rag`: `langchain==1.4.8`, `chromadb==1.5.9`; `ml`: `scikit-learn==1.9.1`) dideklarasikan di `apps/ai-service/pyproject.toml` dan dikunci di `apps/ai-service/uv.lock`, tetapi tidak di-install pada `npm run ai:sync` default maupun image Docker produksi (`uv sync --frozen --no-dev`) sampai fitur RAG/ML diimplementasikan.
 - **Independensi Worker**:
   - `@smart-catering/worker` dapat bergantung pada `db` ketika ada pekerjaan yang benar-benar membutuhkan DB kelak, tetapi **tidak boleh mengimpor `apps/api` maupun `apps/ai-service`**. Ia harus build/start/restart secara mandiri dan pada Fase 0 hanya menjalankan HTTP liveness internal (`:3002/health`) serta graceful shutdown handler.
 - **Konvensi Paket & Build**:
   - Satu `package-lock.json` di root mengelola seluruh dependency Node.js; `apps/ai-service/uv.lock` mengelola seluruh dependency Python.
   - Packages `types` dan `db` dikompilasi ke `dist` sebagai ES modules dengan deklarasi TypeScript. Dependency internal Node adalah exact `0.0.0`.
-  - Kedua aplikasi Next (`apps/web/app`, `apps/api/app`) dan aplikasi FastAPI (`apps/ai-service/app`) tidak memakai lapisan `src`. Hanya `apps/worker/src`, `packages/db/src`, dan `packages/types/src` yang memakai `src`.
+  - Frontend web memakai layout `apps/web/app` langsung di root workspace tanpa lapisan `src`. Aplikasi API memakai lapisan source TypeScript `apps/api/src/` yang dikompilasi ke `dist/src/index.js`. Aplikasi FastAPI (`apps/ai-service/app`) tidak memakai lapisan `src`. `apps/worker/src`, `packages/db/src`, dan `packages/types/src` memakai `src`.
 
 ## Kontrak wire REST, OpenAPI 3.1.0, dan keamanan dokumentasi
 
@@ -75,9 +80,9 @@ Kedua backend REST (`@smart-catering/api` dan `@smart-catering/ai-service`) mema
     "meta": { "requestId": "0192f0c8-7b3a-7000-8000-000000000001" }
   }
   ```
-  Pada `@smart-catering/ai-service`, `data.service` bernilai `"ai-service"`. Respons berpaginasi pada fase mendatang menambahkan `meta.pagination: { page, limit, total, totalPages }`.
+  Pada `@smart-catering/api`, endpoint `/health` dan `/api/v1/health` mengembalikan format ini. Pada `@smart-catering/ai-service`, `data.service` bernilai `"ai-service"`. Respons berpaginasi pada fase mendatang menambahkan `meta.pagination: { page, limit, total, totalPages }`.
 - **`204 No Content`**: helper mengembalikan body kosong tanpa header `Content-Type` JSON, dengan tetap menyertakan header `X-Request-Id`.
-- **Metode `HEAD`**: pada `/health`, `/docs`, dan endpoint skema OpenAPI mengikuti status HTTP, pemeriksaan autentikasi, dan header `GET` dengan body kosong.
+- **Metode `HEAD`**: pada `/health`, `/api/v1/health`, `/docs`, dan endpoint skema OpenAPI mengikuti status HTTP, pemeriksaan autentikasi, dan header `GET` dengan body kosong.
 - **Pengecualian eksplisit dari envelope `{ data, meta }`**:
   1. **Endpoint skema OpenAPI (`/api/openapi` pada API dan `/openapi.json` pada AI service)**: mengembalikan dokumen JSON OpenAPI `3.1.0` mentah agar dapat dikonsumsi langsung oleh Scalar dan validator OpenAPI.
   2. **Endpoint UI dokumentasi (`/docs`)**: mengembalikan dokumen HTML Scalar API Reference.
@@ -93,7 +98,7 @@ Semua respons error (`400`, `401`, `403`, `404`, `405`, `422`, `500`) pada API d
   "title": "Unprocessable Content",
   "status": 422,
   "detail": "Request validation failed.",
-  "instance": "/health",
+  "instance": "/api/v1/health",
   "requestId": "0192f0c8-7b3a-7000-8000-000000000001",
   "errors": [
     {
@@ -116,7 +121,7 @@ Semua respons error (`400`, `401`, `403`, `404`, `405`, `422`, `500`) pada API d
 
 ### 4. Gerbang keamanan OpenAPI 3.1.0 & Scalar (`/docs`)
 
-- Spesifikasi OpenAPI **3.1.0** dihasilkan dari skema kode (Zod + `@asteasolutions/zod-to-openapi` di Node API; Pydantic + FastAPI di Python AI service).
+- Spesifikasi OpenAPI **3.1.0** dihasilkan dari skema kode (Joi 18.3.2 + generator OpenAPI 3.1.0 di `apps/api/src/lib/` pada Node API; Pydantic + FastAPI di Python AI service).
 - UI Scalar memakai bundle klasik yang dipin ke **`https://cdn.jsdelivr.net/npm/@scalar/api-reference@1.76.4`** dengan AI agent, telemetry, persistensi auth, remote proxy, dan font default dinonaktifkan. Browser memerlukan akses internet ke `cdn.jsdelivr.net` saat merender `/docs`.
 - Kebijakan `DOCS_ENABLED`:
   - Default `true` saat development/test (`NODE_ENV` != `production` / `APP_ENV` != `production`).
@@ -147,4 +152,4 @@ Semua respons error (`400`, `401`, `403`, `404`, `405`, `422`, `500`) pada API d
 
 ## Konsekuensi dan status bukti
 
-Hybrid memisahkan lifecycle web serverless dari API, AI service, dan worker always-on di VPS, sekaligus memberikan ekosistem Python `uv` asli untuk beban kerja RAG/ML masa depan tanpa mengorbankan keseragaman kontrak REST/OpenAPI 3.1. Baca [ADR](decisions/README.md) dan [deployment VPS](deployment-vps.md). Status verifikasi mengikuti [batas bukti](README.md#status-dan-batas-bukti).
+Hybrid memisahkan lifecycle web serverless dari API Express, AI service, dan worker always-on di VPS, sekaligus memberikan ekosistem Python `uv` asli untuk beban kerja RAG/ML masa depan tanpa mengorbankan keseragaman kontrak REST/OpenAPI 3.1. Baca [ADR](decisions/README.md) dan [deployment VPS](deployment-vps.md). Status verifikasi mengikuti [batas bukti](README.md#status-dan-batas-bukti).
