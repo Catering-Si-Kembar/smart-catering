@@ -3,6 +3,7 @@
 Direktori ini menyimpan adapter integrasi infrastruktur untuk API **Smart Catering**:
 
 - `waha/` — Adapter HTTP untuk layanan WhatsApp HTTP API (WAHA) internal.
+- `email/` — Adapter opsional (SendGrid/SMTP) untuk notifikasi dan reminder melalui kredensial environment server.
   Integrasi vector database Chroma berada pada layanan Python `apps/ai-service`.
 
 ## Status Fase 0
