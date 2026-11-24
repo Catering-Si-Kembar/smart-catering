@@ -18,6 +18,13 @@ POST_ENDPOINTS: tuple[str, ...] = (
     "/api/v1/insight/generate",
 )
 
+POST_STUB_ENDPOINTS: tuple[str, ...] = (
+    "/api/v1/ml/predict-relevance",
+    "/api/v1/ml/predict-sentiment",
+    "/api/v1/ml/predict-sentiment/batch",
+    "/api/v1/rag/chat",
+)
+
 GET_STUB_ENDPOINTS: tuple[str, ...] = ("/api/v1/ml/relevance/metadata",)
 
 VALID_POST_PAYLOADS: dict[str, dict[str, Any]] = {
@@ -179,6 +186,14 @@ def test_openapi_documents_official_api_v1_ai_endpoints_and_protocol_responses(
             resolved = _resolve_response_spec(document, responses[code])
             assert "application/problem+json" in resolved["content"]
 
+    insight_op = document["paths"]["/api/v1/insight/generate"]["post"]
+    insight_param_refs = [
+        p.get("$ref") for p in insight_op.get("parameters", []) if isinstance(p, dict)
+    ]
+    assert "#/components/parameters/ActorRoleHeader" in insight_param_refs
+    assert "403" in insight_op["responses"]
+    assert "504" in insight_op["responses"]
+
     meta_op = document["paths"]["/api/v1/ml/relevance/metadata"]["get"]
     meta_param_refs = [p.get("$ref") for p in meta_op.get("parameters", []) if isinstance(p, dict)]
     assert "#/components/parameters/RequestIdHeader" in meta_param_refs
@@ -186,7 +201,7 @@ def test_openapi_documents_official_api_v1_ai_endpoints_and_protocol_responses(
     assert "503" in meta_op["responses"]
 
 
-@pytest.mark.parametrize("path", POST_ENDPOINTS)
+@pytest.mark.parametrize("path", POST_STUB_ENDPOINTS)
 def test_api_v1_valid_post_requests_return_honest_503_problem_details(
     make_client: Callable[[Mapping[str, str | None] | None], TestClient],
     path: str,
