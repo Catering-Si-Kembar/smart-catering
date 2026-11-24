@@ -32,20 +32,20 @@ Untuk menyelesaikan masalah di atas, sistem Smart Catering mengintegrasikan laya
 
 ### Daftar Endpoint Aktif (`AI-01`)
 
-| Method         | Path                                 | Tag         | Autentikasi             | Deskripsi                                       |
-| -------------- | ------------------------------------ | ----------- | ----------------------- | ----------------------------------------------- |
-| `GET` / `HEAD` | `/health`                            | `System`    | Publik (`security: []`) | Liveness probe layanan utama.                   |
-| `GET` / `HEAD` | `/api/v1/health`                     | `System`    | Publik (`security: []`) | Alias liveness probe versi `/api/v1`.           |
-| `GET` / `HEAD` | `/openapi.json`                      | `Docs`      | Gate `DOCS_ENABLED`     | Dokumen spesifikasi OpenAPI 3.1.0 resmi.        |
-| `GET` / `HEAD` | `/docs`                              | `Docs`      | Gate `DOCS_ENABLED`     | UI interaktif Scalar API Reference.             |
-| `POST`         | `/api/v1/ml/predict-relevance`       | `Relevance` | `X-Internal-Token`      | Klasifikasi relevansi 2 kelas domain katering.  |
-| `GET`          | `/api/v1/ml/relevance/metadata`      | `Relevance` | `X-Internal-Token`      | Metadata versi dan metrik model relevansi.      |
-| `POST`         | `/api/v1/ml/predict-sentiment`       | `Sentiment` | `X-Internal-Token`      | Klasifikasi sentimen ulasan tunggal.            |
-| `POST`         | `/api/v1/ml/predict-sentiment/batch` | `Sentiment` | `X-Internal-Token`      | Klasifikasi sentimen ulasan secara batch.       |
-| `POST`         | `/api/v1/rag/chat`                   | `RAG`       | `X-Internal-Token`      | Tanya-jawab SOP & operasional berbasis RAG.     |
-| `POST`         | `/api/v1/insight/generate`           | `Insights`  | `X-Internal-Token`      | Sintesis laporan wawasan bisnis katering (SLM). |
+| Method         | Path                                 | Tag         | Autentikasi                                | Deskripsi                                                                                                                  |
+| -------------- | ------------------------------------ | ----------- | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
+| `GET` / `HEAD` | `/health`                            | `System`    | Publik (`security: []`)                    | Liveness probe layanan utama.                                                                                              |
+| `GET` / `HEAD` | `/api/v1/health`                     | `System`    | Publik (`security: []`)                    | Alias liveness probe versi `/api/v1`.                                                                                      |
+| `GET` / `HEAD` | `/openapi.json`                      | `Docs`      | Gate `DOCS_ENABLED`                        | Dokumen spesifikasi OpenAPI 3.1.0 resmi.                                                                                   |
+| `GET` / `HEAD` | `/docs`                              | `Docs`      | Gate `DOCS_ENABLED`                        | UI interaktif Scalar API Reference.                                                                                        |
+| `POST`         | `/api/v1/ml/predict-relevance`       | `Relevance` | `X-Internal-Token`                         | Klasifikasi relevansi 2 kelas domain katering.                                                                             |
+| `GET`          | `/api/v1/ml/relevance/metadata`      | `Relevance` | `X-Internal-Token`                         | Metadata versi dan metrik model relevansi.                                                                                 |
+| `POST`         | `/api/v1/ml/predict-sentiment`       | `Sentiment` | `X-Internal-Token`                         | Klasifikasi sentimen ulasan tunggal.                                                                                       |
+| `POST`         | `/api/v1/ml/predict-sentiment/batch` | `Sentiment` | `X-Internal-Token`                         | Klasifikasi sentimen ulasan secara batch.                                                                                  |
+| `POST`         | `/api/v1/rag/chat`                   | `RAG`       | `X-Internal-Token`                         | Tanya-jawab SOP & operasional berbasis RAG.                                                                                |
+| `POST`         | `/api/v1/insight/generate`           | `Insights`  | `X-Internal-Token` + `X-Actor-Role: ADMIN` | Sintesis laporan wawasan bisnis katering via Modal SLM (`AI-06`, aktif dengan numeric guardrail & fallback deterministik). |
 
-> Endpoint retrieval ChromaDB (`/api/v1/chroma/*` — `AI-04`) dan inferensi forecasting (`/api/v1/ml/forecast/demand` — `DS-05`) ditambahkan pada modul `app/chroma/` dan `app/ml/forecasting/` pada tahap implementasi masing-masing.
+> Endpoint retrieval ChromaDB (`/api/v1/chroma/*` — `AI-04`) dan inferensi forecasting (`/api/v1/ml/forecast/demand` — `DS-05`) ditambahkan pada modul `app/chroma/` dan `app/ml/forecasting/` pada tahap implementasi masing-masing. Dokumentasi lengkap modul AI Business Insight (`AI-06`) dan hasil evaluasi 10 laporan tersedia di [`app/insight/README.md`](app/insight/README.md).
 
 ### Standar Wire Contract
 
