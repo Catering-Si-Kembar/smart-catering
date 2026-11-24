@@ -1,6 +1,6 @@
-# Spesifikasi Teknis: Full-Stack (`01-fullstack.md`)
+# Spesifikasi Teknis: Full-Stack Development (`01-fullstack.md`)
 
-Berkas ini memuat spesifikasi teknis lengkap untuk 9 issue area Full-Stack (`FS-01` s.d. `FS-09`) mencakup frontend Next.js App Router, backend Express `/api/v1`, skema database Prisma PostgreSQL, dan integrasi modul katering.
+Berkas ini memuat spesifikasi teknis lengkap untuk 9 issue area Full-Stack (`FS-01` s.d. `FS-09`) yang telah diselaraskan penuh dengan Asah 2026 Project Plan – A26-CS105, mencakup rancangan mockup ramah staf senior, skema Prisma PostgreSQL 17, autentikasi RBAC & validasi Joi `/api/v1`, katalog menu/resep & konversi satuan bahan baku, alur pesanan → invoice → DP 60% → konfirmasi pesanan, PDF invoice vs PDF laporan analitik, proxy chatbot + backend read-only tools DB tanpa SQL bebas, dasbor analitik, serta pengingat otomatis, pengukuran waktu proses, dan uji E2E.
 
 ---
 
@@ -8,59 +8,69 @@ Berkas ini memuat spesifikasi teknis lengkap untuk 9 issue area Full-Stack (`FS-
 
 - **Labels:** `area:fullstack`, `priority:P0-blocker`, `quest:main`, `quest:side`
 - **Priority:** `P0-blocker`
-- **Milestone:** `M1 (21–27 Nov 2026)`
-- **Target Path:** `apps/web`
+- **Klasifikasi Project Plan:** Wajib (Fondasi Antarmuka) & Tambahan (Mockup, Arsitektur UI Next.js + Tailwind + shadcn/ui)
+- **Milestone:** `M1: Rancangan Disepakati (21–27 Nov 2026)`
+- **Penanggung Jawab (Project Plan):** Haidar Habibi Al Farisi
+- **Target Path:** `apps/web`, `docs/`
 
 ### Context
 
-Operasional katering Catering Si Kembar melibatkan staf dapur dan staf operasional senior yang kurang terbiasa dengan antarmuka digital yang rumit. Sistem memerlukan rancangan mockup dan fondasi layout (App Shell) yang responsif untuk perangkat mobile dan desktop, memiliki kontras tinggi, navigasi intuitif dengan terminologi familiar (Pesanan, Dapur/Resep, Tagihan, Jadwal), serta tombol aksi berukuran minimal 44x44 px agar nyaman disentuh di perangkat ponsel saat berada di area dapur.
+Operasional Catering Si Kembar melibatkan pengelola (`ADMIN`) serta staf operasional dan karyawan senior (`STAFF`) yang sebagian kurang terbiasa dengan antarmuka digital rumit. Sesuai Project Plan A26-CS105, mockup UI harus disepakati sebelum implementasi pada M1, antarmuka wajib sederhana, responsif, terbaca jelas di desktop maupun ponsel, serta setiap keputusan desain responsif (tata letak, ukuran teks, dan navigasi ramah staf senior) beserta alasannya wajib dicatat di README atau user manual.
 
 ### Scope
 
-**In-Scope:**
+**Requirement Wajib (Project Plan):**
 
-- Pembuatan rancangan mockup desain aplikasi web (alur pesanan, kalkulator bahan, invoice, dasbor jadwal).
-- Pembuatan layout dasar (App Shell): Header, Sidebar/Bottom Navigation responsif, status bar jaringan, dan penampung konten utama (`main`).
-- Penerapan tema visual dengan kontras ramah mata, tipografi jelas, dan komponen UI berbasis Tailwind CSS dan shadcn/ui.
-- Pengaturan breakpoint responsif teruji pada resolusi mobile (`390x844`) dan desktop (`1440x900`).
+- Penyusunan rancangan mockup UI seluruh alur utama (login, input pesanan, menu & kalkulator bahan, invoice & pembayaran, dasbor jadwal) dan fitur tambahan (chatbot, dasbor analitik, notifikasi) sebelum implementasi kode.
+- Pembangunan kerangka layout (_App Shell_) berbasis Next.js App Router, Tailwind CSS, dan shadcn/ui yang responsif untuk desktop dan ponsel.
+- Penyajian navigasi sederhana dengan istilah familiar bagi staf senior (Pesanan, Menu & Bahan, Tagihan, Jadwal) dan penyesuaian tampilan menu berdasarkan peran (`ADMIN` vs `STAFF`).
+- Pencatatan keputusan desain responsif (layout, teks, navigasi staf senior) dan alasannya pada README atau user manual.
+
+**Rekomendasi Teknis / Implementasi:**
+
+- Area sentuh tombol aksi utama minimal `44x44 px` dengan kontras teks memenuhi WCAG AA (rasio minimal `4.5:1`).
+- Breakpoint responsif teruji pada resolusi mobile (`390x844`) dan desktop (`1440x900`) tanpa _horizontal overflow_.
+- Indikator status jelas untuk kondisi berhasil, gagal, dan sedang diproses (_loading/error states_).
 
 **Out-of-Scope:**
 
-- Integrasi data API dinamis (masih menggunakan representasi wireframe/komponen antarmuka).
-- Fitur tema gelap (_dark mode_) kustom berlebih di luar kebutuhan kontras operasional dapur.
+- Integrasi data API dinamis penuh (dikerjakan pada `FS-04` s.d. `FS-09`).
+- Aplikasi mobile native Android/iOS (cakupan MVP adalah web responsif).
+- Tema gelap (_dark mode_) kustom berlebih yang mengurangi keterbacaan di area dapur.
 
 ### Business Rules
 
-- Navigasi utama harus dapat diakses maksimal dalam 2 ketukan/klik dari layar mana pun.
-- Teks label tombol aksi penting harus menggunakan kata kerja bahasa Indonesia yang lugas (misal: "Simpan Pesanan", "Cetak Invoice", "Lihat Bahan").
-- Seluruh elemen interaktif wajib memiliki area sentuh minimal 44x44 px untuk kenyamanan operasional layar sentuh.
+- Navigasi utama dapat dijangkau maksimal dalam 2 ketukan/klik dari layar mana pun.
+- Label tombol aksi menggunakan kata kerja bahasa Indonesia yang lugas (misal: "Simpan Pesanan", "Hitung Bahan", "Cetak Invoice").
+- Menu sensitif seperti Keuangan (`FS-06`) dan Dasbor Analitik (`FS-08`) tidak ditampilkan pada navigasi peran `STAFF` (otorisasi tetap ditegakkan di backend `FS-03`).
 
 ### API Contract
 
-Tidak berlaku (tugas non-API). Modul ini membangun fondasi UI shell, layouting responsif, dan aset mockup frontend di `apps/web`.
+Tidak berlaku (tugas non-API). Menghasilkan aset/dokumen mockup dan kerangka UI _App Shell_ di `apps/web`.
 
 ### Acceptance Criteria
 
-- [ ] Tersedia dokumen visual mockup atau halaman prototipe statis di `apps/web/app/(dashboard)` yang mencakup seluruh alur layar utama.
-- [ ] Navigasi responsif beralih mulus: sidebar vertikal pada desktop (`>= 1024px`) dan bottom bar / hamburger drawer pada mobile (`< 768px`).
-- [ ] Tidak ada pergeseran tata letak horizontal (_horizontal scroll/overflow_) pada tampilan ponsel `390px`.
-- [ ] Kontras warna teks memenuhi standar aksesibilitas WCAG AA (minimal rasio 4.5:1).
+- [ ] Tersedia mockup UI seluruh alur utama yang disepakati tim sebelum implementasi M2.
+- [ ] _App Shell_ Next.js terimplementasi dengan navigasi responsif: sidebar vertikal pada desktop (`>= 1024px`) dan bottom bar / drawer pada mobile (`< 768px`).
+- [ ] Tidak terdapat pergeseran tata letak horizontal (_horizontal overflow_) pada tampilan ponsel `390x844` maupun desktop `1440x900`.
+- [ ] Kontras warna teks memenuhi standar aksesibilitas WCAG AA (minimal 4.5:1) dan tombol aksi penting memiliki area sentuh memadai (`>= 44x44 px`).
+- [ ] Keputusan desain responsif untuk staf senior dan alasannya tercatat di README atau user manual.
 
-### Technical Notes
+### Keputusan yang Membutuhkan Konfirmasi (PIC / Tim)
 
-- Desain tombol dan navigasi disesuaikan untuk kenyamanan staf operasional senior `[Perlu Konfirmasi Tim]`.
-- Keputusan desain layout, rasio font, dan hierarki navigasi didokumentasikan pada panduan antarmuka.
+- `[Menunggu Konfirmasi PIC]` Validasi istilah menu navigasi dan contoh tampilan dasbor jadwal agar mudah dipahami karyawan senior Catering Si Kembar.
+- `[Perlu Konfirmasi Tim]` Kesepakatan akhir desain mockup UI dan pembagian rute halaman `apps/web/app/`.
 
 ### DoD
 
-- [ ] Mockup visual disetujui tim dan diimplementasikan ke dalam App Shell Next.js.
-- [ ] Halaman dashboard shell lolos uji render responsif di browser desktop dan simulasi mobile tanpa layout error.
-- [ ] Prettier dan linter ESLint pada `apps/web` lulus tanpa peringatan.
+- [ ] Mockup UI disepakati tim dan diimplementasikan ke dalam App Shell Next.js.
+- [ ] Uji render responsif desktop (`1440x900`) dan ponsel (`390x844`) lulus tanpa error console.
+- [ ] `npm run format:check`, `npm run lint`, dan `npm run typecheck` pada `apps/web` lulus tanpa peringatan.
 
 ### Dependencies
 
-- Prasyarat: Konfigurasi Tailwind CSS dan shadcn/ui pada monorepo.
-- Terkait: Menjadi kerangka layout untuk `FS-04`, `FS-05`, `FS-06`, `FS-07`, dan `FS-08`.
+- **Prasyarat:** Konfigurasi Tailwind CSS, shadcn/ui, dan Axios pada monorepo `apps/web`.
+- **Terkait:** Menjadi kerangka layout untuk `FS-04`, `FS-05`, `FS-06`, `FS-07`, `FS-08`, `FS-09`, dan deployment `OPS-03`.
 
 ---
 
@@ -68,61 +78,79 @@ Tidak berlaku (tugas non-API). Modul ini membangun fondasi UI shell, layouting r
 
 - **Labels:** `area:fullstack`, `priority:P0-blocker`, `quest:main`, `quest:side`
 - **Priority:** `P0-blocker`
-- **Milestone:** `M1 (21–27 Nov 2026)`
+- **Klasifikasi Project Plan:** Wajib (Fondasi Aplikasi: PostgreSQL dengan Prisma)
+- **Milestone:** `M1: Rancangan Disepakati (21–27 Nov 2026)`
+- **Penanggung Jawab (Project Plan):** Haidar Habibi Al Farisi, Zaki Eka Saputra
 - **Target Path:** `packages/db`
 
 ### Context
 
-Kebutuhan transaksi katering mencakup manajemen pesanan, katalog menu, formulasi resep, kalkulasi bahan baku, invoice pembayaran (DP dan pelunasan), serta pencatatan riwayat inferensi chat AI. Seluruh entitas ini memerlukan skema database relasional PostgreSQL yang konsisten, berintegritas tinggi dengan _foreign keys_ yang tepat, serta dilengkapi script migrasi dan seed data awal.
+Seluruh alur bisnis Smart Catering—mulai dari autentikasi RBAC, katalog menu dan resep standar dengan satuan bahan baku, alur pesanan → invoice → DP → pelunasan, pencatatan riwayat chatbot (web & WhatsApp), hingga penjadwalan reminder idempoten—membutuhkan skema relasional PostgreSQL yang konsisten melalui Prisma (`packages/db`). Skema juga wajib memisahkan data operasional dari data simulasi/sintetis melalui penanda `isSynthetic` sesuai guardrail Project Plan.
 
 ### Scope
 
-**In-Scope:**
+**Requirement Wajib (Project Plan):**
 
-- Perancangan file skema Prisma (`packages/db/prisma/schema.prisma`).
-- Entitas utama: `User` (`role`: `ADMIN`, `STAFF`), `Customer`, `Menu`, `Ingredient`, `RecipeItem`, `Order` (`status`: `OrderStatus`), `OrderItem`, `Invoice` (`paymentStatus`: `PaymentStatus`), `Payment` (`type`: `DOWN_PAYMENT`, `FINAL_PAYMENT`), `ChatLog`, `NotificationLog`.
-- Script seed data awal (`packages/db/prisma/seed.ts`) yang memuat akun staf uji, menu standar nasi box, resep bahan baku, dan riwayat pesanan simulasi.
-- Mekanisme migrasi skema dan validasi relasi data.
+- Perancangan skema database PostgreSQL pada `packages/db/prisma/schema.prisma` beserta migrasi dan script seed uji (`packages/db/prisma/seed.ts`).
+- Entitas inti yang disepakati pada M1:
+  - `User` (`role`: `ADMIN` | `STAFF`, `whatsappNumber` opsional untuk whitelist WAHA, password hash).
+  - `Customer` (data pelanggan teranonimisasi untuk uji/simulasi, tanpa menyimpan PII riil di repositori).
+  - `Menu` (nama, kategori, harga resmi satuan dari DB, status aktif).
+  - `Ingredient` & `RecipeItem` (mendukung **satuan dasar** resep seperti `gram`/`ml`/`butir`/`lembar` serta **satuan konversi/belanja** seperti `kg`/`liter`/`pack` dan `conversionFactor` untuk perhitungan bahan baku akurat).
+  - `Order` (`status`: `DRAFT`, `CONFIRMED`, `IN_PREPARATION`, `READY`, `DELIVERED`, `CANCELLED`, penanda `isSynthetic`), `OrderItem` (snapshot `unitPrice` dari `Menu` DB + `portion`).
+  - `Invoice` (relasi `1:1` dengan `Order`, `invoiceNumber`, `totalAmount`, `minDpPercentage` terkonfigurasi default `0.60`, `paymentStatus`: `UNPAID`, `PARTIALLY_PAID`, `PAID`).
+  - `Payment` (`type`: `DOWN_PAYMENT` | `FINAL_PAYMENT`, nominal, metode, waktu bayar, catatan).
+  - `ChatSession` & `ChatLog` (riwayat percakapan web & WAHA: `userId`, `channel`, `message`, `reply`, `isRelevant`, `toolsCalled`, `sourcesJson`, `latencyMs`, `isFallback`).
+  - `NotificationLog` (riwayat reminder & pencegah duplikasi: `idempotencyKey @unique`, `type`, `channel`, `recipient`, `status`, `retryCount`, `lastError`).
+  - `Feedback` (opsional/pendukung analitik sentimen dengan flag wajib `isSynthetic`).
+- Data tetap persisten setelah layanan/container dimulai ulang.
+
+**Rekomendasi Teknis / Implementasi:**
+
+- Gunakan tipe `Decimal` atau integer rupiah (`Int`/`BigInt`) untuk seluruh kolom moneter (`price`, `unitPrice`, `totalAmount`, `amount`) agar bebas galat pembulatan floating-point.
+- Gunakan indeks pada `Order.eventDate`, `Order.status`, `Invoice.paymentStatus`, `ChatLog.sessionId`, dan `NotificationLog.idempotencyKey`.
 
 **Out-of-Scope:**
 
-- Tabel inventaris stok gudang real-time atau pencatatan transaksi mutasi keluar-masuk stok harian (fokus MVP pada resep standar dan kalkulasi agregasi bahan baku otomatis).
-- Integrasi payment gateway eksternal (status pembayaran dicatat secara manual oleh staf).
+- Tabel inventaris stok gudang real-time dan pencatatan mutasi keluar-masuk stok harian (ditegaskan keluar dari cakupan MVP Project Plan).
+- Tabel data gaji karyawan atau integrasi payment gateway otomatis.
 
 ### Business Rules
 
-- Setiap `Order` wajib memiliki minimal 1 `OrderItem`.
-- Setiap `Invoice` berelasi satu-ke-satu (`1:1`) dengan `Order`.
-- Pembayaran dicatat dalam entitas `Payment` bertipe `DOWN_PAYMENT` (DP) atau `FINAL_PAYMENT` (Pelunasan).
-- Data benih uji wajib menandai data simulasi dengan flag atau kategori jelas agar tidak tercampur dengan data operasional riil.
+- Setiap `Order` wajib memiliki minimal 1 `OrderItem`, dengan `unitPrice` disalin (_snapshot_) dari tabel `Menu` di backend saat transaksi dibuat.
+- Setiap `Order` berelasi `1:1` dengan `Invoice`; perubahan pembayaran pada `Payment` selalu disinkronkan secara transaksional dengan `Invoice.paymentStatus`.
+- Seluruh data simulasi/seed atau data sintetis wajib memiliki flag `isSynthetic = true` agar tidak pernah tercampur dengan data operasional nyata.
+- `NotificationLog.idempotencyKey` bersifat unik untuk menjamin reminder worker/cron tidak pernah mengirim notifikasi ganda.
 
 ### API Contract
 
-Tidak berlaku (tugas non-API). Menghasilkan Prisma Client yang dikompilasi ke package internal `@smart-catering/db`.
+Tidak berlaku (tugas non-API). Menghasilkan Prisma Client pada package internal `@smart-catering/db`.
 
 ### Acceptance Criteria
 
-- [ ] Skema Prisma berhasil divalidasi via `npm run db:validate`.
-- [ ] Prisma Client berhasil digenerate via `npm run db:generate`.
-- [ ] Script seeding mengeksekusi insert data pengguna, menu, resep, dan pesanan uji ke PostgreSQL tanpa relasi foreign key yang putus.
-- [ ] Seluruh enum status didefinisikan ketat: `OrderStatus (DRAFT, CONFIRMED, IN_PREPARATION, READY, DELIVERED, CANCELLED)` dan `PaymentStatus (UNPAID, PARTIALLY_PAID, PAID)`.
-- [ ] Role pengguna dibakukan menjadi `ADMIN` dan `STAFF`.
+- [ ] `npm run db:validate` dan `npm run db:generate` berhasil tanpa error.
+- [ ] Migrasi berjalan mulus pada PostgreSQL dan data tetap bertahan setelah container/layanan dimulai ulang.
+- [ ] Skema `Ingredient` & `RecipeItem` menyimpan satuan dasar, satuan konversi/tampilan, dan faktor konversi yang selaras dengan kamus data `DS-03`.
+- [ ] Seluruh enum didefinisikan ketat: `Role (ADMIN, STAFF)`, `OrderStatus (DRAFT, CONFIRMED, IN_PREPARATION, READY, DELIVERED, CANCELLED)`, `PaymentStatus (UNPAID, PARTIALLY_PAID, PAID)`, `PaymentType (DOWN_PAYMENT, FINAL_PAYMENT)`.
+- [ ] Entitas `Order` dan data simulasi/seed memiliki penanda `isSynthetic = true`; `NotificationLog` memiliki constraint unik `idempotencyKey`.
+- [ ] Script seed (`packages/db/prisma/seed.ts`) berhasil mengisi akun uji (`ADMIN`, `STAFF`), menu standar nasi box, resep bahan baku, dan pesanan simulasi tanpa error foreign key atau PII nyata.
 
-### Technical Notes
+### Keputusan yang Membutuhkan Konfirmasi (PIC / Tim)
 
-- Besaran default persentase uang muka minimum adalah 60% `[Menunggu Konfirmasi PIC]`.
-- Nama bahan baku dan satuan baku (gram, butir, lembar, kg) dikonsolidasikan dengan tim Data Science `[Perlu Konfirmasi Tim]`.
+- `[Menunggu Konfirmasi PIC]` Besaran default persentase DP minimal `60%` (`minDpPercentage`) serta aturan apakah nominal DP di bawah batas ditolak keras atau diizinkan dengan catatan khusus.
+- `[Menunggu Konfirmasi PIC]` Daftar final menu standar, takaran resep, harga resmi, dan satuan bahan baku UMKM Catering Si Kembar.
+- `[Perlu Konfirmasi Tim]` Kesepakatan daftar satuan baku & faktor konversi antara Full-Stack (`FS-02`/`FS-04`) dan Data Science (`DS-03`).
 
 ### DoD
 
-- [ ] Berkas `packages/db/prisma/schema.prisma` dan migrasi tersimpan rapi.
-- [ ] Test integrasi database pada suite Vitest lulus saat mengakses data hasil migrasi.
-- [ ] Tidak ada penulisan kredensial database langsung di dalam file skema (menggunakan `DATABASE_URL`).
+- [ ] `packages/db/prisma/schema.prisma`, migrasi, dan `seed.ts` terverifikasi berjalan bersih.
+- [ ] Tidak ada kredensial database yang ditulis langsung dalam kode/skema (hanya membaca `DATABASE_URL`).
+- [ ] Test integrasi/validasi skema di Vitest lulus.
 
 ### Dependencies
 
-- Prasyarat: Konfigurasi container PostgreSQL di `infra/docker/compose.vps.yaml` atau koneksi PostgreSQL lokal.
-- Terkait: Menjadi pondasi wajib bagi `FS-03`, `FS-04`, `FS-05`, `FS-06`, `FS-07`.
+- **Prasyarat:** Konfigurasi PostgreSQL lokal atau Docker Compose (`infra/docker/compose.dev.yaml` / `compose.vps.yaml`).
+- **Terkait:** Fondasi wajib bagi `FS-03`, `FS-04`, `FS-05`, `FS-06`, `FS-07`, `FS-08`, `FS-09`, dan `OPS-02`.
 
 ---
 
@@ -130,163 +158,95 @@ Tidak berlaku (tugas non-API). Menghasilkan Prisma Client yang dikompilasi ke pa
 
 - **Labels:** `area:fullstack`, `priority:P0-blocker`, `quest:main`, `quest:side`
 - **Priority:** `P0-blocker`
-- **Milestone:** `M1 (21–27 Nov 2026)`
-- **Target Path:** `apps/api/modules/auth`, `apps/api/src/routes`
+- **Klasifikasi Project Plan:** Wajib (Fondasi Aplikasi: Autentikasi, RBAC, Validasi Joi, Penanganan Error) & Tambahan (Express REST `/api/v1`, Kontrak API OpenAPI)
+- **Milestone:** `M1: Rancangan Disepakati (21–27 Nov 2026)`
+- **Penanggung Jawab (Project Plan):** Haidar Habibi Al Farisi
+- **Target Path:** `apps/api/src/modules/auth`, `apps/api/src/routes`
 
 ### Context
 
-Aplikasi katering digunakan oleh beberapa tingkatan peran pengguna: Pemilik/Pengelola (Owner/Admin) yang berhak melihat laporan keuangan dan analitik, serta Staf Operasional Dapur yang hanya berhak melihat daftar pesanan dan resep kebutuhan bahan. Diperlukan sistem autentikasi berbasis session/JWT aman, middleware RBAC (_Role-Based Access Control_), dan pipeline validasi request Joi yang mematuhi standar wire contract monorepo.
+Sistem digunakan oleh dua tingkat peran utama: Pengelola/Pemilik (`ADMIN`) yang berhak mengakses keuangan, analitik, dan manajemen akun, serta Staf Operasional (`STAFF`) yang fokus pada pesanan, resep, dan jadwal produksi. Sesuai Project Plan A26-CS105, hak akses wajib diperiksa dan ditegakkan di backend Express (`apps/api`)—bukan hanya di UI atau prompt chatbot—disertai validasi request Joi, kontrak API `/api/v1` yang terdokumentasi di Swagger/OpenAPI sebelum implementasi fitur, serta penanganan error yang jelas.
 
 ### Scope
 
-**In-Scope:**
+**Requirement Wajib (Project Plan):**
 
-- Endpoint login, logout, profil sesi aktif, dan manajemen akun staf internal (`/api/v1/auth/*`).
-- Middleware autentikasi verifikasi token/session dan otorisasi RBAC peran (`ADMIN`, `STAFF`).
-- Middleware validasi request body, query, dan params menggunakan Joi dengan standard error RFC 9457 `422 Unprocessable Content`.
-- Middleware penanganan error global (RFC 9457 `application/problem+json`), korelasi `X-Request-Id`, dan envelope seragam `{ data, meta }`.
-- Integrasi dokumentasi OpenAPI 3.1.0 di `/api/openapi` dan Scalar di `/docs` (fail-closed produksi `DOCS_ENABLED`).
+- Endpoint autentikasi & manajemen akun internal (`/api/v1/auth/login`, `/logout`, `/me`, `POST/GET /users`).
+- Middleware autentikasi sesi/token dan otorisasi RBAC (`ADMIN` vs `STAFF`) yang ditegakkan pada seluruh endpoint bisnis dan endpoint internal tools chatbot.
+- Middleware validasi payload (body, query, params) menggunakan **Joi** yang menolak input kosong/tidak valid dengan pesan yang menyebut kolom bermasalah.
+- Penanganan error terpusat dengan kode status HTTP konsisten dan pesan ramah pengguna (termasuk saat koneksi DB bermasalah, tanpa crash).
+
+**Rekomendasi Teknis / Implementasi:**
+
+- Wire contract monorepo seragam: envelope sukses `{ data, meta: { requestId } }`, error RFC 9457 `application/problem+json` (`422` untuk gagal validasi Joi), header korelasi `X-Request-Id`.
+- Middleware proteksi internal service-to-service menggunakan `X-Internal-Token` (`hmac.compare_digest` terhadap `INTERNAL_SERVICE_SECRET`) untuk komunikasi Express ↔ FastAPI (`AI-05`) dan Express ↔ Worker (`FS-09`).
+- Dokumentasi otomatis OpenAPI 3.1.0 di `GET /api/openapi` dan Scalar UI di `GET /docs` (fail-closed di produksi lewat `DOCS_ENABLED`).
 
 **Out-of-Scope:**
 
-- Registrasi mandiri publik untuk pelanggan umum (akun staf dibuat secara internal oleh Admin).
-- Fitur single sign-on (SSO) OAuth pihak ketiga (Google/Facebook Login).
+- Registrasi publik mandiri untuk pelanggan umum (portal pemesanan pelanggan berada di luar cakupan MVP).
+- Integrasi SSO pihak ketiga (OAuth Google/Facebook).
 
 ### Business Rules
 
-- Pengguna dengan peran `STAFF` dilarang mengakses modul keuangan sensitif (`/api/v1/finance/*`), analitik eksekutif, dan pembuatan user.
-- Password pengguna wajib di-hash menggunakan algoritma aman (`bcrypt` atau `argon2`) dengan _salt rounds_ memadai sebelum disimpan di DB.
-- Token autentikasi yang kedaluwarsa atau tidak valid harus menghasilkan HTTP `401 Unauthorized` dengan format RFC 9457.
-- Akses oleh pengguna tanpa role yang mencukupi menghasilkan HTTP `403 Forbidden` RFC 9457.
+- Peran `STAFF` dilarang mengakses modul keuangan sensitif (`/api/v1/finance/*`), analitik eksekutif (`/api/v1/analytics/*`), ringkasan keuangan mingguan, maupun manajemen user (`/api/v1/auth/users`).
+- RBAC wajib diverifikasi di sisi backend Express; backend tidak boleh memercayai klaim role mentah yang dikirim dari browser maupun hasil keluaran LLM.
+- Password wajib di-hash dengan algoritma aman (`bcrypt` atau `argon2`) sebelum disimpan di PostgreSQL.
+- Kredensial salah menghasilkan `401 Unauthorized`; peran tanpa izin menghasilkan `403 Forbidden` (RFC 9457); tidak ada secret/password yang dicetak di log.
 
 ### API Contract
 
 #### Daftar Endpoint
 
-| Method | Path                  | Fungsi                                                    | Autentikasi / Role            |
-| :----- | :-------------------- | :-------------------------------------------------------- | :---------------------------- |
-| `POST` | `/api/v1/auth/login`  | Autentikasi kredensial pengguna dan penerbitan sesi/token | Publik                        |
-| `POST` | `/api/v1/auth/logout` | Invalidasi sesi / token pengguna aktif                    | Autentikasi: `ADMIN`, `STAFF` |
-| `GET`  | `/api/v1/auth/me`     | Ambil profil pengguna dan hak akses aktif saat ini        | Autentikasi: `ADMIN`, `STAFF` |
-| `POST` | `/api/v1/auth/users`  | Buat akun staf operasional internal baru                  | Autentikasi: `ADMIN`          |
-| `GET`  | `/api/v1/auth/users`  | Daftar akun pengguna internal terdaftar (dengan paginasi) | Autentikasi: `ADMIN`          |
+| Method | Path                  | Fungsi                                                            | Autentikasi / Role |
+| :----- | :-------------------- | :---------------------------------------------------------------- | :----------------- |
+| `POST` | `/api/v1/auth/login`  | Autentikasi kredensial & penerbitan sesi/token                    | Publik             |
+| `POST` | `/api/v1/auth/logout` | Invalidasi sesi/token aktif                                       | `ADMIN`, `STAFF`   |
+| `GET`  | `/api/v1/auth/me`     | Profil dan hak akses pengguna aktif                               | `ADMIN`, `STAFF`   |
+| `POST` | `/api/v1/auth/users`  | Buat akun staf internal baru (termasuk `whatsappNumber` opsional) | `ADMIN`            |
+| `GET`  | `/api/v1/auth/users`  | Daftar akun pengguna internal (paginasi)                          | `ADMIN`            |
 
-#### Format Wire Contract Sukses
+#### Contoh Wire Contract Sukses
 
-- `POST /api/v1/auth/login`
-  - Request:
-    ```json
-    {
-      "username": "admin_catering",
-      "password": "securepassword123"
-    }
-    ```
-  - Response `200 OK`:
-    ```json
-    {
-      "data": {
-        "token": "token_auth_sample_placeholder",
-        "user": {
-          "id": "usr_01",
-          "username": "admin_catering",
-          "name": "Pengelola Katering",
-          "role": "ADMIN"
-        }
-      },
-      "meta": {
-        "requestId": "0192f0c8-7b3a-7000-8000-000000000001"
-      }
-    }
-    ```
+- `POST /api/v1/auth/login` (`200 OK`):
+  ```json
+  {
+    "data": {
+      "token": "<jwt_or_session_token>",
+      "user": { "id": "usr_01", "username": "admin_catering", "name": "Pengelola", "role": "ADMIN" }
+    },
+    "meta": { "requestId": "0192f0c8-7b3a-7000-8000-000000000001" }
+  }
+  ```
 
-- `GET /api/v1/auth/users?page=1&limit=10`
-  - Response `200 OK`:
-    ```json
-    {
-      "data": [
-        {
-          "id": "usr_02",
-          "username": "staf_dapur_01",
-          "name": "Staf Dapur Utama",
-          "role": "STAFF",
-          "createdAt": "2026-11-23T10:00:00.000Z"
-        }
-      ],
-      "meta": {
-        "requestId": "0192f0c8-7b3a-7000-8000-000000000002",
-        "pagination": {
-          "page": 1,
-          "limit": 10,
-          "total": 1,
-          "totalPages": 1
-        }
-      }
-    }
-    ```
+#### Standar Error RFC 9457 (`Content-Type: application/problem+json`)
 
-#### Standar Error RFC 9457 & Kode Status HTTP
-
-Layanan mengembalikan kode status HTTP standar:
-
-- `200 OK`: Autentikasi berhasil atau pengambilan data profil sukses.
-- `201 Created`: Pembuatan user baru berhasil.
-- `400 Bad Request`: Payload JSON salah bentuk.
-- `401 Unauthorized`: Kredensial tidak valid atau token kedaluwarsa.
-- `403 Forbidden`: Role tidak memiliki hak akses (misal: `STAFF` memanggil rute admin).
-- `404 Not Found`: Pengguna tidak ditemukan.
-- `409 Conflict`: Username staf sudah terdaftar sebelumnya.
-- `422 Unprocessable Content`: Validasi skema Joi gagal.
-- `500 Internal Server Error`: Kesalahan server internal.
-
-Contoh payload error RFC 9457 (`Content-Type: application/problem+json`):
-
-```json
-{
-  "type": "https://datatracker.ietf.org/doc/html/rfc9457",
-  "title": "Unprocessable Content",
-  "status": 422,
-  "detail": "Validasi payload request gagal.",
-  "instance": "/api/v1/auth/login",
-  "requestId": "0192f0c8-7b3a-7000-8000-000000000001",
-  "errors": [
-    {
-      "path": "password",
-      "code": "any.required",
-      "message": "Password wajib diisi"
-    }
-  ]
-}
-```
-
-#### Dokumentasi OpenAPI 3.1.0 & Scalar
-
-Seluruh endpoint terdaftar dalam spesifikasi OpenAPI 3.1.0 di `GET /api/openapi` dan disajikan via Scalar UI di `GET /docs` (fail-closed pada lingkungan produksi lewat konfigurasi `DOCS_ENABLED`).
+- `401 Unauthorized` (kredensial salah / token kedaluwarsa), `403 Forbidden` (role tidak berwenang), `409 Conflict` (username duplikat), `422 Unprocessable Content` (validasi Joi gagal dengan array `errors` menyebut `path` kolom bermasalah), `500 Internal Server Error`.
 
 ### Acceptance Criteria
 
-- [ ] Seluruh 5 endpoint (`/api/v1/auth/login`, `/logout`, `/me`, `POST /users`, `GET /users`) terdaftar pada tabel kontrak API dan terimplementasi.
-- [ ] Endpoint `/api/v1/auth/login` sukses menerbitkan token untuk kredensial valid dan menolak kredensial salah dengan HTTP 401 RFC 9457.
-- [ ] Middleware RBAC menolak peran `STAFF` saat memanggil resource admin dengan HTTP `403 Forbidden`.
-- [ ] Validasi skema Joi menolak payload tidak lengkap atau salah tipe dengan HTTP `422` RFC 9457 tanpa membocorkan nilai input rahasia.
-- [ ] Header response selalu menyertakan `X-Request-Id` dan `Content-Type: application/json` atau `application/problem+json`.
-- [ ] Dokumentasi OpenAPI 3.1.0 teruji dapat dibuka pada Scalar UI `/docs`.
+- [ ] Seluruh 5 endpoint `/api/v1/auth/*` terimplementasi dan terdokumentasi di OpenAPI 3.1.0 (`/api/openapi` & Scalar `/docs`).
+- [ ] Login dengan kredensial salah ditolak dengan HTTP `401` dan pesan jelas; login valid mengembalikan profil dan peran yang benar.
+- [ ] Percobaan peran `STAFF` mengakses endpoint khusus `ADMIN` (misal keuangan/analitik/users) ditolak dengan HTTP `403 Forbidden` RFC 9457.
+- [ ] Validasi Joi menolak payload kosong atau tipe data salah dengan HTTP `422` RFC 9457 yang menyebut nama kolom bermasalah.
+- [ ] Middleware `X-Internal-Token` tersedia dan teruji untuk mengamankan pemanggilan internal dari FastAPI (`AI-05`) dan worker (`FS-09`).
+- [ ] Tidak ada password, token, atau secret yang bocor pada respons HTTP maupun log server.
 
-### Technical Notes
+### Keputusan yang Membutuhkan Konfirmasi (PIC / Tim)
 
-- Durasi masa aktif session token disepakati bersama `[Perlu Konfirmasi Tim]`.
-- Mekanisme transport sesi (`HttpOnly cookie` lewat BFF vs `Authorization: Bearer`): `[Perlu Konfirmasi Tim]`.
-- Standar penanganan error dan sanitasi log tidak membocorkan informasi kredensial di console server.
+- `[Perlu Konfirmasi Tim]` Pilihan mekanisme transport sesi antara frontend Next.js BFF dan Express (`HttpOnly cookie` vs `Authorization: Bearer`) serta masa berlaku token.
+- `[Menunggu Konfirmasi PIC]` Daftar akun awal (Admin & Staf) yang diperlukan untuk pengujian dan demonstrasi minggu ke-4.
 
 ### DoD
 
-- [ ] Seluruh unit test dan route test autentikasi di `apps/api` lulus di Vitest dengan coverage >= 80%.
-- [ ] Scalar API Reference pada `/docs` menampilkan dokumentasi endpoint `/api/v1/auth` sesuai spesifikasi OpenAPI 3.1.0.
-- [ ] Prettier dan ESLint lolos tanpa kesalahan.
+- [ ] Unit test dan route test autentikasi/RBAC/Joi di `apps/api` lulus Vitest dengan coverage >= 80%.
+- [ ] Endpoint terdaftar di OpenAPI 3.1.0 Scalar `/docs` sesuai kontrak tim.
+- [ ] `npm run format:check`, `npm run lint`, dan `npm run typecheck` lulus 100%.
 
 ### Dependencies
 
-- Prasyarat: `FS-02` (Skema Prisma User).
-- Terkait: Memproteksi seluruh endpoint di `FS-04`, `FS-05`, `FS-06`, `FS-07`, `FS-08`.
+- **Prasyarat:** `FS-02` (Skema Prisma `User`).
+- **Terkait:** Memproteksi seluruh modul `FS-04`, `FS-05`, `FS-06`, `FS-07`, `FS-08`, `FS-09`, serta integrasi internal `AI-05` dan `AI-07`.
 
 ---
 
@@ -294,48 +254,57 @@ Seluruh endpoint terdaftar dalam spesifikasi OpenAPI 3.1.0 di `GET /api/openapi`
 
 - **Labels:** `area:fullstack`, `priority:P1-mvp`, `quest:main`
 - **Priority:** `P1-mvp`
-- **Milestone:** `M2 (28 Nov–4 Des 2026)`
+- **Klasifikasi Project Plan:** Wajib (Main Quest Full-Stack: Menu, Resep Standar, dan Perhitungan Bahan Baku)
+- **Milestone:** `M2: Fitur Inti Tersedia (28 Nov–4 Des 2026)`
+- **Penanggung Jawab (Project Plan):** Zaki Eka Saputra, Rio Andika Andriansyah
 - **Target Path:** `apps/api/src/modules/menus`, `apps/web`
 
 ### Context
 
-Masalah operasional terbesar Catering Si Kembar adalah lamanya waktu menghitung kebutuhan total bahan mentah secara manual saat menerima pesanan dalam jumlah besar (misal: 100 nasi box). Staf harus menghitung satu per satu kebutuhan beras, ayam, telur, minyak goreng, dan bumbu dapur. Modul ini menyediakan katalog menu baku, formulasi resep standar per porsi, dan kalkulator agregasi bahan baku otomatis yang langsung menghitung kebutuhan belanja ketika porsi diinput.
+Catering Si Kembar saat ini menghitung kebutuhan bahan baku secara manual untuk setiap pesanan (misalnya 100 nasi box), yang memakan waktu lama dan rawan selisih takaran. Sesuai Project Plan A26-CS105, modul ini mengelola katalog menu beserta harga resmi, formulasi resep standar per porsi, serta kalkulasi otomatis kebutuhan bahan baku dengan **konversi satuan baku** yang hasilnya cocok 100% dengan hitungan manual UMKM untuk berbagai jumlah porsi (10, 50, 100 porsi) dan dapat digunakan ulang untuk estimasi bahan baku dari hasil forecasting (`DS-05` / `FS-08`).
 
 ### Scope
 
-**In-Scope:**
+**Requirement Wajib (Project Plan):**
 
-- Manajemen CRUD katalog menu dan daftar harga (`/api/v1/menus/*`).
-- Manajemen formulasi resep per menu: daftar bahan dan takaran per 1 porsi piring/box.
-- Fitur kalkulator bahan otomatis: menerima input array menu dan jumlah porsi, lalu mengembalikan daftar total agregat bahan baku per satuan (gram, kg, butir, liter).
-- Antarmuka web di `apps/web` untuk katalog menu, detail resep, dan simulasi kalkulasi belanja bahan.
-- Integrasi dokumentasi OpenAPI 3.1.0 dan Scalar di `/docs`.
+- Manajemen CRUD katalog menu dan harga resmi (`/api/v1/menus/*`) yang menjadi sumber kebenaran harga tunggal (_single source of truth_) bagi modul pesanan (`FS-05`).
+- Manajemen formulasi resep standar per 1 porsi untuk tiap menu beserta satuan dasar bahan baku (misal `gram`, `ml`, `butir`, `lembar`, `ikat`).
+- Kalkulator agregasi bahan baku otomatis (`POST /api/v1/menus/calculate-ingredients`) dengan **aturan konversi satuan konsisten** (misal otomatis mengonversi `gram -> kg` dan `ml -> liter` saat >= 1000, sambil mempertahankan nilai presisi satuan dasar).
+- Peringatan jelas apabila menu yang dipilih **belum memiliki formulasi resep** (sesuai Rencana Pengujian Project Plan).
+- Antarmuka web di `apps/web` untuk katalog menu, detail resep, dan kalkulator kebutuhan bahan yang mudah dibaca staf dapur di desktop maupun ponsel.
+
+**Rekomendasi Teknis / Implementasi:**
+
+- Pisahkan logika inti kalkulasi & konversi satuan ke fungsi/service murni (_reusable domain service_) di `apps/api/src/modules/menus/` agar dapat dipanggil langsung oleh `FS-05` (kebutuhan bahan per pesanan) dan `FS-08` (estimasi kebutuhan bahan baku dari hasil forecasting per menu `DS-05`).
+- Sertakan penanda status resep (`isConfirmedByPic`) agar resep yang masih simulasi/menunggu konfirmasi PIC tampil jelas.
+- Dokumentasi OpenAPI 3.1.0 & Scalar `/docs`.
 
 **Out-of-Scope:**
 
-- Sistem inventaris stok gudang real-time atau pencatatan mutasi keluar-masuk stok harian (fokus MVP adalah kalkulator agregasi bahan baku otomatis berdasarkan resep standar).
-- Rekomendasi vendor supplier belanja pasar (hanya menyajikan kalkulasi kuantitas).
+- Sistem inventaris dan pengelolaan stok bahan baku secara real-time.
+- Perhitungan pembelian bersih berdasarkan stok aktual gudang (karena data stok tidak tersedia — ditegaskan Out-of-Scope di Project Plan).
+- Rekomendasi vendor/supplier belanja pasar.
 
 ### Business Rules
 
-- Menu yang belum memiliki data resep tidak dapat dihitung bahannya dan sistem harus memberikan pesan error terstruktur `Menu belum memiliki formulasi resep`.
-- Agregasi bahan dengan nama dan satuan yang sama harus dijumlahkan secara otomatis pada level pesanan multi-menu.
-- Perhitungan kuantitas bahan selalu dibulatkan ke atas (_ceiling_) pada satuan terkecil belanja yang wajar.
+- **Presisi Perhitungan & Konversi Satuan:** Total kebutuhan bahan dihitung eksak (`takaran_per_porsi × jumlah_porsi`) lalu diagregasikan pada bahan yang sama dalam satuan dasar sebelum dikonversi ke satuan tampilan/belanja (contoh: `150 gram × 100 porsi = 15000 gram = 15 kg`; `125 gram × 100 porsi = 12500 gram = 12.5 kg`). Dilarang melakukan pembulatan ke atas secara sepihak yang membuat hasil menyimpang dari hitungan manual UMKM (pembulatan ke kemasan belanja hanya opsional jika dikonfirmasi PIC).
+- **Menu Tanpa Resep:** Jika satu atau lebih menu belum memiliki resep, sistem wajib mengembalikan peringatan eksplisit yang menyebut nama menu bermasalah (tidak diam-diam mengembalikan nilai 0).
+- **RBAC:** `ADMIN` dapat mengelola menu, harga, dan resep; `STAFF` hanya memiliki akses baca katalog, resep, dan menjalankan kalkulator bahan.
 
 ### API Contract
 
 #### Daftar Endpoint
 
-| Method  | Path                                  | Fungsi                                                                       | Autentikasi / Role            |
-| :------ | :------------------------------------ | :--------------------------------------------------------------------------- | :---------------------------- |
-| `GET`   | `/api/v1/menus`                       | Ambil daftar katalog menu (filter pencarian & paginasi)                      | Autentikasi: `ADMIN`, `STAFF` |
-| `GET`   | `/api/v1/menus/:id`                   | Ambil rincian detail menu beserta daftar resep bahan                         | Autentikasi: `ADMIN`, `STAFF` |
-| `POST`  | `/api/v1/menus`                       | Tambah menu baru ke katalog katering                                         | Autentikasi: `ADMIN`          |
-| `PATCH` | `/api/v1/menus/:id`                   | Perbarui informasi nama, harga, atau status aktif menu                       | Autentikasi: `ADMIN`          |
-| `PUT`   | `/api/v1/menus/:id/recipe`            | Tetapkan / perbarui formula resep dan takaran per 1 porsi                    | Autentikasi: `ADMIN`          |
-| `POST`  | `/api/v1/menus/calculate-ingredients` | Hitung agregasi kebutuhan total belanja bahan baku untuk 1..N menu dan porsi | Autentikasi: `ADMIN`, `STAFF` |
+| Method  | Path                                  | Fungsi                                                               | Autentikasi / Role |
+| :------ | :------------------------------------ | :------------------------------------------------------------------- | :----------------- |
+| `GET`   | `/api/v1/menus`                       | Daftar katalog menu (filter pencarian, status resep, paginasi)       | `ADMIN`, `STAFF`   |
+| `GET`   | `/api/v1/menus/:id`                   | Detail menu beserta daftar bahan & takaran resep per 1 porsi         | `ADMIN`, `STAFF`   |
+| `POST`  | `/api/v1/menus`                       | Tambah menu baru dan harga resmi ke katalog                          | `ADMIN`            |
+| `PATCH` | `/api/v1/menus/:id`                   | Perbarui nama, harga resmi, kategori, atau status aktif menu         | `ADMIN`            |
+| `PUT`   | `/api/v1/menus/:id/recipe`            | Tetapkan / perbarui formula resep standar per 1 porsi                | `ADMIN`            |
+| `POST`  | `/api/v1/menus/calculate-ingredients` | Hitung agregasi bahan baku + konversi satuan untuk 1..N menu & porsi | `ADMIN`, `STAFF`   |
 
-#### Format Wire Contract Sukses
+#### Contoh Wire Contract Sukses
 
 - `POST /api/v1/menus/calculate-ingredients`
   - Request:
@@ -352,102 +321,60 @@ Masalah operasional terbesar Catering Si Kembar adalah lamanya waktu menghitung 
     {
       "data": {
         "ingredients": [
-          { "ingredientId": "ing_01", "name": "Beras Putih", "totalAmount": 15000, "unit": "gram" },
-          { "ingredientId": "ing_02", "name": "Daging Ayam", "totalAmount": 12.5, "unit": "kg" }
+          {
+            "ingredientId": "ing_01",
+            "name": "Beras Putih",
+            "baseAmount": 15000,
+            "baseUnit": "gram",
+            "displayAmount": 15,
+            "displayUnit": "kg"
+          },
+          {
+            "ingredientId": "ing_02",
+            "name": "Daging Ayam",
+            "baseAmount": 12500,
+            "baseUnit": "gram",
+            "displayAmount": 12.5,
+            "displayUnit": "kg"
+          }
         ],
+        "warnings": [],
         "summary": { "totalPortions": 150, "uniqueIngredientsCount": 2 }
       },
       "meta": { "requestId": "0192f0c8-7b3a-7000-8000-000000000002" }
     }
     ```
 
-- `GET /api/v1/menus?page=1&limit=10&search=ayam`
-  - Response `200 OK`:
-    ```json
-    {
-      "data": [
-        {
-          "id": "menu_01",
-          "name": "Nasi Box Ayam Lengkuas",
-          "price": 25000,
-          "category": "NASI_BOX",
-          "isActive": true
-        }
-      ],
-      "meta": {
-        "requestId": "0192f0c8-7b3a-7000-8000-000000000003",
-        "pagination": {
-          "page": 1,
-          "limit": 10,
-          "total": 1,
-          "totalPages": 1
-        }
-      }
-    }
-    ```
+#### Standar Error RFC 9457 (`Content-Type: application/problem+json`)
 
-#### Standar Error RFC 9457 & Kode Status HTTP
-
-Layanan mengembalikan kode status HTTP standar:
-
-- `200 OK`: Pengambilan data atau kalkulasi sukses.
-- `201 Created`: Menu baru berhasil dibuat.
-- `400 Bad Request`: Format JSON tidak valid.
-- `401 Unauthorized`: Kredensial tidak valid atau tidak disertakan.
-- `403 Forbidden`: Staf operasional mencoba menambah atau mengubah resep menu.
-- `404 Not Found`: Menu atau bahan baku tidak ditemukan.
-- `422 Unprocessable Content`: Validasi skema Joi gagal (porsi <= 0, menuId kosong).
-- `500 Internal Server Error`: Kesalahan server internal.
-
-Contoh payload error RFC 9457 (`Content-Type: application/problem+json`):
-
-```json
-{
-  "type": "https://datatracker.ietf.org/doc/html/rfc9457",
-  "title": "Unprocessable Content",
-  "status": 422,
-  "detail": "Validasi porsi gagal.",
-  "instance": "/api/v1/menus/calculate-ingredients",
-  "requestId": "0192f0c8-7b3a-7000-8000-000000000002",
-  "errors": [
-    {
-      "path": "items.0.portion",
-      "code": "number.min",
-      "message": "Porsi minimal adalah 1"
-    }
-  ]
-}
-```
-
-#### Dokumentasi OpenAPI 3.1.0 & Scalar
-
-Seluruh endpoint terdaftar dalam skema OpenAPI 3.1.0 di `/api/openapi` dan disajikan via Scalar UI di `/docs` (fail-closed produksi `DOCS_ENABLED`).
+- `401 Unauthorized`, `403 Forbidden` (`STAFF` mengubah menu/resep), `404 Not Found` (`menuId` tidak ditemukan), `422 Unprocessable Content` (porsi `<= 0`, bukan bilangan bulat, atau item kosong).
 
 ### Acceptance Criteria
 
-- [ ] Seluruh 6 endpoint menu terdaftar pada tabel kontrak API dan terimplementasi.
-- [ ] Pengujian kalkulasi bahan untuk skenario 10, 50, dan 100 porsi menghasilkan angka yang identik dengan formula resep standar.
-- [ ] Input porsi bernilai 0, negatif, atau desimal tidak valid ditolak oleh validasi Joi dengan HTTP 422 RFC 9457.
-- [ ] Akses modifikasi menu oleh peran `STAFF` ditolak dengan HTTP 403 Forbidden.
-- [ ] Layar kalkulator di web menampilkan daftar belanja bahan yang mudah dibaca staf dapur di ponsel tanpa overflow.
-- [ ] Waktu respon kalkulasi bahan pada backend Express tercatat di bawah 100ms untuk 10 menu kombinasi.
-- [ ] Dokumentasi endpoint OpenAPI 3.1.0 tampil di Scalar `/docs`.
+- [ ] Seluruh 6 endpoint menu & kalkulator terimplementasi sesuai kontrak OpenAPI 3.1.0 di Scalar `/docs`.
+- [ ] Perbandingan hasil kalkulasi sistem dengan hitungan manual dari resep terkonfirmasi untuk **10, 50, dan 100 porsi** menghasilkan angka yang **identik** (termasuk konversi satuan `gram ↔ kg` dan `ml ↔ liter`).
+- [ ] Pengujian menu tanpa resep memunculkan peringatan eksplisit yang menyebut nama menu bermasalah (tidak gagal diam-diam atau bernilai 0).
+- [ ] Input porsi `0`, negatif, huruf, atau desimal ditolak oleh Joi dengan HTTP `422` RFC 9457 yang menyebut kolom bermasalah.
+- [ ] Percobaan modifikasi menu/resep oleh peran `STAFF` ditolak dengan HTTP `403 Forbidden`.
+- [ ] Tampilan kalkulator bahan di web terbaca jelas di ponsel (`390x844`) tanpa _overflow_.
+- [ ] Service agregasi bahan baku dapat dipanggil ulang secara internal oleh modul pesanan (`FS-05`) dan modul analitik estimasi bahan baku forecasting (`FS-08`).
 
-### Technical Notes
+### Keputusan yang Membutuhkan Konfirmasi (PIC / Tim)
 
-- Standar gramatur bumbu dapur dan bahan baku utama nasi box `[Menunggu Konfirmasi PIC]`.
-- Nama dan satuan baku bahan pangan disinkronkan dengan kamus data Data Science `[Perlu Konfirmasi Tim]`.
+- `[Menunggu Konfirmasi PIC]` Konfirmasi resep standar, takaran gramatur bumbu/bahan utama, dan harga resmi menu nasi box Catering Si Kembar (bila belum lengkap di M1, gunakan data simulasi berlabel yang disetujui PIC).
+- `[Menunggu Konfirmasi PIC]` Apakah tampilan daftar belanja cukup menampilkan hasil presisi konversi (`12.5 kg`) atau juga memerlukan kolom tambahan saran pembulatan ke satuan kemasan pasar.
+- `[Perlu Konfirmasi Tim]` Penyelarasan nama bahan baku dan tabel konversi satuan dengan kamus data Data Science (`DS-03`).
 
 ### DoD
 
-- [ ] Endpoint `/api/v1/menus/*` dan `/calculate-ingredients` terimplementasi dan lolos test suite Vitest.
-- [ ] Halaman kalkulator di `apps/web` terhubung ke endpoint melalui Axios BFF.
-- [ ] Dokumentasi endpoint tersedia di OpenAPI 3.1.0 Scalar `/docs`.
+- [ ] Unit test & route test kalkulator (termasuk kasus 10/50/100 porsi, multi-menu, konversi satuan, dan menu tanpa resep) lulus di Vitest.
+- [ ] Antarmuka katalog menu, resep, dan kalkulator di `apps/web` terhubung ke Express melalui Axios.
+- [ ] Endpoint terdaftar di OpenAPI 3.1.0 Scalar `/docs`.
 
 ### Dependencies
 
-- Prasyarat: `FS-02` (Skema Prisma Menu/Recipe), `FS-03` (Auth/Joi).
-- Terkait: Dipanggil oleh modul pesanan `FS-05` dan simulasi demonstrasi 100 porsi `FS-09`.
+- **Prasyarat:** `FS-02` (Skema Menu, Ingredient, RecipeItem), `FS-03` (Auth/RBAC/Joi), `DS-03` (keselarasan kamus satuan bahan).
+- **Terkait:** Dipanggil oleh `FS-05` (Pesanan), `FS-08` (Estimasi Bahan Baku dari Forecasting `DS-05`), dan `FS-09` (Demonstrasi 100 nasi box & pengukuran waktu proses).
 
 ---
 
@@ -455,52 +382,64 @@ Seluruh endpoint terdaftar dalam skema OpenAPI 3.1.0 di `/api/openapi` dan disaj
 
 - **Labels:** `area:fullstack`, `priority:P1-mvp`, `quest:main`
 - **Priority:** `P1-mvp`
-- **Milestone:** `M2 (28 Nov–4 Des 2026)`
+- **Klasifikasi Project Plan:** Wajib (Main Quest Full-Stack: Input & Manajemen Pesanan + Dasbor Jadwal Produksi)
+- **Milestone:** `M2: Fitur Inti Tersedia (28 Nov–4 Des 2026)` _(penyempurnaan dasbor jadwal & integrasi status pembayaran penuh selesai paling lambat akhir M3 sebelum feature freeze)_
+- **Penanggung Jawab (Project Plan):** Haidar Habibi Al Farisi, Adnan Mufti Maulana
 - **Target Path:** `apps/api/src/modules/orders`, `apps/web`
 
 ### Context
 
-Saat ini jadwal pesanan Catering Si Kembar dicatat di Google Spreadsheet terpisah, sehingga staf dapur seringkali tidak mengetahui perubahan jadwal acara, menu yang harus dimasak, atau pesanan yang harus disiapkan untuk hari esok. Modul ini menyediakan alur input pesanan terstruktur, pelacakan status pesanan, serta antarmuka Dasbor Jadwal Produksi yang bersih dan mudah dibaca oleh staf operasional senior di desktop maupun layar ponsel.
+Catering Si Kembar saat ini memantau jadwal pesanan di Google Spreadsheet terpisah sehingga staf dapur dan karyawan senior kerap harus bertanya berulang kepada pengelola. Sesuai Project Plan A26-CS105, alur utama sistem adalah: **input pesanan (pemesan, menu, jumlah porsi, tanggal acara, alamat, catatan) → kalkulasi bahan baku dari resep standar & validasi total harga dari database backend → penerbitan invoice digital otomatis → pencatatan DP & pelunasan (`FS-06`) → konfirmasi pesanan → tampil di dasbor jadwal secara responsif dan mudah dipahami staf senior**.
 
 ### Scope
 
-**In-Scope:**
+**Requirement Wajib (Project Plan):**
 
-- Endpoint CRUD pesanan katering (`/api/v1/orders/*`): nama pemesan, nomor kontak, tanggal & jam acara, alamat pengiriman, daftar menu & porsi, catatan khusus.
-- Kalkulasi total tagihan otomatis berdasarkan harga menu yang berlaku.
-- Pengaturan status alur hidup pesanan: `DRAFT` -> `CONFIRMED` -> `IN_PREPARATION` -> `READY` -> `DELIVERED` (atau `CANCELLED`).
-- Antarmuka Dasbor Jadwal Produksi berbasis kalender dan daftar urutan waktu (harian, mingguan) di `apps/web`.
-- Integrasi dokumentasi OpenAPI 3.1.0 dan Scalar di `/docs`.
+- Endpoint CRUD pesanan (`/api/v1/orders/*`) dengan validasi Joi lengkap (pemesan, menu, porsi > 0, tanggal acara valid, alamat, catatan).
+- **Validasi harga dari database backend:** Backend wajib mengambil harga resmi langsung dari tabel `Menu` di PostgreSQL untuk menghitung subtotal & total harga (menyimpan snapshot `unitPrice` ke `OrderItem`); client **tidak boleh** menentukan atau memanipulasi `unitPrice`/`totalAmount`.
+- **Integrasi alur Pesanan → Invoice → DP → Konfirmasi:**
+  1. Saat `POST /api/v1/orders` sukses, backend secara atomik menghitung kebutuhan bahan baku (atau peringatan resep kosong), menghitung total harga dari DB, membuat `Order` berstatus `DRAFT`, dan otomatis menerbitkan `Invoice` digital (`1:1`, status `UNPAID`).
+  2. Status pesanan berpindah menjadi `CONFIRMED` setelah pencatatan DP memenuhi aturan pada `FS-06` (atau disetujui Admin sesuai kebijakan PIC).
+  3. Siklus operasional berlanjut: `CONFIRMED` → `IN_PREPARATION` → `READY` → `DELIVERED` (atau `CANCELLED`).
+- Dasbor Jadwal Produksi yang sederhana, responsif di desktop & ponsel (`390x844`), menampilkan daftar/kalender pesanan terurut tanggal terdekat, rincian porsi/menu/bahan, dan status pembayaran sesuai hak akses pengguna.
+
+**Rekomendasi Teknis / Implementasi:**
+
+- Bungkus pembuatan `Order`, `OrderItem`, dan penerbitan `Invoice` awal di dalam satu transaksi database (`prisma.$transaction`) agar data tidak pernah parsial.
+- Sediakan filter berdasarkan rentang tanggal acara, status pesanan, dan pencarian nama pemesan/kode pesanan.
+- Dokumentasi OpenAPI 3.1.0 & Scalar `/docs`.
 
 **Out-of-Scope:**
 
-- Pelacakan armada kurir pengiriman berbasis GPS real-time.
-- Pemesanan mandiri oleh pelanggan publik via website (_customer self-service portal_).
+- Portal pemesanan mandiri oleh pelanggan publik via web.
+- Pelacakan kurir pengiriman berbasis GPS real-time.
+- Integrasi marketplace eksternal (Shopee, dll.).
 
 ### Business Rules
 
-- Tanggal acara pesanan tidak boleh berada di masa lalu (_past date_).
-- Pesanan hanya dapat berpindah ke status `CONFIRMED` apabila status pembayaran uang muka (DP) sudah tercatat valid atau disetujui staf berwenang.
-- Nomor telepon pemesan divalidasi dengan format nomor Indonesia yang valid (diawali `08` atau `+62`).
-- Status pesanan yang sudah `DELIVERED` atau `CANCELLED` tidak dapat diubah kembali.
+- **Sumber Harga Tunggal:** Request `POST /api/v1/orders` hanya menerima `{ menuId, portion }`. Harga satuan (`unitPrice`) dan `totalAmount` 100% dihitung dari record `Menu` aktif di PostgreSQL; menu nonaktif/tidak ada ditolak.
+- **Alur Konfirmasi Pesanan:** Pesanan baru otomatis berstatus `DRAFT` bersama `Invoice` (`UNPAID`). Transisi ke `CONFIRMED` mensyaratkan DP sah pada `FS-06` (atau otorisasi khusus `ADMIN` sesuai aturan PIC).
+- **Validasi Input:** Menu kosong, porsi `0`/negatif/huruf, tanggal acara kosong atau masa lalu (_past date_), dan format nomor telepon tidak valid ditolak dengan HTTP `422` RFC 9457 yang menyebut kolom bermasalah.
+- **Kunci Status Final:** Pesanan berstatus `DELIVERED` atau `CANCELLED` tidak dapat diubah lagi (`409 Conflict`).
+- **Visibilitas RBAC:** Staf (`STAFF`) melihat detail jadwal produksi, menu, porsi, alamat, catatan, dan daftar bahan tanpa mengekspos rekap keuangan/omzet khusus `ADMIN`.
 
 ### API Contract
 
 #### Daftar Endpoint
 
-| Method  | Path                        | Fungsi                                                                                   | Autentikasi / Role            |
-| :------ | :-------------------------- | :--------------------------------------------------------------------------------------- | :---------------------------- |
-| `GET`   | `/api/v1/orders`            | Ambil daftar pesanan katering (filter tanggal acara, status, nama pemesan, dan paginasi) | Autentikasi: `ADMIN`, `STAFF` |
-| `GET`   | `/api/v1/orders/schedule`   | Tampilan jadwal produksi harian dan mingguan terurut tanggal acara terdekat              | Autentikasi: `ADMIN`, `STAFF` |
-| `GET`   | `/api/v1/orders/:id`        | Rincian lengkap pesanan beserta ringkasan kebutuhan bahan dan status tagihan             | Autentikasi: `ADMIN`, `STAFF` |
-| `POST`  | `/api/v1/orders`            | Buat pesanan baru (otomatis kalkulasi total harga dan penerbitan invoice)                | Autentikasi: `ADMIN`, `STAFF` |
-| `PATCH` | `/api/v1/orders/:id`        | Ubah rincian pesanan selama belum berstatus DELIVERED atau CANCELLED                     | Autentikasi: `ADMIN`, `STAFF` |
-| `PATCH` | `/api/v1/orders/:id/status` | Transisi status alur hidup pesanan sesuai aturan bisnis                                  | Autentikasi: `ADMIN`, `STAFF` |
+| Method  | Path                        | Fungsi                                                                        | Autentikasi / Role |
+| :------ | :-------------------------- | :---------------------------------------------------------------------------- | :----------------- |
+| `GET`   | `/api/v1/orders`            | Daftar pesanan (filter tanggal acara, status, pencarian, paginasi)            | `ADMIN`, `STAFF`   |
+| `GET`   | `/api/v1/orders/schedule`   | Jadwal produksi harian/mingguan terurut tanggal acara terdekat                | `ADMIN`, `STAFF`   |
+| `GET`   | `/api/v1/orders/:id`        | Rincian pesanan, ringkasan kebutuhan bahan baku, dan referensi invoice        | `ADMIN`, `STAFF`   |
+| `POST`  | `/api/v1/orders`            | Buat pesanan baru (validasi harga dari DB + otomatis terbit invoice `UNPAID`) | `ADMIN`, `STAFF`   |
+| `PATCH` | `/api/v1/orders/:id`        | Ubah detail pesanan selama status masih `DRAFT` / belum final                 | `ADMIN`, `STAFF`   |
+| `PATCH` | `/api/v1/orders/:id/status` | Transisi status operasional sesuai state machine bisnis                       | `ADMIN`, `STAFF`   |
 
-#### Format Wire Contract Sukses
+#### Contoh Wire Contract Sukses
 
 - `POST /api/v1/orders`
-  - Request:
+  - Request (perhatikan: **tidak ada `unitPrice` dari client**):
     ```json
     {
       "customerName": "Ibu Rahmawati",
@@ -508,7 +447,7 @@ Saat ini jadwal pesanan Catering Si Kembar dicatat di Google Spreadsheet terpisa
       "eventDate": "2026-12-15T10:00:00.000Z",
       "deliveryAddress": "Jl. Melati No. 12, Jakarta",
       "notes": "Nasi box jangan pedas",
-      "items": [{ "menuId": "menu_01", "portion": 100, "unitPrice": 25000 }]
+      "items": [{ "menuId": "menu_01", "portion": 100 }]
     }
     ```
   - Response `201 Created`:
@@ -517,706 +456,460 @@ Saat ini jadwal pesanan Catering Si Kembar dicatat di Google Spreadsheet terpisa
       "data": {
         "id": "ord_01",
         "orderNumber": "ORD-202612-0001",
-        "totalAmount": 2500000,
         "status": "DRAFT",
-        "eventDate": "2026-12-15T10:00:00.000Z"
+        "totalAmount": 2500000,
+        "eventDate": "2026-12-15T10:00:00.000Z",
+        "invoice": {
+          "id": "inv_01",
+          "invoiceNumber": "INV-202612-0001",
+          "paymentStatus": "UNPAID"
+        },
+        "recipeWarnings": []
       },
       "meta": { "requestId": "0192f0c8-7b3a-7000-8000-000000000003" }
     }
     ```
 
-- `GET /api/v1/orders?page=1&limit=10&status=CONFIRMED`
-  - Response `200 OK`:
-    ```json
-    {
-      "data": [
-        {
-          "id": "ord_01",
-          "orderNumber": "ORD-202612-0001",
-          "customerName": "Ibu Rahmawati",
-          "totalAmount": 2500000,
-          "status": "CONFIRMED",
-          "eventDate": "2026-12-15T10:00:00.000Z"
-        }
-      ],
-      "meta": {
-        "requestId": "0192f0c8-7b3a-7000-8000-000000000004",
-        "pagination": {
-          "page": 1,
-          "limit": 10,
-          "total": 1,
-          "totalPages": 1
-        }
-      }
-    }
-    ```
+#### Standar Error RFC 9457 (`Content-Type: application/problem+json`)
 
-#### Standar Error RFC 9457 & Kode Status HTTP
-
-Layanan mengembalikan kode status HTTP standar:
-
-- `200 OK`: Pengambilan data pesanan berhasil.
-- `201 Created`: Pesanan baru berhasil dibuat.
-- `400 Bad Request`: Format JSON tidak valid.
-- `401 Unauthorized`: Kredensial tidak valid.
-- `403 Forbidden`: Hak akses tidak mencukupi.
-- `404 Not Found`: Pesanan tidak ditemukan.
-- `409 Conflict`: Transisi status tidak sah (misal: pesanan `DELIVERED` diubah kembali).
-- `422 Unprocessable Content`: Validasi skema Joi gagal (tanggal lampau, nomor HP tidak valid).
-- `500 Internal Server Error`: Kesalahan server internal.
-
-Contoh payload error RFC 9457 (`Content-Type: application/problem+json`):
-
-```json
-{
-  "type": "https://datatracker.ietf.org/doc/html/rfc9457",
-  "title": "Conflict",
-  "status": 409,
-  "detail": "Pesanan yang sudah berstatus DELIVERED tidak dapat diubah.",
-  "instance": "/api/v1/orders/ord_01/status",
-  "requestId": "0192f0c8-7b3a-7000-8000-000000000003"
-}
-```
-
-#### Dokumentasi OpenAPI 3.1.0 & Scalar
-
-Seluruh endpoint terdaftar dalam skema OpenAPI 3.1.0 di `/api/openapi` dan disajikan via Scalar UI di `/docs` (fail-closed produksi `DOCS_ENABLED`).
+- `401 Unauthorized`, `403 Forbidden`, `404 Not Found`, `409 Conflict` (transisi status tidak sah / order sudah final), `422 Unprocessable Content` (validasi Joi gagal, menu kosong, porsi <= 0 / huruf, tanggal kosong/masa lalu).
 
 ### Acceptance Criteria
 
-- [ ] Seluruh 6 endpoint pesanan terdaftar pada tabel kontrak API dan terimplementasi.
-- [ ] Pengujian simpan pesanan 100 nasi box berhasil dan mengembalikan detail pesanan dengan total kalkulasi harga akurat.
-- [ ] Input data pesanan tanpa nama pemesan, porsi 0, atau tanggal kosong ditolak oleh middleware Joi dengan HTTP 422 RFC 9457.
-- [ ] Percobaan transisi status tidak sah ditolak dengan HTTP 409 Conflict RFC 9457.
-- [ ] Dasbor jadwal di antarmuka web menampilkan pesanan yang diurutkan berdasarkan tanggal acara terdekat.
-- [ ] Tampilan dasbor jadwal terbaca jelas di layar mobile (`390px`) tanpa elemen yang terpotong.
-- [ ] Dokumentasi endpoint OpenAPI 3.1.0 tampil di Scalar `/docs`.
+- [ ] Seluruh 6 endpoint pesanan terimplementasi sesuai kontrak OpenAPI 3.1.0 di Scalar `/docs`.
+- [ ] Simpan pesanan **100 nasi box** berhasil menghitung total harga secara otomatis dari tabel `Menu` DB (mengabaikan/menolak manipulasi harga dari client), menyimpan snapshot `unitPrice`, dan langsung menerbitkan invoice digital berstatus `UNPAID`.
+- [ ] Input menu kosong, porsi `0`, negatif, huruf, atau tanggal kosong ditolak Joi dengan HTTP `422` RFC 9457 yang menyebut nama kolom bermasalah.
+- [ ] Transisi status tidak sah (misal mengubah order `DELIVERED` atau loncat ke `CONFIRMED` tanpa DP/izin valid) ditolak dengan HTTP `409 Conflict` RFC 9457.
+- [ ] Dasbor jadwal menampilkan pesanan di beberapa tanggal dan status secara akurat, terbaca jelas di ponsel (`390x844`) tanpa terpotong.
+- [ ] Uji keterpahaman pengguna: staf dan karyawan senior dapat menemukan dan menjelaskan ulang detail pesanan di dasbor tanpa bertanya ke pengelola.
 
-### Technical Notes
+### Keputusan yang Membutuhkan Konfirmasi (PIC / Tim)
 
-- Format penomoran pesanan unik (misal: `ORD-YYYYMM-XXXX`) `[Perlu Konfirmasi Tim]`.
-- Batas maksimal porsi pesanan harian katering `[Menunggu Konfirmasi PIC]`.
-
-### DoD
-
-- [ ] Seluruh endpoint pesanan di `apps/api/src/modules/orders` memiliki test acceptance di Vitest.
-- [ ] Tampilan dasbor jadwal pada `apps/web` memiliki filter tanggal dan status yang berjalan tanpa error console.
-- [ ] Prettier dan ESLint lolos 100%.
-- [ ] Dokumentasi endpoint OpenAPI 3.1.0 tersedia di Scalar `/docs`.
-
-### Dependencies
-
-- Prasyarat: `FS-02` (Skema Order), `FS-03` (Auth/RBAC), `FS-04` (Katalog Menu).
-- Terkait: Menjadi dasar bagi `FS-06` (Invoice Keuangan) dan `FS-09` (Pengingat Pesanan).
-
----
-
-## [FS-06] Modul Keuangan: Invoice Digital, DP 60%, Pelunasan & Export PDF
-
-- **Labels:** `area:fullstack`, `priority:P1-mvp`, `quest:main`
-- **Priority:** `P1-mvp`
-- **Milestone:** `M3 (5–11 Des 2026)`
-- **Target Path:** `apps/api/src/modules/finance`, `apps/web`
-
-### Context
-
-Sebelumnya pembuatan invoice di Catering Si Kembar memakan waktu beberapa jam hingga keesokan harinya karena pengelola harus menghitung rincian dan menulis nota di buku secara manual. Masalah ini menyebabkan kepastian pesanan terlambat. Modul keuangan ini secara instan menerbitkan invoice digital setelah pesanan dibuat, memvalidasi pencatatan uang muka (DP minimal 60%), mengelola pelunasan sisa tagihan, serta menyediakan fitur unduh/cetak invoice dalam format PDF profesional.
-
-### Scope
-
-**In-Scope:**
-
-- Endpoint penerbitan invoice digital otomatis untuk setiap pesanan (`/api/v1/finance/invoices/*`).
-- Pencatatan pembayaran: Down Payment (DP minimal 60% `[Menunggu Konfirmasi PIC]`) dan Pelunasan sisa tagihan (`/api/v1/finance/payments`).
-- Logika pembaruan status invoice: `UNPAID` -> `PARTIALLY_PAID` -> `PAID`.
-- Endpoint & fitur pembuatan berkas PDF invoice resmi untuk dicetak atau dibagikan via WhatsApp.
-- Antarmuka web di `apps/web` untuk daftar tagihan, form pencatatan pembayaran tunai/transfer, dan tombol unduh PDF.
-- Integrasi dokumentasi OpenAPI 3.1.0 dan Scalar di `/docs`.
-
-**Out-of-Scope:**
-
-- Payment gateway otomatis (seperti Midtrans/Xendit) dengan auto-debit atau virtual account otomatis.
-- Rekonsiliasi mutasi rekening bank secara otomatis (_bank scraping_).
-
-### Business Rules
-
-- Uang Muka (DP) yang dicatat divalidasi minimal sebesar 60% dari total tagihan pesanan `[Menunggu Konfirmasi PIC]`. Jika nominal DP di bawah batas minimum, sistem meminta konfirmasi khusus atau menolak sesuai kebijakan.
-- Nominal pelunasan tidak boleh melebihi sisa tagihan (_remaining balance_).
-- Invoice yang sudah berstatus `PAID` dikunci dan tidak dapat menerima penambahan pembayaran baru.
-- Modul keuangan hanya boleh diakses oleh pengguna dengan role `ADMIN`.
-
-### API Contract
-
-#### Daftar Endpoint
-
-| Method | Path                               | Fungsi                                                                                  | Autentikasi / Role   |
-| :----- | :--------------------------------- | :-------------------------------------------------------------------------------------- | :------------------- |
-| `GET`  | `/api/v1/finance/invoices`         | Ambil daftar seluruh invoice (filter PaymentStatus, rentang tanggal, dan paginasi)      | Autentikasi: `ADMIN` |
-| `GET`  | `/api/v1/finance/invoices/:id`     | Rincian invoice, riwayat catatan pembayaran, total DP, dan sisa tagihan                 | Autentikasi: `ADMIN` |
-| `POST` | `/api/v1/finance/invoices`         | Terbitkan invoice digital untuk pesanan terdaftar (idempoten 1:1 per order)             | Autentikasi: `ADMIN` |
-| `POST` | `/api/v1/finance/payments`         | Catat transaksi pembayaran: DP (minimal 60% `[Menunggu Konfirmasi PIC]`) atau pelunasan | Autentikasi: `ADMIN` |
-| `GET`  | `/api/v1/finance/invoices/:id/pdf` | Unduh / cetak invoice resmi katering dalam format biner stream application/pdf          | Autentikasi: `ADMIN` |
-
-#### Format Wire Contract Sukses
-
-- `POST /api/v1/finance/payments`
-  - Request:
-    ```json
-    {
-      "invoiceId": "inv_01",
-      "amount": 1500000,
-      "paymentType": "DOWN_PAYMENT",
-      "paymentMethod": "BANK_TRANSFER",
-      "paidAt": "2026-11-25T08:30:00.000Z",
-      "referenceNote": "Transfer via BCA an Rahmawati"
-    }
-    ```
-  - Response `201 Created`:
-    ```json
-    {
-      "data": {
-        "paymentId": "pay_01",
-        "invoiceId": "inv_01",
-        "amountPaid": 1500000,
-        "remainingBalance": 1000000,
-        "invoiceStatus": "PARTIALLY_PAID"
-      },
-      "meta": { "requestId": "0192f0c8-7b3a-7000-8000-000000000004" }
-    }
-    ```
-
-- `GET /api/v1/finance/invoices?page=1&limit=10&status=UNPAID`
-  - Response `200 OK`:
-    ```json
-    {
-      "data": [
-        {
-          "id": "inv_01",
-          "orderId": "ord_01",
-          "invoiceNumber": "INV-202612-0001",
-          "totalAmount": 2500000,
-          "paidAmount": 0,
-          "status": "UNPAID"
-        }
-      ],
-      "meta": {
-        "requestId": "0192f0c8-7b3a-7000-8000-000000000005",
-        "pagination": {
-          "page": 1,
-          "limit": 10,
-          "total": 1,
-          "totalPages": 1
-        }
-      }
-    }
-    ```
-
-- `GET /api/v1/finance/invoices/:id/pdf`
-  - Header Request: `Accept: application/pdf`
-  - Response `200 OK`: Binary Stream PDF dengan header `Content-Type: application/pdf` dan `Content-Disposition: inline; filename="invoice-INV-202612-0001.pdf"`.
-
-#### Standar Error RFC 9457 & Kode Status HTTP
-
-Layanan mengembalikan kode status HTTP standar:
-
-- `200 OK`: Data invoice berhasil diambil.
-- `201 Created`: Pembayaran berhasil dicatat.
-- `400 Bad Request`: Payload JSON salah bentuk.
-- `401 Unauthorized`: Kredensial tidak valid.
-- `403 Forbidden`: Staf non-admin memanggil endpoint keuangan.
-- `404 Not Found`: Invoice atau pesanan tidak ditemukan.
-- `409 Conflict`: Pembayaran dilakukan pada invoice yang sudah berstatus `PAID`.
-- `422 Unprocessable Content`: Nominal pembayaran melampaui sisa tagihan atau DP di bawah 60%.
-- `500 Internal Server Error`: Kesalahan server internal saat pembuatan PDF atau database.
-
-Contoh payload error RFC 9457 (`Content-Type: application/problem+json`):
-
-```json
-{
-  "type": "https://datatracker.ietf.org/doc/html/rfc9457",
-  "title": "Unprocessable Content",
-  "status": 422,
-  "detail": "Nominal pembayaran uang muka (DP) minimal 60% dari total tagihan.",
-  "instance": "/api/v1/finance/payments",
-  "requestId": "0192f0c8-7b3a-7000-8000-000000000004",
-  "errors": [
-    {
-      "path": "amount",
-      "code": "finance.dp_insufficient",
-      "message": "Nominal DP Rp 1.000.000 kurang dari batas minimal 60% (Rp 1.500.000)"
-    }
-  ]
-}
-```
-
-#### Dokumentasi OpenAPI 3.1.0 & Scalar
-
-Seluruh endpoint terdaftar dalam skema OpenAPI 3.1.0 di `/api/openapi` dan disajikan via Scalar UI di `/docs` (fail-closed produksi `DOCS_ENABLED`).
-
-### Acceptance Criteria
-
-- [ ] Seluruh 5 endpoint keuangan terdaftar pada tabel kontrak API dan terimplementasi.
-- [ ] Penerbitan invoice terjadi otomatis dalam waktu kurang dari 1 detik setelah pesanan disimpan.
-- [ ] Pencatatan DP 60% berhasil mengubah status invoice menjadi `PARTIALLY_PAID` dan menghitung sisa tagihan dengan presisi tanpa kesalahan pembulatan desimal.
-- [ ] Pencatatan pelunasan dengan sisa tagihan tepat mengubah status invoice menjadi `PAID`.
-- [ ] Pengujian unduh file PDF menghasilkan dokumen rapi yang memuat logo katering, rincian menu, porsi, nominal DP, sisa tagihan, dan rekening pembayaran.
-- [ ] Akses modul keuangan oleh pengguna peran `STAFF` ditolak dengan HTTP 403 Forbidden RFC 9457.
-- [ ] Dokumentasi endpoint OpenAPI 3.1.0 tampil di Scalar `/docs`.
-
-### Technical Notes
-
-- Aturan toleransi DP di bawah 60% untuk pelanggan tetap `[Menunggu Konfirmasi PIC]`.
-- Pustaka generator PDF di server menggunakan engine ringan non-headless browser (`pdfkit` atau generator HTML template ringan) agar hemat resource VPS `[Perlu Konfirmasi Tim]`.
+- `[Menunggu Konfirmasi PIC]` Apakah peran `STAFF` diperbolehkan melihat label ringkas status pembayaran (`UNPAID`/`PARTIALLY_PAID`/`PAID`) pada dasbor jadwal tanpa melihat nominal rupiah/rekap keuangan.
+- `[Menunggu Konfirmasi PIC]` Batas maksimal kapasitas porsi harian katering dan aturan perubahan pesanan setelah DP dibayar.
+- `[Perlu Konfirmasi Tim]` Format baku penomoran pesanan (`ORD-YYYYMM-XXXX`).
 
 ### DoD
 
-- [ ] Modul `apps/api/src/modules/finance` teruji penuh di Vitest untuk berbagai variasi pembayaran.
-- [ ] Layar invoice di `apps/web` dapat diakses, menampilkan status akurat, dan tombol cetak/unduh PDF berfungsi tanpa crash.
-- [ ] Endpoint terdaftar di OpenAPI 3.1.0 Scalar documentation `/docs`.
-
-### Dependencies
-
-- Prasyarat: `FS-03` (RBAC Keuangan), `FS-05` (Pesanan Terkonfirmasi).
-- Terkait: Menjadi dasar bagi reminder pembayaran di `FS-09`.
-
----
-
-## [FS-07] Modul Chat AI: Proxy Backend, Riwayat Inferensi DB & UI Chat
-
-- **Labels:** `area:fullstack`, `priority:P2-side-quest`, `quest:side`
-- **Priority:** `P2-side-quest`
-- **Milestone:** `M3 (5–11 Des 2026)`
-- **Target Path:** `apps/api/src/modules/chat`, `apps/web`
-
-### Context
-
-Untuk membantu staf dan pengelola menanyakan informasi katering secara cepat (seperti rincian menu, takaran resep, atau status pesanan tertentu), dibangun asisten AI chatbot. Sesuai guardrail arsitektur, frontend web tidak boleh memanggil `apps/ai-service` atau LLM secara langsung. Backend Express bertindak sebagai proxy aman yang memvalidasi hak akses pengguna, meneruskan pertanyaan ke FastAPI `POST /api/v1/rag/chat`, mencatat riwayat tanya-jawab (_inference history_) ke database PostgreSQL untuk audit, serta menyajikan UI chat interaktif di browser.
-
-### Scope
-
-**In-Scope:**
-
-- Endpoint Express `/api/v1/chat/messages` (menerima pesan pengguna, meneruskan ke FastAPI `:8001/api/v1/rag/chat` membawa `user_role` sesi server, dan mengembalikan respons).
-- Endpoint riwayat sesi chat `/api/v1/chat/sessions` dan pesan `/api/v1/chat/sessions/:sessionId/messages`.
-- Penyimpanan riwayat inferensi chat di tabel `ChatLog` (id pengguna, pesan masuk, respons AI, sumber sitasi referensi, waktu latensi inferensi).
-- Antarmuka chat widget di `apps/web`: jendela obrolan mengambang atau halaman penuh dengan _bubble chat_, indikator _typing_, dan tampilan sumber sitasi.
-- Penanganan graceful saat layanan AI timeout atau kuota habis dengan pesan ramah pengguna.
-- Integrasi dokumentasi OpenAPI 3.1.0 dan Scalar di `/docs`.
-
-**Out-of-Scope:**
-
-- Voice chat atau pengenalan suara (_speech-to-text_).
-- Pemanggilan LLM komersial langsung dari browser tanpa melalui proxy backend.
-
-### Business Rules
-
-- Pertanyaan staf hanya dijawab menggunakan dokumen dan data katering yang sah (grounded).
-- Informasi rahasia keuangan (seperti total omzet tahunan atau gaji karyawan) tidak boleh dijawab kepada staf dapur biasa.
-- Jika layanan AI service tidak merespon dalam batas waktu (timeout 10 detik `[Perlu Konfirmasi Tim]`), backend mengembalikan pesan fallback yang jelas dengan HTTP 503 RFC 9457 tanpa menjatuhkan aplikasi web.
-
-### API Contract
-
-#### Daftar Endpoint
-
-| Method | Path                                        | Fungsi                                                                                                                  | Autentikasi / Role            |
-| :----- | :------------------------------------------ | :---------------------------------------------------------------------------------------------------------------------- | :---------------------------- |
-| `POST` | `/api/v1/chat/messages`                     | Kirim pertanyaan pengguna, proxy ke FastAPI POST /api/v1/rag/chat, simpan riwayat di ChatLog, kembalikan reply & sitasi | Autentikasi: `ADMIN`, `STAFF` |
-| `GET`  | `/api/v1/chat/sessions`                     | Ambil daftar riwayat sesi percakapan milik pengguna login (dengan paginasi)                                             | Autentikasi: `ADMIN`, `STAFF` |
-| `GET`  | `/api/v1/chat/sessions/:sessionId/messages` | Ambil riwayat pesan dan sitasi sumber dalam sesi tertentu                                                               | Autentikasi: `ADMIN`, `STAFF` |
-
-#### Format Wire Contract Sukses
-
-- `POST /api/v1/chat/messages`
-  - Request:
-    ```json
-    {
-      "sessionId": "ses_01",
-      "message": "Berapa porsi minimal pemesanan nasi box ayam lengkuas?"
-    }
-    ```
-  - Response `200 OK`:
-    ```json
-    {
-      "data": {
-        "sessionId": "ses_01",
-        "reply": "Pemesanan minimal nasi box ayam lengkuas adalah 20 porsi dengan konfirmasi H-2 acara.",
-        "citations": [{ "source": "SOP_Pemesanan_2026.pdf", "section": "Ketentuan Minimal Order" }],
-        "latencyMs": 1420
-      },
-      "meta": { "requestId": "0192f0c8-7b3a-7000-8000-000000000005" }
-    }
-    ```
-
-- `GET /api/v1/chat/sessions?page=1&limit=10`
-  - Response `200 OK`:
-    ```json
-    {
-      "data": [
-        {
-          "sessionId": "ses_01",
-          "title": "Pemesanan Nasi Box Ayam Lengkuas",
-          "lastMessageAt": "2026-11-23T14:20:00.000Z"
-        }
-      ],
-      "meta": {
-        "requestId": "0192f0c8-7b3a-7000-8000-000000000006",
-        "pagination": {
-          "page": 1,
-          "limit": 10,
-          "total": 1,
-          "totalPages": 1
-        }
-      }
-    }
-    ```
-
-#### Standar Error RFC 9457 & Kode Status HTTP
-
-Layanan mengembalikan kode status HTTP standar:
-
-- `200 OK`: Respon percakapan berhasil diterima.
-- `201 Created`: Sesi percakapan baru berhasil dibuat.
-- `400 Bad Request`: Payload JSON tidak valid.
-- `401 Unauthorized`: Kredensial tidak valid.
-- `403 Forbidden`: Hak akses tidak mencukupi.
-- `404 Not Found`: Sesi percakapan tidak ditemukan.
-- `422 Unprocessable Content`: Validasi pesan kosong atau format salah.
-- `500 Internal Server Error`: Kesalahan server internal backend.
-- `503 Service Unavailable`: Layanan FastAPI atau LLM tidak merespon / timeout.
-
-Contoh payload error RFC 9457 (`Content-Type: application/problem+json`):
-
-```json
-{
-  "type": "https://datatracker.ietf.org/doc/html/rfc9457",
-  "title": "Service Unavailable",
-  "status": 503,
-  "detail": "Layanan asisten cerdas sedang tidak tersedia atau mengalami batas waktu respon.",
-  "instance": "/api/v1/chat/messages",
-  "requestId": "0192f0c8-7b3a-7000-8000-000000000005"
-}
-```
-
-#### Dokumentasi OpenAPI 3.1.0 & Scalar
-
-Seluruh endpoint terdaftar dalam skema OpenAPI 3.1.0 di `/api/openapi` dan disajikan via Scalar UI di `/docs` (fail-closed produksi `DOCS_ENABLED`).
-
-### Acceptance Criteria
-
-- [ ] Seluruh 3 endpoint chat proxy terdaftar pada tabel kontrak API dan terimplementasi.
-- [ ] Pengiriman pesan melalui UI web berhasil diteruskan oleh Express ke FastAPI `POST /api/v1/rag/chat` dan menampilkan balasan asisten beserta sitasi sumbernya.
-- [ ] Setiap percakapan tersimpan dengan benar di tabel PostgreSQL `ChatLog`.
-- [ ] Simulasi kegagalan AI service (FastAPI dimatikan/timeout) ditangani dengan respons error 503 bersahabat RFC 9457.
-- [ ] UI chat responsif dan nyaman digunakan di ponsel tanpa menghalangi navigasi dasar.
-- [ ] Dokumentasi endpoint OpenAPI 3.1.0 tampil di Scalar `/docs`.
-
-### Technical Notes
-
-- Format payload sitasi dokumen disepakati bersama tim AI Engineering `[Perlu Konfirmasi Tim]`.
-- Mekanisme batas laju (_rate limiting_) obrolan per pengguna untuk mencegah kehabisan kuota API LLM `[Perlu Konfirmasi Tim]`.
-- SLA batas waktu respon timeout default 10 detik `[Perlu Konfirmasi Tim]`.
-
-### DoD
-
-- [ ] Endpoint `/api/v1/chat/messages` memiliki unit test dan mock test inter-service di Vitest.
-- [ ] Komponen UI Chat di `apps/web` dapat digunakan secara interaktif tanpa console warning.
-- [ ] Linter dan format Prettier lulus 100%.
+- [ ] Unit test dan route test `apps/api/src/modules/orders` (termasuk pengujian anti-manipulasi harga & state machine) lulus di Vitest.
+- [ ] Halaman form pesanan & dasbor jadwal di `apps/web` terhubung melalui Axios dan lulus uji tampilan mobile.
 - [ ] Endpoint terdaftar di OpenAPI 3.1.0 Scalar `/docs`.
 
 ### Dependencies
 
-- Prasyarat: `FS-03` (Autentikasi Pengguna), `AI-01` (FastAPI Serving), `AI-05` (Pipeline Agentic RAG).
-- Terkait: Menjadi bagian dari demonstrasi interaktif MVP.
+- **Prasyarat:** `FS-01` (App Shell), `FS-02` (Skema Order/Invoice), `FS-03` (Auth/RBAC/Joi), `FS-04` (Katalog Menu & Kalkulator Bahan).
+- **Terkait:** Berpasangan langsung dengan `FS-06` (DP, pelunasan, konfirmasi pesanan, PDF Invoice), `FS-07` (backend read-only tools jadwal/pesanan untuk Agentic RAG), dan `FS-09` (Reminder & uji E2E 100 nasi box).
 
 ---
 
-## [FS-08] Modul Dasbor Analitik DS: KPI, Filter, Upload Data & Tampilan Prediksi/Insight
+## [FS-06] Modul Keuangan: Invoice Digital, DP 60%, Pelunasan & PDF Invoice
+
+- **Labels:** `area:fullstack`, `priority:P1-mvp`, `quest:main`
+- **Priority:** `P1-mvp`
+- **Klasifikasi Project Plan:** Wajib (Main Quest Full-Stack: Invoice Digital, Pencatatan DP minimal 60%, Pelunasan, Status Bayar)
+- **Milestone:** `M3: Alur Utama Selesai & Feature Freeze (5–11 Des 2026)` _(penerbitan invoice digital dasar mulai diuji di M2 bersama `FS-05`; pencatatan DP, pelunasan, dan PDF invoice tuntas pada M3 sebelum feature freeze)_
+- **Penanggung Jawab (Project Plan):** Haidar Habibi Al Farisi, Zaki Eka Saputra _(Pengujian: Zaki Eka Saputra, Chaviela Nazwa Syaqiba)_
+- **Target Path:** `apps/api/src/modules/finance`, `apps/web`
+
+### Context
+
+Pembuatan invoice manual di Catering Si Kembar memakan waktu beberapa jam hingga keesokan harinya sehingga kepastian pesanan tertunda. Sesuai Project Plan A26-CS105, modul ini melengkapi alur **Pesanan (`DRAFT`) → Invoice Digital (`UNPAID`) → Pencatatan DP minimal 60% (`[Menunggu Konfirmasi PIC]`) → Konfirmasi Pesanan (`CONFIRMED`) → Pelunasan (`PAID`)**, sekaligus menyediakan **pembuatan PDF Invoice per Pesanan** di backend Express.
+
+### Scope
+
+**Requirement Wajib (Project Plan):**
+
+- Pengelolaan invoice digital yang diterbitkan otomatis (`1:1`) saat pesanan dibuat di `FS-05` (beserta endpoint idempoten `POST /api/v1/finance/invoices` bila diperlukan).
+- Pencatatan pembayaran manual (`POST /api/v1/finance/payments`):
+  - **Uang Muka (DP):** Validasi batas minimal default **60%** (`[Menunggu Konfirmasi PIC]`) dari `totalAmount` invoice; nominal di bawah batas ditolak atau memunculkan peringatan/konfirmasi khusus sesuai aturan PIC.
+  - **Pelunasan:** Validasi nominal tidak kosong, > 0, dan tidak melebihi sisa tagihan (_remaining balance_).
+- Pembaruan status otomatis secara transaksional:
+  - Invoice: `UNPAID` → `PARTIALLY_PAID` (DP tercatat) → `PAID` (lunas).
+  - Sinkronisasi ke `Order` (`FS-05`): pencatatan DP yang sah otomatis mengubah (atau membuka) status `Order` dari `DRAFT` menjadi `CONFIRMED`.
+- **Pembagian Tanggung Jawab PDF:** Modul `FS-06` bertanggung jawab khusus atas **pembuatan & unduh/cetak PDF Invoice Digital per Pesanan** (`GET /api/v1/finance/invoices/:id/pdf`) di backend Express. _(Catatan: Pembuatan PDF Laporan Analitik & AI Business Insight menjadi tanggung jawab terpisah pada modul analitik `FS-08`, bukan `FS-06`.)_
+- Antarmuka web di `apps/web` untuk daftar tagihan, pencatatan pembayaran tunai/transfer, rincian sisa tagihan, dan tombol cetak/unduh PDF Invoice.
+
+**Rekomendasi Teknis / Implementasi:**
+
+- Simpan persentase batas DP minimum sebagai parameter konfigurasi (default `0.60`), bukan angka keras tak dapat diubah, agar mudah disesuaikan setelah konfirmasi PIC.
+- Gunakan generator PDF server-side ringan di Express (misal `pdfkit`) untuk menghemat RAM VPS dibandingkan headless browser.
+- Dokumentasi OpenAPI 3.1.0 & Scalar `/docs`.
+
+**Out-of-Scope:**
+
+- Integrasi payment gateway (Midtrans/Xendit) dan verifikasi pembayaran otomatis.
+- Rekonsiliasi mutasi bank otomatis.
+- Pembuatan PDF Laporan Analitik / AI Business Insight (ditangani oleh `FS-08`).
+
+### Business Rules
+
+- Total tagihan invoice selalu bersumber dari kalkulasi harga resmi DB pada `Order` (`FS-05`).
+- Nominal pembayaran `<= 0`, kosong, atau melebihi `remainingBalance` wajib ditolak dengan HTTP `422` RFC 9457.
+- Aturan DP minimal **60%** masih berstatus `[Menunggu Konfirmasi PIC]`; perilaku untuk DP di bawah 60% harus mendukung penolakan atau peringatan/override khusus `ADMIN` yang tercatat alasannya sesuai keputusan PIC.
+- Invoice berstatus `PAID` dikunci dan menolak pembayaran baru (`409 Conflict`).
+- Seluruh endpoint modul keuangan (`/api/v1/finance/*`) dan halaman keuangan di web hanya boleh diakses peran **`ADMIN`** (`STAFF` ditolak dengan HTTP `403 Forbidden`).
+
+### API Contract
+
+#### Daftar Endpoint
+
+| Method | Path                               | Fungsi                                                                                                                    | Autentikasi / Role |
+| :----- | :--------------------------------- | :------------------------------------------------------------------------------------------------------------------------ | :----------------- |
+| `GET`  | `/api/v1/finance/invoices`         | Daftar invoice (filter `paymentStatus`, rentang tanggal, paginasi)                                                        | `ADMIN`            |
+| `GET`  | `/api/v1/finance/invoices/:id`     | Rincian invoice, riwayat pembayaran, total DP, dan sisa tagihan                                                           | `ADMIN`            |
+| `POST` | `/api/v1/finance/invoices`         | Terbitkan invoice untuk order `DRAFT` (idempoten 1:1 per order)                                                           | `ADMIN`            |
+| `POST` | `/api/v1/finance/payments`         | Catat pembayaran DP (default min 60% `[Menunggu Konfirmasi PIC]`) atau pelunasan; sinkronisasi status `Invoice` & `Order` | `ADMIN`            |
+| `GET`  | `/api/v1/finance/invoices/:id/pdf` | Unduh / cetak **PDF Invoice Pesanan** (`application/pdf`)                                                                 | `ADMIN`            |
+
+#### Contoh Wire Contract Sukses
+
+- `POST /api/v1/finance/payments` (`201 Created`):
+  ```json
+  {
+    "data": {
+      "paymentId": "pay_01",
+      "invoiceId": "inv_01",
+      "orderId": "ord_01",
+      "orderStatus": "CONFIRMED",
+      "amountPaid": 1500000,
+      "totalPaid": 1500000,
+      "remainingBalance": 1000000,
+      "invoiceStatus": "PARTIALLY_PAID"
+    },
+    "meta": { "requestId": "0192f0c8-7b3a-7000-8000-000000000004" }
+  }
+  ```
+- `GET /api/v1/finance/invoices/:id/pdf`: Response `200 OK`, `Content-Type: application/pdf`, `Content-Disposition: inline; filename="invoice-INV-202612-0001.pdf"`.
+
+#### Standar Error RFC 9457 (`Content-Type: application/problem+json`)
+
+- `401 Unauthorized`, `403 Forbidden` (non-`ADMIN`), `404 Not Found`, `409 Conflict` (invoice sudah `PAID`), `422 Unprocessable Content` (nominal kosong/negatif/melebihi sisa tagihan/DP di bawah ketentuan PIC), `500 Internal Server Error`.
+
+### Acceptance Criteria
+
+- [ ] Seluruh 5 endpoint keuangan terimplementasi sesuai kontrak OpenAPI 3.1.0 di Scalar `/docs`.
+- [ ] Alur **Pesanan (`DRAFT`) → Invoice (`UNPAID`) → Catat DP 60% → Invoice (`PARTIALLY_PAID`) & Pesanan (`CONFIRMED`) → Catat Pelunasan → Invoice (`PAID`)** berjalan akurat dan dapat diperiksa ulang.
+- [ ] Pengujian DP di bawah 60%, nominal kosong, `<= 0`, atau melebihi sisa tagihan ditolak atau memunculkan peringatan sesuai aturan PIC yang terkonfigurasi (`422` RFC 9457).
+- [ ] Total tagihan, total terbayar, dan sisa tagihan akurat tanpa galat pembulatan desimal.
+- [ ] Pengunduhan `GET /api/v1/finance/invoices/:id/pdf` menghasilkan berkas PDF Invoice pesanan yang rapi, dapat dicetak/disimpan, memuat identitas katering, rincian menu & porsi, total, DP, sisa tagihan, dan informasi pembayaran.
+- [ ] Akses modul keuangan oleh peran `STAFF` ditolak dengan HTTP `403 Forbidden` RFC 9457.
+
+### Keputusan yang Membutuhkan Konfirmasi (PIC / Tim)
+
+- `[Menunggu Konfirmasi PIC]` Kepastian angka persentase minimum DP (apakah tetap 60% atau nominal lain) serta kebijakan toleransi/override untuk DP di bawah batas minimum (ditolak mutlak vs diizinkan dengan peringatan/catatan Admin).
+- `[Menunggu Konfirmasi PIC]` Format dan konten resmi PDF Invoice Catering Si Kembar (logo, nama/nomor rekening tujuan transfer, syarat & ketentuan pembayaran).
+- `[Perlu Konfirmasi Tim]` Pemilihan pustaka generator PDF server-side di Express (`pdfkit` atau setara) agar berbagi utilitas yang bersih dengan PDF laporan analitik `FS-08`.
+
+### DoD
+
+- [ ] Unit test & route test `apps/api/src/modules/finance` (skenario DP 60%, DP < 60%, pelunasan, overpayment, double-pay pada `PAID`, RBAC `STAFF`, dan stream PDF) lulus di Vitest.
+- [ ] Antarmuka daftar invoice, form pembayaran, dan tombol unduh/cetak PDF di `apps/web` berfungsi tanpa error.
+- [ ] Endpoint terdaftar di OpenAPI 3.1.0 Scalar `/docs`.
+
+### Dependencies
+
+- **Prasyarat:** `FS-02` (Skema Invoice/Payment), `FS-03` (Auth/RBAC `ADMIN`), `FS-05` (Pembuatan Pesanan `DRAFT` yang memicu penerbitan invoice awal).
+- **Terkait:** Menjadi sumber data status DP & pelunasan bagi backend read-only tools Agentic RAG (`FS-07`/`AI-05`), analitik keuangan (`FS-08`), dan pengingat jatuh tempo pembayaran (`FS-09`).
+
+---
+
+## [FS-07] Modul Chat AI: Proxy Backend, Read-Only Tools DB, Riwayat Chat & UI Web
+
+- **Labels:** `area:fullstack`, `priority:P1-mvp`, `quest:main`, `quest:side`
+- **Priority:** `P1-mvp` _(komponen proxy chatbot web + riwayat chat mendukung fitur Wajib Chatbot Generatif; backend read-only tools operasional mendukung fitur Tambahan Agentic RAG — tidak boleh menunda penyelesaian alur utama `FS-04`..`FS-06`)_
+- **Klasifikasi Project Plan:** Wajib (Chatbot Generatif melalui backend, riwayat chat tersimpan, kanal web) & Tambahan (Backend Read-Only Tools untuk Agentic RAG)
+- **Milestone:** `M3: Alur Utama Selesai & Feature Freeze (5–11 Des 2026)`
+- **Penanggung Jawab (Project Plan):** Haidar Habibi Al Farisi, Adnan Mufti Maulana, Mohamad Dwi Rezky Desyafa
+- **Target Path:** `apps/api/src/modules/chat`, `apps/web`
+
+### Context
+
+Sesuai arsitektur Project Plan A26-CS105, frontend Next.js **tidak boleh** memanggil FastAPI (`apps/ai-service`), ChromaDB, maupun API LLM secara langsung. Backend Express (`apps/api`) memiliki dua peran krusial dalam ekosistem chatbot:
+
+1. **Proxy & Penyimpan Riwayat Chat:** Memverifikasi autentikasi & peran pengguna (`ADMIN`/`STAFF`), meneruskan pertanyaan ke FastAPI `POST /api/v1/rag/chat` (bersama konteks peran terverifikasi), menyimpan riwayat percakapan (`ChatLog`) ke PostgreSQL, serta menyajikan UI chatbot web yang responsif dan ramah staf.
+2. **Penyedia Backend Tools Baca-Saja (_Read-Only Tools_) ke PostgreSQL untuk Agentic RAG (`AI-05`):** Menyediakan endpoint internal baca-saja berparameter ketat agar agen LLM dapat mengambil data operasional aktual (**pesanan, invoice, status DP, pelunasan, dan jadwal produksi**) sesuai hak akses peran yang diverifikasi oleh backend Express—**tanpa pernah memberi akses SQL bebas kepada LLM**.
+
+### Scope
+
+**Requirement Wajib (Project Plan):**
+
+- Endpoint proxy chat web:
+  - `POST /api/v1/chat/messages`: verifikasi sesi pengguna → teruskan pertanyaan, `sessionId`, dan konteks `userId`/`userRole` terverifikasi ke FastAPI `:8001/api/v1/rag/chat` → simpan riwayat lengkap ke PostgreSQL `ChatLog` → kembalikan balasan beserta metadata sumber.
+  - `GET /api/v1/chat/sessions` & `GET /api/v1/chat/sessions/:sessionId/messages`: ambil riwayat percakapan milik pengguna login.
+- **Backend Tools Baca-Saja (_Read-Only_) untuk Agentic RAG (`AI-05`)** pada namespace `/api/v1/internal/agent-tools/*` (khusus operasi `GET`, validasi Joi, Prisma terparameterisasi, diproteksi `X-Internal-Token`):
+  1. `GET /api/v1/internal/agent-tools/orders`: pencarian/detail pesanan aktual berdasarkan kode pesanan, nama pemesan, atau rentang tanggal.
+  2. `GET /api/v1/internal/agent-tools/schedule`: jadwal produksi aktual berdasarkan rentang tanggal & status.
+  3. `GET /api/v1/internal/agent-tools/invoices`: rincian invoice, total tagihan, status DP, nominal terbayar, sisa tagihan, dan status pelunasan (**wajib penegakan RBAC `ADMIN` di backend Express; ditolak `403` untuk `STAFF`**, kecuali status ringkas bila disetujui PIC).
+- Antarmuka UI Chatbot di `apps/web`: menampilkan gelembung percakapan, indikator _loading/typing_, tampilan **metadata sumber tervalidasi** (nama sumber, tanggal, versi, status validasi) atau referensi kode pesanan/invoice, serta pesan error yang jelas saat layanan AI tidak tersedia/timeout/kuota habis.
+- Kegagalan layanan AI (FastAPI mati, timeout, kuota habis) ditangani _graceful_ dan **tidak boleh mengganggu alur fitur inti aplikasi web**.
+
+**Rekomendasi Teknis / Implementasi:**
+
+- Batasi jumlah pesan konteks riwayat yang dikirim ke FastAPI (misal 6–10 pesan terakhir per sesi) untuk efisiensi token.
+- Terapkan _rate limiting_ ringan per pengguna pada `/api/v1/chat/messages` untuk menjaga kuota API LLM.
+- Dokumentasi OpenAPI 3.1.0 & Scalar `/docs`.
+
+**Out-of-Scope:**
+
+- Memberikan akses query SQL bebas (`text-to-SQL`) atau koneksi langsung PostgreSQL kepada LLM/FastAPI.
+- Tools mutasi data (membuat pesanan, mengubah harga, atau mencatat pembayaran lewat chatbot).
+- Voice chat / _speech-to-text_.
+
+### Business Rules
+
+- **Penegakan RBAC di Backend (Bukan di Prompt):** Express menentukan `userRole` secara eksklusif dari sesi/JWT terverifikasi, lalu menegakkan izin yang sama saat FastAPI memanggil `/api/v1/internal/agent-tools/*`. Jika peran `STAFF` meminta data keuangan sensitif/invoice terlarang (termasuk melalui upaya _prompt injection_), endpoint internal tool wajib menolak dengan `403 Forbidden` RFC 9457 dan mencatat kejadian di log audit keamanan.
+- **Tanpa SQL Bebas:** Seluruh akses data operasional hanya melalui query Prisma terparameterisasi pada endpoint read-only yang telah ditetapkan.
+- **Kejelasan Kegagalan:** Jika FastAPI tidak merespons (timeout / mati / kuota habis), Express mengembalikan respons error/fallback yang jelas (HTTP `503`/`504` RFC 9457 atau fallback terstruktur yang disepakati) tanpa membuat aplikasi web crash.
+- **API Key Server-Only:** Seluruh kredensial/API key hanya berada di environment server, tidak pernah terekspos ke browser.
+
+### API Contract
+
+#### Daftar Endpoint
+
+| Method | Path                                        | Fungsi                                                                       | Autentikasi / Role                                                          |
+| :----- | :------------------------------------------ | :--------------------------------------------------------------------------- | :-------------------------------------------------------------------------- |
+| `POST` | `/api/v1/chat/messages`                     | Kirim pertanyaan web, proxy ke FastAPI `/api/v1/rag/chat`, simpan `ChatLog`  | `ADMIN`, `STAFF`                                                            |
+| `GET`  | `/api/v1/chat/sessions`                     | Daftar sesi percakapan milik pengguna login (paginasi)                       | `ADMIN`, `STAFF`                                                            |
+| `GET`  | `/api/v1/chat/sessions/:sessionId/messages` | Riwayat pesan & metadata sumber dalam satu sesi                              | `ADMIN`, `STAFF`                                                            |
+| `GET`  | `/api/v1/internal/agent-tools/orders`       | _(Internal Read-Only Tool)_ Ambil data pesanan aktual dari PostgreSQL        | `X-Internal-Token` + konteks `X-Actor-Role` (`ADMIN`, `STAFF`)              |
+| `GET`  | `/api/v1/internal/agent-tools/schedule`     | _(Internal Read-Only Tool)_ Ambil jadwal produksi aktual                     | `X-Internal-Token` + konteks `X-Actor-Role` (`ADMIN`, `STAFF`)              |
+| `GET`  | `/api/v1/internal/agent-tools/invoices`     | _(Internal Read-Only Tool)_ Ambil data invoice, status DP & pelunasan aktual | `X-Internal-Token` + konteks `X-Actor-Role` (`ADMIN` saja; `STAFF` → `403`) |
+
+#### Contoh Wire Contract Sukses
+
+- `POST /api/v1/chat/messages` (`200 OK`):
+  ```json
+  {
+    "data": {
+      "sessionId": "ses_01",
+      "reply": "Pemesanan minimal nasi box ayam lengkuas adalah 20 porsi dengan konfirmasi H-2.",
+      "isRelevant": true,
+      "toolsCalled": ["search_catering_knowledge"],
+      "sources": [
+        {
+          "source": "faq.md",
+          "category": "faq",
+          "version": "1.0",
+          "validatedAt": "2026-11-24",
+          "validationStatus": "verified",
+          "chunkId": "faq_order_01_c1"
+        }
+      ],
+      "isFallback": false,
+      "latencyMs": 1420
+    },
+    "meta": { "requestId": "0192f0c8-7b3a-7000-8000-000000000005" }
+  }
+  ```
+
+#### Standar Error RFC 9457 (`Content-Type: application/problem+json`)
+
+- `401 Unauthorized`, `403 Forbidden` (akses tool/data di luar hak akses role atau `X-Internal-Token` tidak sah), `404 Not Found` (sesi atau data pesanan/invoice tidak ditemukan), `422 Unprocessable Content`, `503 Service Unavailable` / `504 Gateway Timeout` (layanan FastAPI/LLM tidak tersedia/timeout).
+
+### Acceptance Criteria
+
+- [ ] Seluruh 3 endpoint chat proxy web dan 3 endpoint internal read-only tools terimplementasi sesuai kontrak OpenAPI 3.1.0 di Scalar `/docs`.
+- [ ] Frontend Next.js hanya berkomunikasi ke Express via Axios (0 panggilan langsung ke FastAPI/LLM dari browser).
+- [ ] Setiap percakapan (pertanyaan, jawaban, `isRelevant`, `toolsCalled`, metadata sumber, latensi, status fallback) tersimpan di tabel PostgreSQL `ChatLog` dan dapat dibaca ulang lewat riwayat sesi.
+- [ ] Endpoint `/api/v1/internal/agent-tools/*` hanya melayani operasi baca-saja (`GET`), tervalidasi Joi, tanpa menerima query SQL mentah, dan menolak akses `STAFF` ke data invoice/keuangan terlarang dengan HTTP `403` + catatan log keamanan.
+- [ ] Simulasi mematikan FastAPI (`apps/ai-service`) atau timeout menampilkan pesan error jelas pada UI chat sementara alur pesanan, kalkulator, invoice, dan dasbor tetap berjalan normal.
+- [ ] UI chat menampilkan metadata sumber dokumen tervalidasi (sumber, tanggal, versi, status validasi) dan responsif di layar ponsel (`390x844`).
+
+### Keputusan yang Membutuhkan Konfirmasi (PIC / Tim)
+
+- `[Menunggu Konfirmasi PIC]` Apakah `STAFF` diizinkan menanyakan status bayar ringkas (`UNPAID`/`PARTIALLY_PAID`/`PAID`) sebuah pesanan tertentu lewat chatbot tanpa menampilkan nominal uang, atau seluruh query invoice khusus `ADMIN`.
+- `[Perlu Konfirmasi Tim]` Penyelarasan final skema JSON antara `POST /api/v1/chat/messages` (Express), `POST /api/v1/rag/chat` (FastAPI `AI-05`), dan `/api/v1/internal/agent-tools/*` (termasuk batas timeout default, misal 15 detik, dan batas rate limit).
+
+### DoD
+
+- [ ] Unit test & mock inter-service test Express–FastAPI dan pengujian keamanan RBAC pada internal agent tools lulus di Vitest.
+- [ ] Komponen UI chat di `apps/web` berfungsi interaktif pada desktop & ponsel tanpa error console.
+- [ ] Endpoint terdaftar di OpenAPI 3.1.0 Scalar `/docs`.
+
+### Dependencies
+
+- **Prasyarat:** `FS-02` (Skema `ChatLog`), `FS-03` (Auth/RBAC & `X-Internal-Token`), `FS-05` & `FS-06` (Data Pesanan/Jadwal/Invoice), `AI-01` (FastAPI), `AI-05` (Pipeline Agentic RAG).
+- **Terkait:** Berbagi pipeline RAG dan pencatatan `ChatLog` bersama integrasi kanal WhatsApp `AI-07`.
+
+---
+
+## [FS-08] Modul Dasbor Analitik DS: KPI, Filter, Upload Data, Estimasi Bahan Forecasting & PDF Laporan
 
 - **Labels:** `area:fullstack`, `priority:P2-side-quest`, `quest:side`
-- **Priority:** `P2-side-quest`
-- **Milestone:** `M3 (5–11 Des 2026)`
+- **Priority:** `P2-side-quest` _(fitur tambahan — tidak boleh menunda alur utama `FS-04`..`FS-06` sebelum feature freeze akhir M3)_
+- **Klasifikasi Project Plan:** Tambahan (Side Quest DS: Dasbor Analitik Interaktif + Integrasi Forecasting, Sentimen, AI Business Insight & Unduhan PDF Laporan)
+- **Milestone:** `M3: Alur Utama Selesai & Feature Freeze (5–11 Des 2026)`
+- **Penanggung Jawab (Project Plan):** Chaviela Nazwa Syaqiba, Haidar Habibi Al Farisi
 - **Target Path:** `apps/api/src/modules/analytics`, `apps/web`
 
 ### Context
 
-Pengelola katering memerlukan gambaran performa bisnis yang mudah dipahami, meliputi tren penjualan menu terlaris, pola hari sibuk, estimasi kebutuhan belanja masa depan dari model peramalan (_forecasting_), serta ringkasan evaluasi umpan balik pelanggan dari model analisis sentimen. Modul ini menyajikan Dasbor Analitik interaktif di antarmuka web yang terhubung dengan modul analitik Express dan model data hasil kerja tim Data Science.
+Sesuai Project Plan A26-CS105, pengelola Catering Si Kembar (`ADMIN`) memerlukan dasbor analitik interaktif yang menyajikan indikator KPI yang **definisinya telah dikunci terlebih dahulu oleh tim DS pada `DS-02` (M2)**, filter periode & status, pembaruan data melalui database maupun unggahan file valid, tampilan hasil **forecasting permintaan per menu (`DS-05`) yang digabungkan dengan resep standar (`FS-04`) menjadi estimasi kebutuhan bahan baku**, ringkasan **analisis sentimen (`AI-03`)**, narasi **AI Business Insight (`AI-06`)**, serta **unduhan PDF Laporan Analitik** yang di-render oleh backend Express.
 
 ### Scope
 
-**In-Scope:**
+**Requirement Wajib (Project Plan untuk Fitur Dasbor Analitik):**
 
-- Endpoint agregasi KPI bisnis (`/api/v1/analytics/overview`): total pesanan, total porsi terjual, menu terfavorit, rasio pelunasan tagihan.
-- Endpoint unggah berkas pembaruan data (`/api/v1/analytics/upload`) untuk menerima file CSV/Excel terstruktur dengan validasi skema dan penandaan `isSynthetic`.
-- Endpoint pemicu narasi AI Business Insight via FastAPI `POST /api/v1/insight/generate` (`/api/v1/analytics/insights`).
-- Endpoint unduh laporan analitik dalam format PDF (`/api/v1/analytics/report/pdf`).
-- Halaman antarmuka Dasbor Analitik di `apps/web` dengan visualisasi grafik (grafik garis tren pesanan, grafik batang menu terlaris, donut chart sentimen pelanggan) serta tombol unggah data.
-- Integrasi dokumentasi OpenAPI 3.1.0 dan Scalar di `/docs`.
+- Endpoint agregasi KPI bisnis (`/api/v1/analytics/overview`) yang mengimplementasikan formula KPI resmi terkunci dari `DS-02` (M2): total pesanan, total porsi, omzet/revenue, menu terfavorit (frekuensi & volume porsi), rasio status pembayaran, tren periode, serta filter periode tanggal dan status pesanan/bayar.
+- **Integrasi Forecasting Per Menu → Estimasi Kebutuhan Bahan Baku:** Backend Express memanggil layanan forecasting (`DS-05`, `POST /api/v1/ml/forecast/demand`) untuk proyeksi porsi per menu, lalu menggabungkannya dengan resep standar terkonfirmasi (`FS-04`) untuk menyajikan tabel estimasi kebutuhan bahan baku beserta pernyataan batas data/simulasi.
+- Integrasi tampilan ringkasan analisis sentimen (`AI-03`) dengan label jelas apabila berasal dari data sintetis (`is_synthetic = true`).
+- Endpoint unggah berkas pembaruan data (`/api/v1/analytics/upload`, `.csv`/`.xlsx`) dengan validasi skema ketat dan penanda `isSynthetic`; berkas berformat salah ditolak dengan pesan jelas (`422` RFC 9457) tanpa merusak data eksisting.
+- Endpoint pemicu narasi AI Business Insight (`/api/v1/analytics/insights`) yang memanggil FastAPI `POST /api/v1/insight/generate` (`AI-06`) membawa metrik agregat aktual.
+- **Pembagian Tanggung Jawab PDF:** Modul `FS-08` bertanggung jawab tunggal atas **pembuatan & unduhan PDF Laporan Analitik + AI Business Insight** (`GET /api/v1/analytics/report/pdf`) di backend Express. _(Berbeda dari PDF Invoice Pesanan yang menjadi tanggung jawab `FS-06`.)_
+- Halaman Dasbor Analitik interaktif di `apps/web` dengan filter periode/status, visualisasi grafik, unggah file, panel insight AI, dan tombol unduh PDF Laporan.
+
+**Rekomendasi Teknis / Implementasi:**
+
+- Gunakan pustaka grafik kompatibel React/Next.js (misal Recharts) dengan label sumbu, satuan, dan disclaimer data sintetis/prediksi yang jelas.
+- Sediakan endpoint terpisah atau bagian dalam overview untuk `GET /api/v1/analytics/forecast-ingredients` agar pemanggilan forecasting tidak memblokir muatan kartu KPI utama bila `apps/ai-service` lambat.
+- Dokumentasi OpenAPI 3.1.0 & Scalar `/docs`.
 
 **Out-of-Scope:**
 
-- Sistem Business Intelligence enterprise yang kompleks (seperti Tableau/PowerBI embed).
-- Modifikasi langsung skema analitik oleh pengguna non-admin.
+- Platform BI enterprise eksternal (Tableau/PowerBI embed).
+- Pembuatan PDF Invoice per Pesanan (dikerjakan di `FS-06`).
+- Pelatihan ulang model ML dari browser.
 
 ### Business Rules
 
-- Dasbor analitik hanya dapat diakses oleh pengguna dengan peran `ADMIN` / Pengelola.
-- Grafik harus menampilkan label yang jelas mengenai rentang tanggal dan indikator jika data yang ditampilkan merupakan hasil simulasi/prediksi atau berasal dari data `isSynthetic = true`.
-- Berkas unggahan pembaruan data wajib divalidasi ekstensi (`.csv`/`.xlsx`), ukuran maksimum, dan kolom wajibnya; berkas berformat salah ditolak dengan HTTP `422` RFC 9457 tanpa merusak data eksisting.
-- Data yang ditampilkan selalu mencerminkan status transaksi terkini dari database PostgreSQL.
+- Seluruh endpoint `/api/v1/analytics/*` (termasuk unduhan PDF Laporan) dan halaman dasbor analitik hanya boleh diakses oleh peran **`ADMIN`** (`STAFF` ditolak dengan HTTP `403 Forbidden`).
+- Formula seluruh angka KPI wajib 100% identik dengan spesifikasi KPI yang dikunci di `DS-02` (dan diaudit akhir di `DS-06`).
+- Setiap data sintetis (`isSynthetic = true`) atau hasil prediksi forecasting wajib menampilkan badge/catatan batas data secara eksplisit (tidak diklaim sebagai data riil atau jaminan akurasi operasional).
+- Jika layanan AI Insight (`AI-06`) atau forecasting (`DS-05`) tidak tersedia/timeout, kartu KPI dan filter dasbor tetap berjalan normal dengan pesan status jelas pada panel terkait.
 
 ### API Contract
 
 #### Daftar Endpoint
 
-| Method | Path                           | Fungsi                                                                                        | Autentikasi / Role   |
-| :----- | :----------------------------- | :-------------------------------------------------------------------------------------------- | :------------------- |
-| `GET`  | `/api/v1/analytics/overview`   | Ambil ringkasan KPI, tren periode, menu terlaris, sentimen (AI-03), dan forecasting (DS-05)   | Autentikasi: `ADMIN` |
-| `POST` | `/api/v1/analytics/upload`     | Unggah berkas CSV/XLSX pembaruan data (multipart/form-data, validasi skema, flag isSynthetic) | Autentikasi: `ADMIN` |
-| `POST` | `/api/v1/analytics/insights`   | Picu atau ambil narasi AI Business Insight via FastAPI POST /api/v1/insight/generate          | Autentikasi: `ADMIN` |
-| `GET`  | `/api/v1/analytics/report/pdf` | Unduh laporan analitik dan insight bisnis resmi dalam format application/pdf                  | Autentikasi: `ADMIN` |
+| Method | Path                                     | Fungsi                                                                                                              | Autentikasi / Role |
+| :----- | :--------------------------------------- | :------------------------------------------------------------------------------------------------------------------ | :----------------- |
+| `GET`  | `/api/v1/analytics/overview`             | Ringkasan KPI (`DS-02`), tren periode, filter status/tanggal, sentimen (`AI-03`), & prediksi (`DS-05`)              | `ADMIN`            |
+| `GET`  | `/api/v1/analytics/forecast-ingredients` | Ambil proyeksi permintaan per menu (`DS-05`) dan gabungkan dengan resep standar (`FS-04`) untuk estimasi bahan baku | `ADMIN`            |
+| `POST` | `/api/v1/analytics/upload`               | Unggah berkas `.csv`/`.xlsx` pembaruan data (`multipart/form-data`, validasi skema, flag `isSynthetic`)             | `ADMIN`            |
+| `POST` | `/api/v1/analytics/insights`             | Picu narasi AI Business Insight via FastAPI `POST /api/v1/insight/generate` (`AI-06`)                               | `ADMIN`            |
+| `GET`  | `/api/v1/analytics/report/pdf`           | Unduh **PDF Laporan Analitik & AI Business Insight** (`application/pdf`)                                            | `ADMIN`            |
 
-#### Format Wire Contract Sukses
+#### Standar Error RFC 9457 (`Content-Type: application/problem+json`)
 
-- `GET /api/v1/analytics/overview?startDate=2026-11-01&endDate=2026-11-30`
-  - Response `200 OK`:
-    ```json
-    {
-      "data": {
-        "kpis": {
-          "totalOrders": 42,
-          "totalPortions": 3850,
-          "revenue": 96250000,
-          "topMenu": "Nasi Box Ayam Lengkuas"
-        },
-        "trends": [
-          { "date": "2026-11-01", "portions": 120 },
-          { "date": "2026-11-02", "portions": 80 }
-        ],
-        "sentimentDistribution": { "positive": 88, "negative": 12 },
-        "demandForecastNextWeek": [{ "date": "2026-12-01", "predictedPortions": 250 }]
-      },
-      "meta": { "requestId": "0192f0c8-7b3a-7000-8000-000000000006" }
-    }
-    ```
-
-- `POST /api/v1/analytics/upload`
-  - Request (`multipart/form-data`): field `file` (`.csv` atau `.xlsx`), opsional `isSynthetic` (`boolean`).
-  - Response `200 OK`:
-    ```json
-    {
-      "data": {
-        "importedRows": 120,
-        "skippedRows": 0,
-        "isSynthetic": false
-      },
-      "meta": { "requestId": "0192f0c8-7b3a-7000-8000-000000000007" }
-    }
-    ```
-
-#### Standar Error RFC 9457 & Kode Status HTTP
-
-Layanan mengembalikan kode status HTTP standar:
-
-- `200 OK`: Data analitik berhasil diambil atau berkas berhasil diunggah.
-- `201 Created`: Pembuatan laporan analitik sukses.
-- `400 Bad Request`: Parameter query tanggal tidak valid.
-- `401 Unauthorized`: Kredensial tidak valid.
-- `403 Forbidden`: Staf operasional mencoba membuka modul analitik.
-- `404 Not Found`: Data tidak ditemukan.
-- `422 Unprocessable Content`: Format berkas tidak didukung atau kolom wajib hilang.
-- `500 Internal Server Error`: Kesalahan server internal.
-- `503 Service Unavailable`: Layanan AI Insight atau forecasting tidak merespon.
-
-Contoh payload error RFC 9457 (`Content-Type: application/problem+json`):
-
-```json
-{
-  "type": "https://datatracker.ietf.org/doc/html/rfc9457",
-  "title": "Forbidden",
-  "status": 403,
-  "detail": "Modul analitik hanya dapat diakses oleh peran ADMIN.",
-  "instance": "/api/v1/analytics/overview",
-  "requestId": "0192f0c8-7b3a-7000-8000-000000000006"
-}
-```
-
-#### Dokumentasi OpenAPI 3.1.0 & Scalar
-
-Seluruh endpoint terdaftar dalam skema OpenAPI 3.1.0 di `/api/openapi` dan disajikan via Scalar UI di `/docs` (fail-closed produksi `DOCS_ENABLED`).
+- `401 Unauthorized`, `403 Forbidden` (`STAFF` mengakses dasbor atau unduh PDF), `422 Unprocessable Content` (filter tanggal terbalik, format file unggahan salah/kolom wajib hilang), `503 Service Unavailable` (layanan forecasting/insight sementara tidak tersedia).
 
 ### Acceptance Criteria
 
-- [ ] Seluruh 4 endpoint analitik terdaftar pada tabel kontrak API dan terimplementasi.
-- [ ] Pengelola berhasil melihat indikator KPI utama dan mengubah filter periode tanggal/status dengan grafik yang terbarui secara dinamis.
-- [ ] Unggah berkas CSV/Excel valid berhasil memperbarui data analitik, sedangkan berkas berformat salah ditolak dengan pesan error jelas (HTTP 422 RFC 9457).
-- [ ] Hasil inferensi peramalan dari Data Science (`DS-05`), ringkasan sentimen (`AI-03`), dan narasi AI Business Insight tampil secara terpadu di tab analitik.
-- [ ] Tombol unduh laporan PDF memicu pengunduhan berkas ringkasan analitik resmi katering.
-- [ ] Akses oleh pengguna dengan peran `STAFF` ditolak dengan HTTP 403 Forbidden RFC 9457.
-- [ ] Dokumentasi endpoint OpenAPI 3.1.0 tampil di Scalar `/docs`.
+- [ ] Seluruh 5 endpoint analitik terimplementasi sesuai kontrak OpenAPI 3.1.0 di Scalar `/docs` dan mengadopsi formula KPI terkunci dari `DS-02`.
+- [ ] Filter periode tanggal dan status pesanan/pembayaran memperbarui indikator KPI dan grafik secara dinamis dan akurat.
+- [ ] Unggah file valid (`.csv`/`.xlsx`) berhasil memperbarui data dengan penandaan `isSynthetic` yang sesuai; unggah file berformat salah ditolak dengan HTTP `422` RFC 9457 dan pesan jelas.
+- [ ] Prediksi permintaan per menu (`DS-05`) berhasil digabungkan dengan resep terkonfirmasi (`FS-04`) menjadi estimasi kebutuhan bahan baku beserta catatan batas data/simulasi.
+- [ ] Ringkasan sentimen (`AI-03`) dan narasi AI Business Insight (`AI-06`) tampil terpadu di dasbor; data sintetis ditandai jelas.
+- [ ] Unduhan `GET /api/v1/analytics/report/pdf` menghasilkan PDF Laporan Analitik yang angkanya konsisten dengan dasbor dan narasi `AI-06`, serta menolak akses non-`ADMIN` dengan HTTP `403`.
 
-### Technical Notes
+### Keputusan yang Membutuhkan Konfirmasi (PIC / Tim)
 
-- Pustaka visualisasi grafik di web menggunakan library charting kompatibel React (misal: Recharts) `[Perlu Konfirmasi Tim]`.
-- Penentuan metrik default kartu ringkasan KPI `[Menunggu Konfirmasi PIC]`.
+- `[Menunggu Konfirmasi PIC]` Konfirmasi daftar kartu KPI default dan struktur ringkasan laporan PDF analitik yang paling berguna bagi pengelola Catering Si Kembar.
+- `[Perlu Konfirmasi Tim]` Kesepakatan pustaka visualisasi grafik React (misal Recharts) dan struktur kolom template file CSV/XLSX unggahan antara `FS-08` dan `DS-02`/`DS-03`.
 
 ### DoD
 
-- [ ] Endpoint `/api/v1/analytics/*` lulus pengujian rute dan otorisasi di Vitest.
-- [ ] Komponen dasbor di `apps/web` bebas dari kesalahan render dan responsif di desktop dan tablet.
-- [ ] Scalar documentation pada `/docs` memuat kontrak analitik OpenAPI 3.1.0.
+- [ ] Unit test dan route test `/api/v1/analytics/*` (termasuk validasi upload file salah, RBAC `STAFF`, agregasi estimasi bahan, dan PDF stream) lulus di Vitest.
+- [ ] Halaman Dasbor Analitik di `apps/web` responsif dan bebas error console.
+- [ ] Endpoint terdaftar di OpenAPI 3.1.0 Scalar `/docs`.
 
 ### Dependencies
 
-- Prasyarat: `FS-05` (Data Pesanan), `FS-06` (Data Keuangan), `DS-05` (Forecasting Service), `AI-03` (Model Sentimen).
-- Terkait: Memenuhi checklist Side Quest Full-Stack dan Data Science.
+- **Prasyarat:** `DS-02` (**Definisi KPI Terkunci di M2**), `FS-04` (Resep & Service Kalkulator Bahan), `FS-05` & `FS-06` (Data Pesanan & Keuangan), `DS-05` (Forecasting per Menu), `AI-03` (Sentimen), `AI-06` (AI Business Insight).
+- **Terkait:** Angka KPI dan laporan diverifikasi pada audit akurasi akhir `DS-06` (M4).
 
 ---
 
-## [FS-09] Modul Pengingat (In-App + Email Worker), Panduan Pengguna, Ukur Waktu Proses & Uji E2E
+## [FS-09] Modul Pengingat Otomatis (In-App, WAHA, Email), User Manual, Ukur Waktu Proses & Uji E2E
 
 - **Labels:** `area:fullstack`, `priority:P1-mvp`, `quest:main`, `quest:side`
-- **Priority:** `P1-mvp`
-- **Milestone:** `M4 (12–20 Des 2026)`
-- **Target Path:** `apps/api/src/modules/reminders`, `apps/worker`, `apps/web`
+- **Priority:** `P1-mvp` _(Pengukuran waktu proses, User Manual, dan Uji E2E 100 nasi box adalah **Wajib**; Modul Reminder Otomatis adalah **Tambahan** dan tidak boleh menunda alur utama)_
+- **Klasifikasi Project Plan:** Wajib (Pengukuran Waktu Proses, Pengujian E2E & User Manual) & Tambahan (Reminder Otomatis In-App, WAHA, Email Opsional)
+- **Milestone:** `M4: Validasi & Finalisasi (12–20 Des 2026)` — **PENTING (Kepatuhan Feature Freeze):** Seluruh kode fitur _Reminder Otomatis_ wajib selesai paling lambat **akhir M3 (11 Des 2026)**; fase **M4 (12–20 Des 2026)** difokuskan khusus pada pengujian E2E, perbaikan bug, pengukuran waktu proses vs baseline manual, demonstrasi PIC 100 nasi box, dan finalisasi dokumentasi/user manual.
+- **Penanggung Jawab (Project Plan):** Haidar Habibi Al Farisi (Reminder & E2E), Zaki Eka Saputra (Koordinator Dokumentasi & Pengukuran Waktu Proses)
+- **Target Path:** `apps/api/src/modules/reminders`, `apps/worker`, `apps/web`, `docs/`
 
 ### Context
 
-Pada tahap akhir sebelum demonstrasi produk kepada pengelola katering, sistem memerlukan modul pengingat otomatis (pengingat pesanan H-1 acara, pengingat jatuh tempo pelunasan) yang dieksekusi secara periodik oleh worker. Selain itu, diperlukan panduan pengguna ringkas (_user manual_), pelaksanaan pengujian end-to-end menyeluruh (alur pesanan, perhitungan bahan, invoice, pembayaran), serta pencatatan pengukuran waktu proses sistem untuk dibandingkan dengan baseline manual mitra.
+Sesuai Project Plan A26-CS105, terdapat dua pilar kerja penutup dari sisi Full-Stack:
+
+1. **Modul Pengingat Otomatis (kode selesai ≤ akhir M3 / Feature Freeze):** Menangani 4 jenis pengingat—**pesanan terdekat (H-1), pembayaran belum lunas, ringkasan keuangan mingguan (khusus `ADMIN`), dan saran bahan baku**—melalui kanal **in-app, WhatsApp via WAHA (khusus nomor staf terdaftar), dan email opsional (SendGrid/SMTP)**, dipicu oleh worker Node.js dan cron sistem VPS (tanpa Redis/BullMQ) dengan jaminan **tanpa duplikasi** dan pencatatan kegagalan untuk dicoba ulang.
+2. **Validasi, Pengukuran Waktu Proses & Dokumentasi Akhir (M4):** Menjalankan pengujian end-to-end skenario **100 nasi box** bersama PIC, mencatat waktu hitung bahan dan waktu penerbitan invoice pada sistem dibandingkan dengan **baseline manual** yang dicatat pada M1 sebagai **hasil teramati (bukan klaim dampak bisnis)**, serta menyusun User Manual dan README lengkap.
 
 ### Scope
 
-**In-Scope:**
+**Requirement Wajib (Project Plan — M4 Validasi & Dokumentasi):**
 
-- Endpoint internal pengelolaan jadwal pengingat (`/api/v1/reminders/*`) dan pencatatan riwayat pengiriman notifikasi di `NotificationLog` untuk mencegah duplikasi pengiriman (_idempotency_).
-- Integrasi notifikasi in-app pada antarmuka web (lonceng notifikasi dan daftar pengingat operasional).
-- Penyiapan task worker Node.js di `apps/worker` untuk memeriksa jadwal pengingat dan memicu pengiriman email atau notifikasi sistem.
-- Penyusunan dokumen Panduan Pengguna (_User Manual_) praktis untuk pengelola dan staf dapur katering.
-- Pengujian menyeluruh alur utama end-to-end (simulasi skenario 100 nasi box) serta pencatatan stopwatch waktu proses (hitung bahan dan cetak invoice).
-- Integrasi dokumentasi OpenAPI 3.1.0 dan Scalar di `/docs`.
+- Pengujian menyeluruh end-to-end alur utama (**skenario 100 nasi box**: input pesanan → hitung bahan → terbit invoice → catat DP & pelunasan → dasbor jadwal) pada uji internal dan demonstrasi PIC.
+- Pengukuran dan pencatatan waktu proses sistem (waktu hitung bahan & waktu penerbitan invoice) dibandingkan dengan baseline waktu manual mitra (dicatat tanggal dan sumber pengukuran; target < 5 menit hanya disebut sebagai **potensi**, bukan klaim dampak bisnis).
+- Penyusunan **User Manual** sederhana berbahasa Indonesia yang ramah staf senior (termasuk alasan keputusan desain responsif) dan pembaruan bagian dokumentasi uji pada README + Spreadsheet pengujian bersama.
+
+**Requirement Fitur Tambahan (Project Plan — Kode Reminder selesai ≤ akhir M3 / Feature Freeze):**
+
+- Endpoint pengelolaan & pemrosesan pengingat di Express (`/api/v1/reminders`, `PATCH /api/v1/reminders/:id/read`, `POST /api/v1/reminders/process-due`).
+- Cakupan **4 jenis pengingat**:
+  1. Pesanan terdekat (misal H-1 acara).
+  2. Pembayaran belum lunas (`UNPAID` / `PARTIALLY_PAID` mendekati acara).
+  3. **Ringkasan keuangan mingguan** (hanya dikirim/ditampilkan kepada peran berwenang **`ADMIN`**).
+  4. **Saran kebutuhan bahan baku** untuk pesanan terjadwal terdekat (memanfaatkan kalkulasi resep `FS-04`).
+- Cakupan **3 kanal pengiriman**:
+  1. In-app notification di `apps/web` (lonceng & daftar pengingat sesuai role).
+  2. WhatsApp via WAHA (`AI-07`) — **hanya ke nomor staf terdaftar** dengan volume rendah.
+  3. Email opsional (SendGrid atau SMTP) — dengan fallback ke in-app jika belum dikonfigurasi/gagal.
+- Task worker Node.js di `apps/worker` yang memanggil `POST /api/v1/reminders/process-due` (dipicu cron sistem VPS tanpa Redis/BullMQ, dan mendukung pemicuan manual lewat backend bila cron gagal).
+- Mekanisme **anti-duplikasi (_idempotency_)** menggunakan `idempotencyKey` unik pada `NotificationLog` serta pencatatan status gagal (`FAILED`) dan **mekanisme percobaan ulang (_retry_)** tanpa mengulang pengiriman yang sudah berhasil.
 
 **Out-of-Scope:**
 
-- Integrasi SMS gateway berbayar.
-- Penjadwalan pesan pemasaran massal (_blast broadcast marketing_).
+- SMS gateway berbayar atau pesan broadcast promosi massal ke pelanggan.
+- Penggunaan Redis/BullMQ pada fase MVP.
+- Klaim dampak bisnis komersial telah tercapai dari hasil prototype.
 
 ### Business Rules
 
-- Pengingat pesanan hanya dikirimkan satu kali per event (_idempotent_) dengan status tercatat `SENT`.
-- Pengingat pembayaran hanya dikirimkan untuk pesanan yang belum lunas (_status invoice bukan PAID_).
-- Pencatatan waktu proses sistem harus diukur berdasarkan durasi eksekusi nyata sejak tombol ditekan hingga hasil tampil di layar, tanpa klaim spekulatif.
+- **Idempotensi Ketat:** Menjalankan cron/worker dua kali pada jadwal reminder yang sama **tidak boleh** mengirim notifikasi ganda (`idempotencyKey` unik per jenis/entitas/periode/kanal/penerima).
+- **Retry Tanpa Duplikasi:** Jika satu kanal gagal (misal WAHA putus atau SMTP error), kegagalan dicatat di `NotificationLog` dan dicoba ulang hanya untuk item yang berstatus `FAILED` tanpa mengganggu pengiriman kanal lain yang sudah `DELIVERED`.
+- **RBAC Pengingat Keuangan:** Ringkasan keuangan mingguan dan nominal tagihan sensitif hanya boleh dikirim dan ditampilkan ke peran **`ADMIN`** (`STAFF` ditolak `403` atau tersaring ketat).
+- **Whitelist WhatsApp:** Pengiriman WAHA hanya ditujukan ke `whatsappNumber` staf terdaftar di database.
+- **Pelaporan Objektif Waktu Proses:** Waktu sistem dan baseline manual dicatat beserta tanggal dan sumbernya sebagai hasil teramati demonstrasi.
 
 ### API Contract
 
 #### Daftar Endpoint
 
-| Method  | Path                            | Fungsi                                                                                                  | Autentikasi / Role                                        |
-| :------ | :------------------------------ | :------------------------------------------------------------------------------------------------------ | :-------------------------------------------------------- |
-| `GET`   | `/api/v1/reminders`             | Ambil daftar notifikasi pengingat in-app sesuai role (ringkasan keuangan khusus ADMIN, dengan paginasi) | Autentikasi: `ADMIN`, `STAFF`                             |
-| `PATCH` | `/api/v1/reminders/:id/read`    | Tandai entri notifikasi pengingat in-app telah dibaca pengguna                                          | Autentikasi: `ADMIN`, `STAFF`                             |
-| `POST`  | `/api/v1/reminders/process-due` | Jalankan proses pemindaian dan pengiriman pengingat jatuh tempo (idempoten)                             | Autentikasi: Internal `X-Internal-Token` dari worker/cron |
+| Method  | Path                            | Fungsi                                                                                                | Autentikasi / Role                                              |
+| :------ | :------------------------------ | :---------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------- |
+| `GET`   | `/api/v1/reminders`             | Daftar notifikasi in-app sesuai role (ringkasan keuangan khusus `ADMIN`, paginasi)                    | `ADMIN`, `STAFF`                                                |
+| `PATCH` | `/api/v1/reminders/:id/read`    | Tandai notifikasi in-app telah dibaca                                                                 | `ADMIN`, `STAFF`                                                |
+| `POST`  | `/api/v1/reminders/process-due` | Pindai jadwal jatuh tempo, kirim reminder lintas kanal (in-app/WAHA/email), catat idempotensi & retry | `X-Internal-Token` (Worker/Cron) atau `ADMIN` (manual fallback) |
 
-#### Format Wire Contract Sukses
+#### Standar Error RFC 9457 (`Content-Type: application/problem+json`)
 
-- `POST /api/v1/reminders/process-due` (Internal Cron / Worker Call)
-  - Headers: `X-Internal-Token: <INTERNAL_SERVICE_SECRET>`
-  - Response `200 OK`:
-    ```json
-    {
-      "data": {
-        "processedCount": 3,
-        "sentNotifications": [
-          {
-            "orderId": "ord_01",
-            "type": "H_MINUS_1_EVENT",
-            "channel": "IN_APP",
-            "status": "DELIVERED"
-          }
-        ]
-      },
-      "meta": { "requestId": "0192f0c8-7b3a-7000-8000-000000000008" }
-    }
-    ```
-
-- `GET /api/v1/reminders?page=1&limit=10`
-  - Response `200 OK`:
-    ```json
-    {
-      "data": [
-        {
-          "id": "notif_01",
-          "title": "Pengingat Pesanan Besok",
-          "message": "Pesanan ORD-202612-0001 (100 box) dijadwalkan besok pukul 10:00",
-          "isRead": false,
-          "createdAt": "2026-12-14T08:00:00.000Z"
-        }
-      ],
-      "meta": {
-        "requestId": "0192f0c8-7b3a-7000-8000-000000000009",
-        "pagination": {
-          "page": 1,
-          "limit": 10,
-          "total": 1,
-          "totalPages": 1
-        }
-      }
-    }
-    ```
-
-- `PATCH /api/v1/reminders/:id/read`
-  - Response `204 No Content` (tanpa body response).
-
-#### Standar Error RFC 9457 & Kode Status HTTP
-
-Layanan mengembalikan kode status HTTP standar:
-
-- `200 OK`: Pemrosesan pengingat selesai atau daftar notifikasi berhasil diambil.
-- `204 No Content`: Notifikasi berhasil ditandai telah dibaca.
-- `400 Bad Request`: Format JSON tidak valid.
-- `401 Unauthorized`: Kredensial tidak valid atau `X-Internal-Token` salah.
-- `403 Forbidden`: Staf mencoba mengakses ringkasan pengingat keuangan admin.
-- `404 Not Found`: Notifikasi tidak ditemukan.
-- `422 Unprocessable Content`: Validasi payload gagal.
-- `500 Internal Server Error`: Kesalahan server internal saat mengirim notifikasi/email.
-
-Contoh payload error RFC 9457 (`Content-Type: application/problem+json`):
-
-```json
-{
-  "type": "https://datatracker.ietf.org/doc/html/rfc9457",
-  "title": "Unauthorized",
-  "status": 401,
-  "detail": "Kredensial token internal tidak valid.",
-  "instance": "/api/v1/reminders/process-due",
-  "requestId": "0192f0c8-7b3a-7000-8000-000000000008"
-}
-```
-
-#### Dokumentasi OpenAPI 3.1.0 & Scalar
-
-Seluruh endpoint terdaftar dalam skema OpenAPI 3.1.0 di `/api/openapi` dan disajikan via Scalar UI di `/docs` (fail-closed produksi `DOCS_ENABLED`).
+- `401 Unauthorized` (`X-Internal-Token` atau sesi tidak valid), `403 Forbidden`, `404 Not Found`, `422 Unprocessable Content`, `500 Internal Server Error`.
 
 ### Acceptance Criteria
 
-- [ ] Seluruh 3 endpoint pengingat terdaftar pada tabel kontrak API dan terimplementasi.
-- [ ] Worker berhasil memproses pengingat pesanan H-1 dan pesanan jatuh tempo tanpa terjadinya duplikasi pengiriman ke pelanggan/staf.
-- [ ] Pengujian skenario demonstrasi 100 nasi box berjalan mulus end-to-end: input pesanan -> hitung bahan -> terbit invoice -> catat DP -> jadwal tampil di dasbor.
-- [ ] Waktu hitung bahan dan penerbitan invoice pada sistem tercatat bersama tanggal dan sumber pengukuran sebagai hasil teramati demonstrasi (potensi < 5 menit, tanpa klaim dampak bisnis komersial).
-- [ ] Dokumen panduan pengguna (_user manual_) selesai disusun dengan bahasa sederhana dan instruksi bergambar.
-- [ ] Dokumentasi endpoint OpenAPI 3.1.0 tampil di Scalar `/docs`.
+- [ ] Seluruh 3 endpoint reminder terimplementasi (kode selesai ≤ akhir M3) dan terdokumentasi di OpenAPI 3.1.0 Scalar `/docs`.
+- [ ] Pengujian membuat pesanan H-1 & pembayaran belum lunas, lalu menjalankan cron/worker **dua kali berturut-turut** pada jadwal yang sama membuktikan reminder terkirim **tepat sekali tanpa duplikasi**.
+- [ ] Pengujian mematikan salah satu kanal (misal WAHA atau email) membuktikan kegagalan tercatat di `NotificationLog`, kanal lain tetap berjalan, dan item gagal dapat dicoba ulang tanpa menduplikasi yang berhasil.
+- [ ] Pesan WhatsApp hanya terkirim ke nomor staf terdaftar; ringkasan keuangan mingguan hanya dapat diakses/diterima peran `ADMIN`.
+- [ ] Pengujian E2E skenario **100 nasi box** (input pesanan → hitung bahan → terbit invoice → catat DP & pelunasan → dasbor jadwal) lulus penuh pada uji internal dan demonstrasi PIC, dengan feedback PIC tercatat.
+- [ ] Waktu proses manual (baseline M1) dan waktu sistem (demonstrasi M4) tercatat lengkap dengan tanggal dan sumbernya sebagai hasil teramati tanpa klaim dampak bisnis.
+- [ ] User Manual berbahasa sederhana (memuat panduan staf senior & catatan keputusan desain responsif) dan catatan hasil uji di Spreadsheet bersama & README selesai disusun.
 
-### Technical Notes
+### Keputusan yang Membutuhkan Konfirmasi (PIC / Tim)
 
-- Kredensial akun email SMTP pengirim pengingat `[Perlu Konfirmasi Tim]`.
-- Pencatatan baseline waktu manual bersama mitra katering pada pesanan nyata `[Menunggu Konfirmasi PIC]`.
+- `[Menunggu Konfirmasi PIC]` Jadwal pencatatan baseline waktu manual hitung bahan & penerbitan invoice bersama mitra (M1) serta jadwal demonstrasi 100 nasi box dan final survey (M4).
+- `[Menunggu Konfirmasi PIC]` Waktu pengiriman ideal reminder harian (misal H-1 jam 08.00 WIB) dan hari pengiriman ringkasan keuangan mingguan.
+- `[Perlu Konfirmasi Tim]` Pemilihan kanal email opsional (SendGrid vs SMTP gratis) atau cukup in-app + WAHA bila batas kuota email tidak memadai.
 
 ### DoD
 
-- [ ] Pengujian E2E alur utama berhasil 100% tanpa kendala fungsional.
-- [ ] Panduan pengguna tersedia di dokumentasi web atau direktori `docs/`.
-- [ ] Hasil pengukuran waktu proses tercatat rapi dan siap didemonstrasikan.
-- [ ] Dokumentasi endpoint OpenAPI 3.1.0 tersedia di Scalar `/docs`.
+- [ ] Kode fitur reminder & worker selesai dan lolos test idempotensi/retry/RBAC sebelum feature freeze akhir M3 (11 Des 2026).
+- [ ] Uji E2E 100 nasi box, laporan waktu proses teramati, feedback PIC, dan User Manual selesai di M4 (20 Des 2026).
+- [ ] Endpoint terdaftar di OpenAPI 3.1.0 Scalar `/docs`.
 
 ### Dependencies
 
-- Prasyarat: `FS-05` (Pesanan), `FS-06` (Invoice Keuangan), `OPS-02` (VPS Runtime).
-- Terkait: Dieksekusi secara terjadwal oleh cron VPS dan diuji ketahanan failover-nya pada `OPS-05`.
+- **Prasyarat:** `FS-02` (`NotificationLog`), `FS-04` (Kalkulator Saran Bahan), `FS-05` (Pesanan/Jadwal), `FS-06` (Invoice/DP/Pelunasan), `AI-07` (Kanal WAHA), `OPS-02` (VPS Runtime).
+- **Terkait:** Penjadwalan cron & uji failover pra-demo terkoordinasi erat dengan `OPS-05`.

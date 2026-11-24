@@ -11,6 +11,7 @@ from app.contracts import (
     InsightMetricsInput,
     InsightTopMenu,
     RagChatData,
+    RagChatHistoryItem,
     RagChatRequest,
     RagChatResponse,
     RagSourceItem,
@@ -64,6 +65,7 @@ _SCHEMA_MODELS: Final[tuple[type[BaseModel], ...]] = (
     SentimentBatchRequest,
     SentimentBatchItemResult,
     SentimentBatchResponse,
+    RagChatHistoryItem,
     RagChatRequest,
     RagSourceItem,
     RagChatData,
@@ -82,7 +84,6 @@ _V1_EXAMPLES: Final[dict[str, dict[str, Any]]] = {
             "label": "relevant",
             "is_relevant": True,
             "confidence": 0.942,
-            "intent": None,
             "model_version": "relevance_lr_v1.0",
         },
         "meta": {"requestId": EXAMPLE_REQUEST_ID},
@@ -116,22 +117,29 @@ _V1_EXAMPLES: Final[dict[str, dict[str, Any]]] = {
     "/api/v1/rag/chat": {
         "data": {
             "reply": (
-                "Halo! Catering Si Kembar tentu melayani pesanan 50 nasi box. "
-                "Untuk jadwal lusa, mohon pastikan pesanan segera dikonfirmasi dan "
-                "pembayaran uang muka (DP) minimal 60% diselesaikan hari ini agar tim dapur "
-                "kami dapat menyiapkan bahan baku tepat waktu."
+                "Berdasarkan data sistem, pesanan ORD-202612-0001 berstatus CONFIRMED dengan DP "
+                "Rp1.500.000 (PARTIALLY_PAID). Sesuai kebijakan pembayaran, minimal DP adalah 60% "
+                "(menunggu konfirmasi PIC)."
             ),
             "is_relevant": True,
-            "intent": None,
-            "tools_called": ["search_catering_knowledge"],
+            "tools_called": ["get_invoice_and_payment_status", "search_catering_knowledge"],
             "sources": [
                 {
-                    "source": "faq.md",
-                    "category": "pemesanan",
-                    "chunk_id": "faq_order_01_c1",
-                }
+                    "source": "payment_policy.md",
+                    "category": "payment",
+                    "chunk_id": "pay_dp_01_c1",
+                    "version": "1.0",
+                    "validated_at": "2026-11-24",
+                    "validation_status": "verified",
+                    "is_verified": True,
+                },
+                {
+                    "source": "postgresql:invoices",
+                    "category": "operational_db",
+                    "reference_id": "ORD-202612-0001",
+                },
             ],
-            "tokens_used": 185,
+            "tokens_used": 240,
             "is_fallback": False,
         },
         "meta": {"requestId": EXAMPLE_REQUEST_ID},
