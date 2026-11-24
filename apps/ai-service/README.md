@@ -130,6 +130,24 @@ uv run --frozen mypy app
 uv run --frozen pytest --cov=app --cov-report=term-missing --cov-fail-under=80
 ```
 
+### Evaluasi Model Relevansi 2 Kelas (AI-02)
+
+Modul relevansi menyaring pertanyaan pelanggan ke dalam dua kelas: `relevant` (domain katering) dan `out_of_domain` (luar katering). Dataset awal dibangkitkan secara transparan berlabel `is_synthetic=true` pada `data/synthetic/relevance_dataset.csv` (439 sampel unik: 351 train / 88 test, rasio terstratifikasi 80:20 tanpa kebocoran data).
+
+#### Tabel Perbandingan Model & Tuning
+
+| Model Arsitektur                | Status Evaluasi                  | Holdout F1-score | Holdout Accuracy |
+| ------------------------------- | -------------------------------- | ---------------- | ---------------- |
+| `MultinomialNB (baseline)`      | Baseline tanpa tuning            | 0.8730           | 0.8182           |
+| `LogisticRegression (baseline)` | Sebelum hyperparameter tuning    | 0.9402           | 0.9205           |
+| `LogisticRegression (tuned)`    | Sesudah `GridSearchCV` 5-fold CV | 0.9735           | 0.9659           |
+
+- **Hyperparameter Tuning:** Melalui 5-fold `StratifiedKFold` CV, parameter optimal diperoleh pada `C=10.0`, `class_weight='balanced'`, `ngram_range=(1, 1)`, dan `sublinear_tf=True`. F1-score meningkat dari `0.9402` menjadi `0.9735` dan akurasi meningkat dari `0.9205` menjadi `0.9659`.
+- **Confusion Matrix Holdout:** `[[55, 0], [3, 30]]` (baris: ground truth `relevant` & `out_of_domain`; kolom: prediksi). Model mencapai presisi `0.9483` dan recall `1.0000` pada kelas relevan (0 false negative).
+- **Alasan Pemilihan Model:** `LogisticRegression (tuned)` dipilih karena menghasilkan F1-score tertinggi (`0.9735`), probabilitas terkalibrasi, serta mendukung dual-artifact (bobot matematis JSON portable untuk CI minimal tanpa dependensi ML tambahan).
+- **Rata-rata Latensi Inferensi:** `1.493 ms` per permintaan (jauh di bawah ambang SLA `< 100 ms`).
+- **Rujukan Eksperimen:** Alur eksperimen mandiri dan evaluasi lengkap terdokumentasi pada notebook `notebooks/04_relevance_classification.ipynb`.
+
 ---
 
 ## 4. Kepatuhan & Guardrails Keamanan AI

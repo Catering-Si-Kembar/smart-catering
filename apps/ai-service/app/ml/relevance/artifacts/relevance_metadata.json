@@ -1,0 +1,70 @@
+{
+  "modelName": "relevance_classifier",
+  "version": "1.0.0",
+  "modelVersion": "relevance_lr_v1.0",
+  "algorithm": "LogisticRegression (tuned)",
+  "classes": [
+    "relevant",
+    "out_of_domain"
+  ],
+  "isSynthetic": true,
+  "confidenceThreshold": 0.6,
+  "metrics": {
+    "f1Score": 0.9735,
+    "precision": 0.9483,
+    "recall": 1.0,
+    "accuracy": 0.9659
+  },
+  "imbalanceHandling": "class_weight='balanced'",
+  "datasetStats": {
+    "total": 439,
+    "train": 351,
+    "test": 88,
+    "relevant": 275,
+    "outOfDomain": 164
+  },
+  "modelComparison": [
+    {
+      "model": "MultinomialNB (baseline)",
+      "holdoutF1": 0.873,
+      "holdoutAccuracy": 0.8182
+    },
+    {
+      "model": "LogisticRegression (baseline)",
+      "holdoutF1": 0.9402,
+      "holdoutAccuracy": 0.9205
+    },
+    {
+      "model": "LogisticRegression (tuned)",
+      "holdoutF1": 0.9735,
+      "holdoutAccuracy": 0.9659
+    }
+  ],
+  "tuningComparison": {
+    "beforeTuning": {
+      "holdoutF1": 0.9402,
+      "holdoutAccuracy": 0.9205
+    },
+    "afterTuning": {
+      "holdoutF1": 0.9735,
+      "holdoutAccuracy": 0.9659
+    }
+  },
+  "confusionMatrix": {
+    "labels": [
+      "relevant",
+      "out_of_domain"
+    ],
+    "matrix": [
+      [
+        55,
+        0
+      ],
+      [
+        3,
+        30
+      ]
+    ]
+  },
+  "avgInferenceLatencyMs": 1.493
+}

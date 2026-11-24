@@ -18,6 +18,10 @@ from app.contracts import (
     SentimentPredictResponse,
 )
 from app.errors import AppProblemError
+from app.ml.relevance.inference import (
+    ModelArtifactMissingError,
+    RelevanceClassifierService,
+)
 from app.responses import create_success_response
 from app.schemas import HealthData, HealthResponse
 
@@ -36,6 +40,15 @@ def verify_internal_token(request: Request) -> None:
             status_code=401,
             detail="Authentication credentials are required or invalid.",
         )
+
+
+def get_relevance_service(request: Request) -> RelevanceClassifierService:
+    service = getattr(request.app.state, "relevance_service", None)
+    if isinstance(service, RelevanceClassifierService):
+        return service
+    service = RelevanceClassifierService()
+    request.app.state.relevance_service = service
+    return service
 
 
 v1_router = APIRouter(prefix="/api/v1")
@@ -76,12 +89,18 @@ async def head_v1_health(request: Request) -> Response:
     dependencies=[Depends(verify_internal_token)],
 )
 async def predict_relevance(
+    request: Request,
     payload: RelevancePredictRequest,
-) -> RelevancePredictResponse:
-    raise AppProblemError(
-        status_code=503,
-        detail="Relevance prediction capability is temporarily unavailable.",
-    )
+    relevance_service: RelevanceClassifierService = Depends(get_relevance_service),  # noqa: B008
+) -> Response:
+    try:
+        result = relevance_service.predict(payload.text)
+    except ModelArtifactMissingError as exc:
+        raise AppProblemError(
+            status_code=503,
+            detail="Relevance classification model artifacts are unavailable.",
+        ) from exc
+    return create_success_response(request, result)
 
 
 @v1_router.get(
@@ -91,11 +110,18 @@ async def predict_relevance(
     summary="Get relevance classification model metadata",
     dependencies=[Depends(verify_internal_token)],
 )
-async def get_relevance_metadata() -> RelevanceMetadataResponse:
-    raise AppProblemError(
-        status_code=503,
-        detail="Relevance metadata capability is temporarily unavailable.",
-    )
+async def get_relevance_metadata(
+    request: Request,
+    relevance_service: RelevanceClassifierService = Depends(get_relevance_service),  # noqa: B008
+) -> Response:
+    try:
+        metadata = relevance_service.get_metadata()
+    except ModelArtifactMissingError as exc:
+        raise AppProblemError(
+            status_code=503,
+            detail="Relevance classification model metadata is unavailable.",
+        ) from exc
+    return create_success_response(request, metadata)
 
 
 @v1_router.post(
