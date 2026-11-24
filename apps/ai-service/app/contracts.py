@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
 
 from app.schemas import ApiMeta
 
@@ -314,6 +314,12 @@ class InsightMetricsInput(BaseModel):
         ge=0,
         description="Forecasted production portions for the upcoming week.",
     )
+
+    @model_validator(mode="after")
+    def _validate_order_bounds(self) -> InsightMetricsInput:
+        if self.completed_orders > self.total_orders:
+            raise ValueError("completed_orders cannot exceed total_orders.")
+        return self
 
 
 class InsightGenerateRequest(BaseModel):
