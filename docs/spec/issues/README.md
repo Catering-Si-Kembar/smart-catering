@@ -142,10 +142,10 @@ Setiap issue memiliki label metadata standar untuk pelacakan dan filter di issue
 
 ### Area (Disiplin Kerja)
 
-- `area:fullstack`: Frontend Next.js, Backend Express, skema database Prisma, dan antarmuka web.
-- `area:ds`: Pengolahan data UMKM, EDA, kamus data, dataset sintetis, dan pemodelan forecasting.
-- `area:ai`: Serving FastAPI, model klasifikasi relevansi/intent, sentimen, kurasi ChromaDB, RAG, dan SLM insight.
-- `area:devops`: CI/CD GitHub Actions, Docker Compose VPS, deployment Vercel, Modal GPU, dan pemeliharaan worker.
+- `area:fullstack`: Frontend Next.js, Backend Express, skema database Prisma, backend read-only tools Agentic RAG, dan antarmuka web.
+- `area:ds`: Pengolahan data UMKM, EDA & definisi KPI dasbor, kamus data, dataset sintetis, dan pemodelan forecasting permintaan per menu.
+- `area:ai`: Serving FastAPI, model klasifikasi relevansi dua kelas (tanpa klasifikasi intent), sentimen 2 kelas, kurasi ChromaDB, Agentic RAG dual-source tool calling, dan SLM insight.
+- `area:devops`: CI/CD GitHub Actions, Docker Compose VPS, deployment Vercel, Modal GPU, dan pemeliharaan cron worker.
 
 ### Priority (Tingkat Urgensi)
 
@@ -162,7 +162,7 @@ Setiap issue memiliki label metadata standar untuk pelacakan dan filter di issue
 
 ## 4. Peta Milestone 1 Bulan (21 Nov – 20 Des 2026)
 
-Target rilis berpedoman pada jadwal 4 minggu proyek:
+Target rilis berpedoman pada jadwal 4 minggu Project Plan A26-CS105:
 
 ```text
 [M1: 21–27 Nov 2026] ──► [M2: 28 Nov–4 Des 2026] ──► [M3: 5–11 Des 2026] ──► [M4: 12–20 Des 2026]
@@ -172,84 +172,84 @@ Rancangan Disepakati     Fitur Inti Tersedia        Alur Utama Selesai &      Va
 
 ### Milestone M1: Rancangan Disepakati (21–27 Nov 2026)
 
-Fokus: Mockup antarmuka, baseline manual, kontrak API, skema DB, kamus data, dataset awal, konfigurasi ChromaDB, CI, dan uji kelayakan layanan pihak ketiga.
+Fokus: Mockup UI, kontrak API, skema DB Prisma, dataset awal & kamus data, konfigurasi ChromaDB (konfirmasi paling lambat 23 Nov 2026), baseline waktu proses, CI, dan uji kelayakan layanan.
 
 - `FS-01`: App Mockup, Desain Responsif & App Shell Staf Senior (`P0-blocker`, `quest:main`, `quest:side`)
 - `FS-02`: Skema Database Prisma, Migrasi & Seed Data Uji (`P0-blocker`, `quest:main`, `quest:side`)
 - `FS-03`: Autentikasi, RBAC & Standar Validasi Express `/api/v1` (Joi) (`P0-blocker`, `quest:main`, `quest:side`)
-- `DS-01`: Pengumpulan, Anonimasi & Data Wrangling Data UMKM (`P0-blocker`, `quest:main`)
+- `DS-01`: Pengumpulan, Anonimisasi & Data Wrangling Data UMKM (`P0-blocker`, `quest:main`)
 - `DS-03`: Kamus Data, Generator Data Sintetik (`is_synthetic`) & Paket Dataset untuk Gen AI (`P0-blocker`, `quest:main`, `quest:side`)
-- `AI-01`: Dokumentasi Masalah AI, Kontrak OpenAPI & Kerangka Serving FastAPI (`P0-blocker`, `quest:main`, `quest:side`)
-- `AI-04`: Kurasi Knowledge Base Tervalidasi PIC & Retrieval ChromaDB (`P1-mvp`, `quest:side`)
+- `AI-01`: Dokumentasi Masalah AI, Kontrak OpenAPI & Kerangka Serving FastAPI (`P0-blocker`, `quest:main`, `quest:side`) — _(Selesai / CLOSED)_
+- `AI-04`: Kurasi Knowledge Base Tervalidasi PIC & Retrieval ChromaDB (`P1-mvp`, `quest:main`, `quest:side`)
 - `OPS-01`: Tata Kelola Git/PR, GitHub Actions CI & Secrets Hygiene (`P0-blocker`, `quest:main`, `quest:side`)
 
 ### Milestone M2: Fitur Inti Tersedia (28 Nov – 4 Des 2026)
 
-Fokus: Input pesanan, katalog menu/resep, perhitungan bahan, model relevansi, forecasting baseline vs RF, model sentimen, pipeline RAG, Docker Compose VPS, dan deployment Vercel.
+Fokus: Input pesanan (validasi harga DB) & invoice awal, katalog menu/resep & konversi satuan bahan, EDA 5 pertanyaan & **penguncian definisi KPI dasbor**, model relevansi 2 kelas, forecasting per menu (evaluasi objektif MA vs RF), model sentimen, pipeline Agentic RAG dasar, Docker Compose VPS, deployment Vercel, dan penyiapan inference Modal GPU.
 
 - `FS-04`: Modul Katalog Menu, Resep & Kalkulator Bahan Otomatis (`P1-mvp`, `quest:main`)
 - `FS-05`: Modul Pesanan & Dasbor Jadwal Produksi (`P1-mvp`, `quest:main`)
-- `DS-02`: EDA 5 Pertanyaan Bisnis, Visualisasi & Rekomendasi Operasional (`P1-mvp`, `quest:main`)
-- `DS-04`: Feature Engineering & Modeling Forecasting Permintaan (`P2-side-quest`, `quest:side`)
-- `AI-02`: Model Utama Latih Sendiri: Klasifikasi Relevansi / Intent (`P1-mvp`, `quest:main`, `quest:side`)
+- `DS-02`: EDA 5 Pertanyaan Bisnis, Definisi KPI Dasbor, Visualisasi & Rekomendasi Operasional (`P1-mvp`, `quest:main`, `quest:side`)
+- `DS-04`: Feature Engineering & Modeling Forecasting Permintaan per Menu (Moving Average vs Random Forest) (`P2-side-quest`, `quest:side`)
+- `AI-02`: Model Utama Latih Sendiri: Klasifikasi Relevansi Dua Kelas (`P1-mvp`, `quest:main`)
 - `AI-03`: Model Tambahan: Klasifikasi Sentimen Feedback Pelanggan (`P2-side-quest`, `quest:side`)
-- `AI-05`: Pipeline Agentic RAG, Tool Calling, Prompt Terstruktur & Guardrail (`P1-mvp`, `quest:main`, `quest:side`)
+- `AI-05`: Pipeline Agentic RAG, Dual-Source Tool Calling, Prompt Terstruktur & Guardrail (`P1-mvp`, `quest:main`, `quest:side`)
 - `OPS-02`: Docker Compose Produksi & Provisioning VPS + Reverse Proxy HTTPS (`P1-mvp`, `quest:main`, `quest:side`)
 - `OPS-03`: Deployment Frontend Vercel & Verifikasi Koneksi BFF Desktop/Mobile (`P1-mvp`, `quest:main`, `quest:side`)
+- `OPS-04`: Deployment SLM/LLM Open-Source di Modal GPU (vLLM) (`P2-side-quest`, `quest:side`)
 
 ### Milestone M3: Alur Utama Selesai & Feature Freeze (5–11 Des 2026)
 
-Fokus: Pencatatan DP dan pelunasan invoice, export PDF, integrasi chat AI dan dasbor analitik di UI, serving forecasting di AI service, inference SLM Modal GPU, uji kanal WAHA, dan **Feature Freeze pada 11 Des 2026**.
+Fokus: Alur utama tuntas (pencatatan DP minimal 60% `[Menunggu Konfirmasi PIC]`, pelunasan, konfirmasi pesanan, PDF Invoice), integrasi Chat AI + backend read-only tools DB, Dasbor Analitik + estimasi bahan forecasting + PDF Laporan Analitik, serving forecasting per menu, AI Business Insight, kanal WhatsApp WAHA, kode fitur reminder & konfigurasi cron VPS, serta **Feature Freeze pada 11 Des 2026**.
 
-- `FS-06`: Modul Keuangan: Invoice Digital, DP 60%, Pelunasan & Export PDF (`P1-mvp`, `quest:main`)
-- `FS-07`: Modul Chat AI: Proxy Backend, Riwayat Inferensi DB & UI Chat (`P2-side-quest`, `quest:side`)
-- `FS-08`: Modul Dasbor Analitik DS: KPI, Filter, Upload Data & Tampilan Prediksi/Insight (`P2-side-quest`, `quest:side`)
-- `DS-05`: Integrasi Pipeline Inferensi Forecasting ke `apps/ai-service` (`P2-side-quest`, `quest:side`)
+- `FS-06`: Modul Keuangan: Invoice Digital, DP 60%, Pelunasan & PDF Invoice (`P1-mvp`, `quest:main`)
+- `FS-07`: Modul Chat AI: Proxy Backend, Read-Only Tools DB, Riwayat Chat & UI Web (`P1-mvp`, `quest:main`, `quest:side`)
+- `FS-08`: Modul Dasbor Analitik DS: KPI, Filter, Upload Data, Estimasi Bahan Forecasting & PDF Laporan (`P2-side-quest`, `quest:side`)
+- `DS-05`: Integrasi Pipeline Inferensi Forecasting per Menu ke `apps/ai-service` (`P2-side-quest`, `quest:side`)
 - `AI-06`: Modul AI Business Insight (SLM/LLM Open-Source & Evaluasi 10 Laporan) (`P2-side-quest`, `quest:side`)
 - `AI-07`: Integrasi Kanal WhatsApp (WAHA / Cloud API Test) & Uji Resiliensi Layanan AI (`P2-side-quest`, `quest:side`)
-- `OPS-04`: Deployment SLM/LLM Open-Source di Modal GPU (vLLM) (`P2-side-quest`, `quest:side`)
 
 ### Milestone M4: Validasi & Finalisasi (12–20 Des 2026)
 
-Fokus: Pengujian sistem end-to-end, simulasi skenario 100 nasi box bersama PIC UMKM, pengukuran waktu sistem vs baseline manual, cron worker pengingat, audit data akhir, penyusunan README dan manual pengguna.
+Fokus _(pasca Feature Freeze — hanya pengujian, perbaikan bug, dan dokumentasi)_: Pengujian sistem end-to-end (20 skenario Project Plan), uji cron ganda tanpa duplikasi & failover pra-demo, verifikasi implementasi KPI & audit akurasi data akhir, demonstrasi skenario **100 nasi box** & pengukuran waktu sistem vs baseline manual bersama PIC UMKM, serta finalisasi README dan user manual.
 
-- `FS-09`: Modul Pengingat (In-App + Email Worker), Panduan Pengguna, Ukur Waktu Proses & Uji E2E (`P1-mvp`, `quest:main`, `quest:side`)
-- `DS-06`: Spesifikasi KPI Dasbor Bisnis & Audit Akurasi Data Akhir (`P1-mvp`, `quest:main`, `quest:side`)
-- `OPS-05`: Penjadwalan Cron Worker VPS, Backup DB/Chroma & Uji Failover Pra-Demo (`P2-side-quest`, `quest:side`)
+- `FS-09`: Modul Pengingat Otomatis (In-App, WAHA, Email), User Manual, Ukur Waktu Proses & Uji E2E (`P1-mvp`, `quest:main`, `quest:side`) _(kode fitur reminder selesai ≤ akhir M3 / Feature Freeze)_
+- `DS-06`: Verifikasi Implementasi KPI Dasbor & Audit Akurasi Data Akhir (`P1-mvp`, `quest:main`, `quest:side`)
+- `OPS-05`: Penjadwalan Cron Worker VPS, Backup DB/Chroma & Uji Failover Pra-Demo (`P2-side-quest`, `quest:side`) _(konfigurasi cron VPS selesai ≤ akhir M3 / Feature Freeze)_
 
 ---
 
 ## 5. Tabel Indeks 27 Issue
 
-| ID       | Judul Issue                                                                             | Area             | Priority                 | Quest                      | Milestone                | Berkas Spesifikasi                           |
-| :------- | :-------------------------------------------------------------------------------------- | :--------------- | :----------------------- | :------------------------- | :----------------------- | :------------------------------------------- |
-| `FS-01`  | App Mockup, Desain Responsif & App Shell Staf Senior                                    | `area:fullstack` | `priority:P0-blocker`    | `quest:main`, `quest:side` | `M1 (21–27 Nov 2026)`    | [01-fullstack.md](01-fullstack.md)           |
-| `FS-02`  | Skema Database Prisma, Migrasi & Seed Data Uji                                          | `area:fullstack` | `priority:P0-blocker`    | `quest:main`, `quest:side` | `M1 (21–27 Nov 2026)`    | [01-fullstack.md](01-fullstack.md)           |
-| `FS-03`  | Autentikasi, RBAC & Standar Validasi Express `/api/v1` (Joi)                            | `area:fullstack` | `priority:P0-blocker`    | `quest:main`, `quest:side` | `M1 (21–27 Nov 2026)`    | [01-fullstack.md](01-fullstack.md)           |
-| `FS-04`  | Modul Katalog Menu, Resep & Kalkulator Bahan Otomatis                                   | `area:fullstack` | `priority:P1-mvp`        | `quest:main`               | `M2 (28 Nov–4 Des 2026)` | [01-fullstack.md](01-fullstack.md)           |
-| `FS-05`  | Modul Pesanan & Dasbor Jadwal Produksi                                                  | `area:fullstack` | `priority:P1-mvp`        | `quest:main`               | `M2 (28 Nov–4 Des 2026)` | [01-fullstack.md](01-fullstack.md)           |
-| `FS-06`  | Modul Keuangan: Invoice Digital, DP 60%, Pelunasan & Export PDF                         | `area:fullstack` | `priority:P1-mvp`        | `quest:main`               | `M3 (5–11 Des 2026)`     | [01-fullstack.md](01-fullstack.md)           |
-| `FS-07`  | Modul Chat AI: Proxy Backend, Riwayat Inferensi DB & UI Chat                            | `area:fullstack` | `priority:P2-side-quest` | `quest:side`               | `M3 (5–11 Des 2026)`     | [01-fullstack.md](01-fullstack.md)           |
-| `FS-08`  | Modul Dasbor Analitik DS: KPI, Filter, Upload Data & Tampilan Prediksi/Insight          | `area:fullstack` | `priority:P2-side-quest` | `quest:side`               | `M3 (5–11 Des 2026)`     | [01-fullstack.md](01-fullstack.md)           |
-| `FS-09`  | Modul Pengingat (In-App + Email Worker), Panduan Pengguna, Ukur Waktu Proses & Uji E2E  | `area:fullstack` | `priority:P1-mvp`        | `quest:main`, `quest:side` | `M4 (12–20 Des 2026)`    | [01-fullstack.md](01-fullstack.md)           |
-| `DS-01`  | Pengumpulan, Anonimasi & Data Wrangling Data UMKM                                       | `area:ds`        | `priority:P0-blocker`    | `quest:main`               | `M1 (21–27 Nov 2026)`    | [02-data-science.md](02-data-science.md)     |
-| `DS-02`  | EDA 5 Pertanyaan Bisnis, Visualisasi & Rekomendasi Operasional                          | `area:ds`        | `priority:P1-mvp`        | `quest:main`               | `M2 (28 Nov–4 Des 2026)` | [02-data-science.md](02-data-science.md)     |
-| `DS-03`  | Kamus Data, Generator Data Sintetik (`is_synthetic`) & Paket Dataset untuk Gen AI       | `area:ds`        | `priority:P0-blocker`    | `quest:main`, `quest:side` | `M1 (21–27 Nov 2026)`    | [02-data-science.md](02-data-science.md)     |
-| `DS-04`  | Feature Engineering & Modeling Forecasting Permintaan (Moving Average vs Random Forest) | `area:ds`        | `priority:P2-side-quest` | `quest:side`               | `M2 (28 Nov–4 Des 2026)` | [02-data-science.md](02-data-science.md)     |
-| `DS-05`  | Integrasi Pipeline Inferensi Forecasting ke `apps/ai-service`                           | `area:ds`        | `priority:P2-side-quest` | `quest:side`               | `M3 (5–11 Des 2026)`     | [02-data-science.md](02-data-science.md)     |
-| `DS-06`  | Spesifikasi KPI Dasbor Bisnis & Audit Akurasi Data Akhir                                | `area:ds`        | `priority:P1-mvp`        | `quest:main`, `quest:side` | `M4 (12–20 Des 2026)`    | [02-data-science.md](02-data-science.md)     |
-| `AI-01`  | Dokumentasi Masalah AI, Kontrak OpenAPI & Kerangka Serving FastAPI                      | `area:ai`        | `priority:P0-blocker`    | `quest:main`, `quest:side` | `M1 (21–27 Nov 2026)`    | [03-ai-engineering.md](03-ai-engineering.md) |
-| `AI-02`  | Model Utama Latih Sendiri: Klasifikasi Relevansi / Intent                               | `area:ai`        | `priority:P1-mvp`        | `quest:main`, `quest:side` | `M2 (28 Nov–4 Des 2026)` | [03-ai-engineering.md](03-ai-engineering.md) |
-| `AI-03`  | Model Tambahan: Klasifikasi Sentimen Feedback Pelanggan                                 | `area:ai`        | `priority:P2-side-quest` | `quest:side`               | `M2 (28 Nov–4 Des 2026)` | [03-ai-engineering.md](03-ai-engineering.md) |
-| `AI-04`  | Kurasi Knowledge Base Tervalidasi PIC & Retrieval ChromaDB                              | `area:ai`        | `priority:P1-mvp`        | `quest:side`               | `M1 (21–27 Nov 2026)`    | [03-ai-engineering.md](03-ai-engineering.md) |
-| `AI-05`  | Pipeline Agentic RAG, Tool Calling, Prompt Terstruktur & Guardrail                      | `area:ai`        | `priority:P1-mvp`        | `quest:main`, `quest:side` | `M2 (28 Nov–4 Des 2026)` | [03-ai-engineering.md](03-ai-engineering.md) |
-| `AI-06`  | Modul AI Business Insight (SLM/LLM Open-Source & Evaluasi 10 Laporan)                   | `area:ai`        | `priority:P2-side-quest` | `quest:side`               | `M3 (5–11 Des 2026)`     | [03-ai-engineering.md](03-ai-engineering.md) |
-| `AI-07`  | Integrasi Kanal WhatsApp (WAHA / Cloud API Test) & Uji Resiliensi Layanan AI            | `area:ai`        | `priority:P2-side-quest` | `quest:side`               | `M3 (5–11 Des 2026)`     | [03-ai-engineering.md](03-ai-engineering.md) |
-| `OPS-01` | Tata Kelola Git/PR, GitHub Actions CI & Secrets Hygiene                                 | `area:devops`    | `priority:P0-blocker`    | `quest:main`, `quest:side` | `M1 (21–27 Nov 2026)`    | [04-devops-infra.md](04-devops-infra.md)     |
-| `OPS-02` | Docker Compose Produksi & Provisioning VPS + Reverse Proxy HTTPS                        | `area:devops`    | `priority:P1-mvp`        | `quest:main`, `quest:side` | `M2 (28 Nov–4 Des 2026)` | [04-devops-infra.md](04-devops-infra.md)     |
-| `OPS-03` | Deployment Frontend Vercel & Verifikasi Koneksi BFF Desktop/Mobile                      | `area:devops`    | `priority:P1-mvp`        | `quest:main`, `quest:side` | `M2 (28 Nov–4 Des 2026)` | [04-devops-infra.md](04-devops-infra.md)     |
-| `OPS-04` | Deployment SLM/LLM Open-Source di Modal GPU (vLLM)                                      | `area:devops`    | `priority:P2-side-quest` | `quest:side`               | `M3 (5–11 Des 2026)`     | [04-devops-infra.md](04-devops-infra.md)     |
-| `OPS-05` | Penjadwalan Cron Worker VPS, Backup DB/Chroma & Uji Failover Pra-Demo                   | `area:devops`    | `priority:P2-side-quest` | `quest:side`               | `M4 (12–20 Des 2026)`    | [04-devops-infra.md](04-devops-infra.md)     |
+| ID       | Judul Issue                                                                                      | Area             | Priority                 | Quest                      | Milestone                | Berkas Spesifikasi                           |
+| :------- | :----------------------------------------------------------------------------------------------- | :--------------- | :----------------------- | :------------------------- | :----------------------- | :------------------------------------------- |
+| `FS-01`  | App Mockup, Desain Responsif & App Shell Staf Senior                                             | `area:fullstack` | `priority:P0-blocker`    | `quest:main`, `quest:side` | `M1 (21–27 Nov 2026)`    | [01-fullstack.md](01-fullstack.md)           |
+| `FS-02`  | Skema Database Prisma, Migrasi & Seed Data Uji                                                   | `area:fullstack` | `priority:P0-blocker`    | `quest:main`, `quest:side` | `M1 (21–27 Nov 2026)`    | [01-fullstack.md](01-fullstack.md)           |
+| `FS-03`  | Autentikasi, RBAC & Standar Validasi Express `/api/v1` (Joi)                                     | `area:fullstack` | `priority:P0-blocker`    | `quest:main`, `quest:side` | `M1 (21–27 Nov 2026)`    | [01-fullstack.md](01-fullstack.md)           |
+| `FS-04`  | Modul Katalog Menu, Resep & Kalkulator Bahan Otomatis                                            | `area:fullstack` | `priority:P1-mvp`        | `quest:main`               | `M2 (28 Nov–4 Des 2026)` | [01-fullstack.md](01-fullstack.md)           |
+| `FS-05`  | Modul Pesanan & Dasbor Jadwal Produksi                                                           | `area:fullstack` | `priority:P1-mvp`        | `quest:main`               | `M2 (28 Nov–4 Des 2026)` | [01-fullstack.md](01-fullstack.md)           |
+| `FS-06`  | Modul Keuangan: Invoice Digital, DP 60%, Pelunasan & PDF Invoice                                 | `area:fullstack` | `priority:P1-mvp`        | `quest:main`               | `M3 (5–11 Des 2026)`     | [01-fullstack.md](01-fullstack.md)           |
+| `FS-07`  | Modul Chat AI: Proxy Backend, Read-Only Tools DB, Riwayat Chat & UI Web                          | `area:fullstack` | `priority:P1-mvp`        | `quest:main`, `quest:side` | `M3 (5–11 Des 2026)`     | [01-fullstack.md](01-fullstack.md)           |
+| `FS-08`  | Modul Dasbor Analitik DS: KPI, Filter, Upload Data, Estimasi Bahan Forecasting & PDF Laporan     | `area:fullstack` | `priority:P2-side-quest` | `quest:side`               | `M3 (5–11 Des 2026)`     | [01-fullstack.md](01-fullstack.md)           |
+| `FS-09`  | Modul Pengingat Otomatis (In-App, WAHA, Email), User Manual, Ukur Waktu Proses & Uji E2E         | `area:fullstack` | `priority:P1-mvp`        | `quest:main`, `quest:side` | `M4 (12–20 Des 2026)`    | [01-fullstack.md](01-fullstack.md)           |
+| `DS-01`  | Pengumpulan, Anonimisasi & Data Wrangling Data UMKM                                              | `area:ds`        | `priority:P0-blocker`    | `quest:main`               | `M1 (21–27 Nov 2026)`    | [02-data-science.md](02-data-science.md)     |
+| `DS-02`  | EDA 5 Pertanyaan Bisnis, Definisi KPI Dasbor, Visualisasi & Rekomendasi Operasional              | `area:ds`        | `priority:P1-mvp`        | `quest:main`, `quest:side` | `M2 (28 Nov–4 Des 2026)` | [02-data-science.md](02-data-science.md)     |
+| `DS-03`  | Kamus Data, Generator Data Sintetik (`is_synthetic`) & Paket Dataset untuk Gen AI                | `area:ds`        | `priority:P0-blocker`    | `quest:main`, `quest:side` | `M1 (21–27 Nov 2026)`    | [02-data-science.md](02-data-science.md)     |
+| `DS-04`  | Feature Engineering & Modeling Forecasting Permintaan per Menu (Moving Average vs Random Forest) | `area:ds`        | `priority:P2-side-quest` | `quest:side`               | `M2 (28 Nov–4 Des 2026)` | [02-data-science.md](02-data-science.md)     |
+| `DS-05`  | Integrasi Pipeline Inferensi Forecasting per Menu ke `apps/ai-service`                           | `area:ds`        | `priority:P2-side-quest` | `quest:side`               | `M3 (5–11 Des 2026)`     | [02-data-science.md](02-data-science.md)     |
+| `DS-06`  | Verifikasi Implementasi KPI Dasbor & Audit Akurasi Data Akhir                                    | `area:ds`        | `priority:P1-mvp`        | `quest:main`, `quest:side` | `M4 (12–20 Des 2026)`    | [02-data-science.md](02-data-science.md)     |
+| `AI-01`  | Dokumentasi Masalah AI, Kontrak OpenAPI & Kerangka Serving FastAPI                               | `area:ai`        | `priority:P0-blocker`    | `quest:main`, `quest:side` | `M1 (21–27 Nov 2026)`    | [03-ai-engineering.md](03-ai-engineering.md) |
+| `AI-02`  | Model Utama Latih Sendiri: Klasifikasi Relevansi Dua Kelas                                       | `area:ai`        | `priority:P1-mvp`        | `quest:main`               | `M2 (28 Nov–4 Des 2026)` | [03-ai-engineering.md](03-ai-engineering.md) |
+| `AI-03`  | Model Tambahan: Klasifikasi Sentimen Feedback Pelanggan                                          | `area:ai`        | `priority:P2-side-quest` | `quest:side`               | `M2 (28 Nov–4 Des 2026)` | [03-ai-engineering.md](03-ai-engineering.md) |
+| `AI-04`  | Kurasi Knowledge Base Tervalidasi PIC & Retrieval ChromaDB                                       | `area:ai`        | `priority:P1-mvp`        | `quest:main`, `quest:side` | `M1 (21–27 Nov 2026)`    | [03-ai-engineering.md](03-ai-engineering.md) |
+| `AI-05`  | Pipeline Agentic RAG, Dual-Source Tool Calling, Prompt Terstruktur & Guardrail                   | `area:ai`        | `priority:P1-mvp`        | `quest:main`, `quest:side` | `M2 (28 Nov–4 Des 2026)` | [03-ai-engineering.md](03-ai-engineering.md) |
+| `AI-06`  | Modul AI Business Insight (SLM/LLM Open-Source & Evaluasi 10 Laporan)                            | `area:ai`        | `priority:P2-side-quest` | `quest:side`               | `M3 (5–11 Des 2026)`     | [03-ai-engineering.md](03-ai-engineering.md) |
+| `AI-07`  | Integrasi Kanal WhatsApp (WAHA / Cloud API Test) & Uji Resiliensi Layanan AI                     | `area:ai`        | `priority:P2-side-quest` | `quest:side`               | `M3 (5–11 Des 2026)`     | [03-ai-engineering.md](03-ai-engineering.md) |
+| `OPS-01` | Tata Kelola Git/PR, GitHub Actions CI & Secrets Hygiene                                          | `area:devops`    | `priority:P0-blocker`    | `quest:main`, `quest:side` | `M1 (21–27 Nov 2026)`    | [04-devops-infra.md](04-devops-infra.md)     |
+| `OPS-02` | Docker Compose Produksi & Provisioning VPS + Reverse Proxy HTTPS                                 | `area:devops`    | `priority:P1-mvp`        | `quest:main`, `quest:side` | `M2 (28 Nov–4 Des 2026)` | [04-devops-infra.md](04-devops-infra.md)     |
+| `OPS-03` | Deployment Frontend Vercel & Verifikasi Koneksi BFF Desktop/Mobile                               | `area:devops`    | `priority:P1-mvp`        | `quest:main`, `quest:side` | `M2 (28 Nov–4 Des 2026)` | [04-devops-infra.md](04-devops-infra.md)     |
+| `OPS-04` | Deployment SLM/LLM Open-Source di Modal GPU (vLLM)                                               | `area:devops`    | `priority:P2-side-quest` | `quest:side`               | `M2 (28 Nov–4 Des 2026)` | [04-devops-infra.md](04-devops-infra.md)     |
+| `OPS-05` | Penjadwalan Cron Worker VPS, Backup DB/Chroma & Uji Failover Pra-Demo                            | `area:devops`    | `priority:P2-side-quest` | `quest:side`               | `M4 (12–20 Des 2026)`    | [04-devops-infra.md](04-devops-infra.md)     |
 
 ---
 
@@ -257,29 +257,30 @@ Fokus: Pengujian sistem end-to-end, simulasi skenario 100 nasi box bersama PIC U
 
 ```text
 [Jalur Transaksi Utama]
-FS-01 (Mockup/Shell) ──► FS-02 (Prisma Schema) ──► FS-03 (Auth/Joi) ──► FS-04 (Menus & Resep) ──► FS-05 (Pesanan) ──► FS-06 (Keuangan/DP) ──► FS-09 (E2E & Demo)
+FS-01 (Mockup/Shell) ──► FS-02 (Prisma Schema) ──► FS-03 (Auth/Joi) ──► FS-04 (Menus, Resep & Satuan) ──► FS-05 (Pesanan DB Price & Jadwal) ──► FS-06 (Invoice, DP 60%, Pelunasan & PDF Invoice) ──► FS-09 (E2E 100 Box & Ukur Waktu)
 
 [Jalur Data Science ke AI & Web]
-DS-01 (Wrangling) ──► DS-03 (Data Synth/Kamus) ──┬──► AI-02 (Model Relevansi/Intent) ──┐
-                                                 └──► AI-03 (Model Sentimen) ──────────┼──► AI-05 (Agentic RAG) ──► FS-07 (Chat UI & Proxy)
-DS-01 (Wrangling) ──► DS-02 (EDA 5 Masalah)                                            │
-DS-01 (Wrangling) ──► DS-04 (Forecasting RF) ───────► DS-05 (Serving AI Service) ──────┴──► FS-08 (Dasbor Analitik) ──► DS-06 (Audit KPI)
+DS-01 (Wrangling) ──► DS-03 (Data Synth/Kamus) ──┬──► AI-02 (Relevansi 2 Kelas) ─────────────────────────┐
+                                                 └──► AI-03 (Sentimen 2 Kelas) ──────────────────────────┼──► FS-08 (Dasbor Analitik, Estimasi Bahan & PDF Laporan) ──► DS-06 (Verifikasi KPI & Audit Akhir)
+DS-01 (Wrangling) ──► DS-02 (EDA & Kunci KPI M2) ────────────────────────────────────────────────────────┤
+DS-01 (Wrangling) ──► DS-04 (Forecasting per Menu: MA vs RF) ──► DS-05 (Serving Forecasting per Menu) ───┘
 
-[Jalur Knowledge Base & AI Serving]
-AI-01 (FastAPI Frame) ──┬──► AI-04 (ChromaDB KB) ──► AI-05 (Agentic RAG) ──► AI-07 (WAHA / WhatsApp)
-                        └──► OPS-04 (Modal GPU SLM) ──► AI-06 (Insight Report PDF) ──► FS-08 (Unduh PDF)
+[Jalur Agentic RAG Dual-Source & SLM Insight]
+AI-01 (FastAPI) ──┬──► AI-04 (ChromaDB KB + 4 Metadata) ──┬──► AI-05 (Agentic RAG Dual-Source) ──┬──► FS-07 (Proxy Chat + Read-Only Tools DB + UI)
+FS-05/FS-06 ──────┴──► FS-07 (/internal/agent-tools/*) ───┘                                      └──► AI-07 (WhatsApp WAHA + Resiliensi)
+OPS-04 (Modal GPU M2) ──► AI-06 (SLM Business Insight JSON) ──► FS-08 (PDF Laporan Analitik)
 
 [Jalur Otomasi & Deployment]
-OPS-01 (CI Actions) ──► OPS-02 (VPS Compose) ──► OPS-03 (Vercel BFF) ──► FS-09 (Pengujian Responsif & E2E)
-FS-05/FS-06 ──────────► AI-07 (WAHA) ─────────► FS-09 (Reminder In-App & Email) ──► OPS-05 (VPS Cron & Uji Failover)
+OPS-01 (CI Actions) ──► OPS-02 (VPS Compose) ──► OPS-03 (Vercel BFF) ──► FS-09 (Uji Responsif & E2E)
+FS-04/FS-05/FS-06 ────► AI-07 (WAHA) ──────────► FS-09 (4 Jenis Reminder ≤ M3) ──► OPS-05 (Cron VPS ≤ M3 & Uji Failover M4)
 ```
 
 ### Penjelasan Titik Kritis:
 
-1. **Pondasi Data (`DS-01` & `DS-03`):** AI Engineering membutuhkan dataset teks berlabel dari Data Science untuk melatih model relevansi (`AI-02`) dan model sentimen (`AI-03`). Jika data riil belum mencukupi pada minggu pertama, `DS-03` wajib menyediakan paket data sintetis berpenanda `is_synthetic = true`.
-2. **Pondasi Database & Kontrak (`FS-02` & `FS-03`):** Seluruh modul bisnis web bergantung pada tersedianya tabel relasional Prisma dan endpoint Express yang tervalidasi skema Joi.
-3. **Penyajian AI ke Frontend (`AI-01`, `AI-05`, `FS-07`):** Frontend Next.js tidak boleh mengakses FastAPI `:8001` secara langsung. Endpoint Express `/api/v1/chat/messages` bertindak sebagai reverse proxy/BFF yang memvalidasi otentikasi pengguna, meneruskan prompt ke FastAPI `POST /api/v1/rag/chat`, menyimpan riwayat ke database PostgreSQL, dan mengembalikan respons ke client.
-4. **Alur Peramalan & Analitik (`DS-04`, `DS-05`, `FS-08`):** Data Science mengembangkan model runtun waktu di notebook, lalu mempaketkannya ke format serialisasi standar (`joblib`) di `apps/ai-service/app/ml/forecasting/artifacts/forecasting_rf.joblib`. FastAPI melayani inferensi via `POST /api/v1/ml/forecast/demand`. Express kemudian mengambil hasil estimasi dan menampilkannya pada grafik dasbor analitik.
+1. **Pondasi Data (`DS-01` & `DS-03`):** AI Engineering membutuhkan dataset teks berlabel dari Data Science untuk melatih model relevansi 2 kelas (`AI-02`) dan sentimen 2 kelas (`AI-03`). Jika data riil belum mencukupi pada minggu pertama, `DS-03` menyediakan paket data sintetis berpenanda `is_synthetic = true` dengan persetujuan PIC.
+2. **Penguncian Definisi KPI Sebelum Dasbor (`DS-02` → `FS-08` → `DS-06`):** Formula matematis KPI bisnis dikunci di `DS-02` (M2) sebelum diimplementasikan di `FS-08` (M3), lalu diverifikasi kecocokan 100%-nya di `DS-06` (M4).
+3. **Agentic RAG Dual-Source Tanpa SQL Bebas (`AI-04`, `AI-05`, `FS-07`):** Frontend Next.js hanya berkomunikasi dengan Express `/api/v1/chat/*`. FastAPI `/api/v1/rag/chat` menyaring pesan melalui model relevansi 2 kelas (`AI-02`), lalu agen LLM memilih tools ke dua sumber: (1) ChromaDB (`AI-04`) untuk menu/FAQ/SOP/aturan pembayaran tervalidasi PIC beserta 4 metadata, dan (2) backend read-only tools Express (`/api/v1/internal/agent-tools/*` di `FS-07`) untuk pesanan, invoice, status DP, pelunasan, dan jadwal aktual dengan penegakan RBAC di backend Express (**dilarang akses SQL bebas kepada LLM**).
+4. **Pembagian Tanggung Jawab PDF & Forecasting per Menu (`FS-04`, `FS-06`, `DS-04/05`, `AI-06`, `FS-08`):** `FS-06` khusus merender **PDF Invoice Pesanan**; `FS-08` khusus merender **PDF Laporan Analitik + AI Business Insight** (memakai narasi JSON dari `AI-06`) sekaligus menggabungkan proyeksi **forecasting per menu** (`DS-05`) dengan resep standar (`FS-04`) untuk menampilkan estimasi kebutuhan bahan baku.
 
 ---
 
@@ -289,21 +290,20 @@ Untuk menjaga integritas spesifikasi dan menghindari asumsi sepihak, item-item b
 
 ### Menunggu Konfirmasi PIC UMKM (`[Menunggu Konfirmasi PIC]`)
 
-1. **Aturan Uang Muka (DP) Minimal 60%:** Diperlukan penegasan apakah batas minimum 60% bersifat kaku (_hard block_) atau dapat disesuaikan pada pesanan khusus pelanggan langganan.
-2. **Formula Baku Resep dan Takaran Bahan:** Rincian takaran gramatur bumbu, protein, beras, dan sayuran per porsi box sesuai daftar menu resmi UMKM agar perhitungan kalkulator bahan baku akurat.
-3. **Harga Jual Menu dan Paket Nasi Box:** Daftar harga resmi terbaru untuk perhitungan invoice digital otomatis.
-4. **Penyediaan Rekap Riwayat Transaksi:** Ekspor rekap pesanan masa lalu (Spreadsheet) untuk dianonimkan sebagai data latih dan evaluasi model forecasting.
-5. **Nomor WhatsApp Cadangan dan Izin WAHA:** Penyediaan satu nomor telepon sekunder UMKM khusus untuk pemasangan sesi QR WAHA agar nomor bisnis utama UMKM terhindar dari risiko pembatasan akun (_banned_).
-6. **Batas Kapasitas Maksimal Produksi Harian:** Batasan jumlah porsi maksimal yang dapat dimasak dapur per hari sebelum pesanan ditolak atau diberi tanda peringatan kapasitas.
+1. **Aturan Uang Muka (DP) Minimal 60%:** Kepastian persentase minimum DP dan apakah DP di bawah batas ditolak mutlak atau diizinkan dengan peringatan/catatan khusus Admin.
+2. **Formula Baku Resep, Harga Resmi & Pembulatan Bahan:** Rincian gramatur bahan per porsi, harga resmi menu nasi box, serta apakah daftar belanja cukup menampilkan hasil presisi konversi (`gram ↔ kg`, `ml ↔ liter`) atau perlu saran pembulatan kemasan.
+3. **Penyediaan Rekap Riwayat Transaksi & Persetujuan Data Sintetis:** Ekspor rekap Spreadsheet pesanan teranonimisasi (tanpa PII & data gaji) serta persetujuan penggunaan data sintetis berlabel `is_synthetic = true` sebagai cadangan simulasi.
+4. **Validasi Konten Knowledge Base (`menus.md`, `faq.md`, `sop.md`, `payment_policy.md`):** Konfirmasi status `verified` beserta tanggal dan versi dokumen.
+5. **Batas Visibilitas Status Pembayaran untuk `STAFF`:** Apakah staf operasional boleh melihat label status bayar ringkas di dasbor jadwal atau chatbot tanpa nominal uang, atau seluruh informasi invoice khusus `ADMIN`.
+6. **Nomor WhatsApp Cadangan & Whitelist Staf WAHA:** Izin penggunaan nomor sekunder (bukan nomor utama UMKM) untuk pairing QR WAHA sebagai prototype dan daftar nomor staf terdaftar.
+7. **Baseline Waktu Manual & Jadwal Demonstrasi 100 Nasi Box:** Pencatatan waktu manual hitung bahan & invoice (M1), format resmi PDF Invoice, serta jadwal demo & final survey (M4).
 
 ### Perlu Konfirmasi Tim Capstone (`[Perlu Konfirmasi Tim]`)
 
-1. **Klasifikasi 2 Kelas Relevansi (Wajib Project Plan) vs >= 4 Kelas Intent (Opsional):** Model utama `AI-02` ditetapkan menggunakan **2 kelas relevansi** (`relevant` vs `out_of_domain`) dipadukan dengan Agentic RAG tool calling sesuai Project Plan. Ekstensi menjadi klasifikasi intent >= 4 kelas (misal: `tanya_produk`, `pemesanan`, `keluhan`, `lainnya`) bersifat **opsional** sebagai nilai tambah Side Quest apabila masih tersedia waktu sebelum feature freeze (`11 Des 2026`).
-2. **Penyedia Layanan Proprietary LLM API:** Pemilihan provider model generatif (Google Gemini API vs OpenAI API) berdasarkan ketersediaan kuota gratis dan latensi respons.
-3. **Kredensial Layanan Email Transaksional:** Penentuan akun SMTP/SendGrid gratis untuk kebutuhan notifikasi email pengingat pada background worker.
-4. **Batas Split Kronologis Forecasting:** Penetapan batas tanggal _holdout split_ (misal 80% data awal untuk training, 20% data akhir untuk testing) agar simulasi evaluasi MAE/RMSE/WAPE tidak mengalami kebocoran data (_data leakage_).
-5. **Mekanisme Transport Sesi Autentikasi:** Pemilihan antara `HttpOnly cookie` lewat BFF Next.js vs header `Authorization: Bearer <token>` untuk kemudahan pengujian API klien dan keamanan browser.
-6. **SLA Batas Waktu Respon Asisten AI:** Penentuan batas waktu timeout inferensi (default 10 detik) sebelum backend beralih ke fallback graceful message.
+1. **Visibilitas Repositori GitHub (`OPS-01`):** Penyelarasan status repositori saat ini (`PUBLIC`) terhadap ketentuan Project Plan (_"Repository wajib private"_).
+2. **Kontrak Lintas Layanan Express ↔ FastAPI:** Finalisasi skema JSON `/api/v1/internal/agent-tools/*`, transport sesi BFF (`HttpOnly cookie` vs `Authorization: Bearer`), batas timeout LLM/Modal (15–20 detik), dan minimal hari historis forecasting (`>= 7` hari).
+3. **Definisi Matematis KPI (`DS-02`):** Kesepakatan final definisi omzet/revenue (`Order CONFIRMED` vs `Payment` masuk) dan format template CSV/XLSX unggahan `FS-08`.
+4. **Penyedia Layanan & Model Teknis:** Pilihan API LLM proprietary (Gemini vs OpenAI), model embedding (lokal multilingual vs API), bobot SLM Modal GPU (`Qwen2.5-7B-Instruct` vs `Llama-3.2-3B`/kuantisasi), akun/domain VPS & Vercel, pustaka PDF (`pdfkit`) & grafik (`Recharts`), serta kanal email opsional (SendGrid/SMTP).
 
 ---
 
@@ -314,22 +314,21 @@ Seluruh anggota tim dan pengembang wajib mematuhi batasan mutlak berikut dalam s
 ### Larangan Full-Stack
 
 - ❌ **Dilarang menampilkan fitur utama yang belum berfungsi:** Tidak boleh membiarkan tombol mati tanpa aksi, navigasi buntu, atau halaman berlabel "segera hadir" pada alur utama yang diujikan.
-- ❌ **Dilarang membocorkan rahasia:** Tidak boleh menulis atau mengekspos token, password, API key, `DATABASE_URL`, atau credential di client-side code, repositori git publik, maupun log.
-- ❌ **Dilarang menggunakan data pribadi pelanggan nyata tanpa izin:** Seluruh nama pelanggan, alamat spesifik, nomor HP, dan nominal pribadi wajib disamarkan atau dianonimkan.
+- ❌ **Dilarang memercayai harga dari input client:** Harga satuan dan total tagihan pesanan wajib divalidasi langsung dari database backend `Menu`.
+- ❌ **Dilarang membocorkan rahasia atau PII:** Tidak boleh menulis atau mengekspos token, password, API key, `DATABASE_URL`, data gaji, atau identitas pelanggan nyata di kode, repositori, maupun log.
 
 ### Larangan AI Engineering / Gen AI
 
-- ❌ **Dilarang menggunakan model TensorFlow Hub siap pakai sebagai model utama Main Quest:** Model klasifikasi utama wajib dilatih sendiri dari dataset yang diproses tim Data Science.
-- ❌ **Dilarang menggunakan API LLM proprietary secara langsung sebagai pengganti model AI latih sendiri:** Fitur utama klasifikasi relevansi tidak boleh digantikan oleh prompt wrapper LLM komersial.
-- ❌ **Dilarang menggunakan AutoML:** Seluruh proses modeling, feature extraction, dan evaluasi wajib dikodekan secara eksplisit.
-- ❌ **Dilarang melakukan forking liar:** Tidak boleh menyalin atau mengklon repositori aplikasi luar tanpa izin atau atribusi sah.
+- ❌ **Dilarang memberikan akses SQL bebas (`text-to-SQL`) atau tools mutasi data kepada LLM:** Akses database oleh Agentic RAG wajib melalui backend read-only tools Express tervalidasi Joi dengan penegakan RBAC di backend.
+- ❌ **Dilarang menggunakan model TensorFlow Hub siap pakai, API LLM proprietary sebagai pengganti model latih sendiri, maupun AutoML** untuk model klasifikasi relevansi 2 kelas (`AI-02`).
+- ❌ **Dilarang mengganti chatbot RAG memakai SLM insight (`AI-06`)** saat API LLM mengalami gangguan/kuota habis.
+- ❌ **Dilarang melakukan forking liar:** Tidak boleh menyalin repositori aplikasi luar tanpa izin atau atribusi sah.
 
 ### Larangan Data Science
 
-- ❌ **Dilarang menggunakan data tanpa menjelaskan asal-usulnya:** Setiap dataset wajib memiliki dokumentasi sumber, metodologi pengumpulan, atau skrip generatornya.
-- ❌ **Dilarang menyamarkan data sintetis sebagai data riil:** Data sintetis atau augmentasi wajib memiliki flag penanda eksplisit `is_synthetic = true`.
-- ❌ **Dilarang memanipulasi data untuk mengarahkan hasil:** Tidak boleh mengubah atau membuang data historis secara sepihak untuk memperbagus akurasi model.
-- ❌ **Dilarang membuat klaim dampak bisnis yang tidak didukung data:** Penghematan waktu proses operasional wajib dilaporkan sebagai hasil pengujian teramati pada demonstrasi, bukan klaim dampak komersial definitif.
+- ❌ **Dilarang menggunakan data tanpa menjelaskan asal-usulnya atau menyamarkan data sintetis sebagai data riil:** Seluruh data buatan wajib memiliki penanda `is_synthetic = true` dan penjelasan metode pembuatannya di README.
+- ❌ **Dilarang memanipulasi data atau hasil evaluasi:** Perbandingan Moving Average vs Random Forest wajib objektif pada split kronologis tanpa kebocoran data (_data leakage_).
+- ❌ **Dilarang membuat klaim dampak bisnis tanpa bukti:** Penghematan waktu proses dilaporkan sebagai hasil teramati demonstrasi (target `< 5 menit` hanya potensi).
 
 ### Batasan Arsitektur Monorepo
 
