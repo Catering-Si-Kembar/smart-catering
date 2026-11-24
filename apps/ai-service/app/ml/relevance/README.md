@@ -26,6 +26,7 @@ uv run --no-sync python -m app.ml.relevance.train
 ```
 
 Proses ini mengeksekusi tahapan:
+
 1. Pembangkitan dataset sintetis reproducible di `data/synthetic/relevance_dataset.csv` dengan label `is_synthetic=true` dan pembagian train/test terstratifikasi 80:20 tanpa kebocoran data (_zero leakage_).
 2. Pelatihan dan perbandingan model `MultinomialNB` dan `LogisticRegression`.
 3. Hyperparameter tuning menggunakan `GridSearchCV` 5-fold Stratified CV.

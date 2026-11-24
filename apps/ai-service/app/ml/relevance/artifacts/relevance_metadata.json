@@ -3,10 +3,7 @@
   "version": "1.0.0",
   "modelVersion": "relevance_lr_v1.0",
   "algorithm": "LogisticRegression (tuned)",
-  "classes": [
-    "relevant",
-    "out_of_domain"
-  ],
+  "classes": ["relevant", "out_of_domain"],
   "isSynthetic": true,
   "confidenceThreshold": 0.6,
   "metrics": {
@@ -51,19 +48,10 @@
     }
   },
   "confusionMatrix": {
-    "labels": [
-      "relevant",
-      "out_of_domain"
-    ],
+    "labels": ["relevant", "out_of_domain"],
     "matrix": [
-      [
-        55,
-        0
-      ],
-      [
-        3,
-        30
-      ]
+      [55, 0],
+      [3, 30]
     ]
   },
   "avgInferenceLatencyMs": 1.493
