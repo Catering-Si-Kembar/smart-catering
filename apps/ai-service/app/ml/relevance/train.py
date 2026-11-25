@@ -7,32 +7,49 @@ portable JSON weights), produces metadata, and builds an executed experiment not
 
 from __future__ import annotations
 
+import importlib
 import json
 import re
 import time
 from pathlib import Path
 from typing import Any
 
-import joblib  # type: ignore[import-untyped]
-import pandas as pd  # type: ignore[import-untyped]
-from sklearn.feature_extraction.text import TfidfVectorizer  # type: ignore[import-untyped]
-from sklearn.linear_model import LogisticRegression  # type: ignore[import-untyped]
-from sklearn.metrics import (  # type: ignore[import-untyped]
-    accuracy_score,
-    confusion_matrix,
-    f1_score,
-    precision_score,
-    recall_score,
-)
-from sklearn.model_selection import (  # type: ignore[import-untyped]
-    GridSearchCV,
-    StratifiedKFold,
-    train_test_split,
-)
-from sklearn.naive_bayes import MultinomialNB  # type: ignore[import-untyped]
-from sklearn.pipeline import Pipeline  # type: ignore[import-untyped]
-
 from app.ml.relevance.preprocess import normalize_indonesian_text
+
+
+def _load_ml_dependencies() -> dict[str, Any]:  # pragma: no cover
+    """Lazily load optional `ml` extra packages so base CI typecheck stays self-contained."""
+    try:
+        joblib_mod = importlib.import_module("joblib")
+        pandas_mod = importlib.import_module("pandas")
+        text_mod = importlib.import_module("sklearn.feature_extraction.text")
+        linear_mod = importlib.import_module("sklearn.linear_model")
+        metrics_mod = importlib.import_module("sklearn.metrics")
+        selection_mod = importlib.import_module("sklearn.model_selection")
+        nb_mod = importlib.import_module("sklearn.naive_bayes")
+        pipeline_mod = importlib.import_module("sklearn.pipeline")
+    except ModuleNotFoundError as exc:
+        raise RuntimeError(
+            "Optional 'ml' extra is required for training. Run: uv sync --extra ml"
+        ) from exc
+
+    return {
+        "joblib": joblib_mod,
+        "pd": pandas_mod,
+        "TfidfVectorizer": text_mod.TfidfVectorizer,
+        "LogisticRegression": linear_mod.LogisticRegression,
+        "accuracy_score": metrics_mod.accuracy_score,
+        "confusion_matrix": metrics_mod.confusion_matrix,
+        "f1_score": metrics_mod.f1_score,
+        "precision_score": metrics_mod.precision_score,
+        "recall_score": metrics_mod.recall_score,
+        "GridSearchCV": selection_mod.GridSearchCV,
+        "StratifiedKFold": selection_mod.StratifiedKFold,
+        "train_test_split": selection_mod.train_test_split,
+        "MultinomialNB": nb_mod.MultinomialNB,
+        "Pipeline": pipeline_mod.Pipeline,
+    }
+
 
 RANDOM_STATE = 42
 
@@ -597,8 +614,11 @@ def build_raw_synthetic_examples() -> list[tuple[str, str, str]]:  # pragma: no 
 
 def generate_synthetic_relevance_dataset(  # pragma: no cover
     output_path: Path = DATASET_PATH,
-) -> pd.DataFrame:
+) -> Any:
     """Generate deterministic synthetic relevance dataset without data leakage."""
+    ml = _load_ml_dependencies()
+    pd = ml["pd"]
+    train_test_split = ml["train_test_split"]
     raw_examples = build_raw_synthetic_examples()
 
     # Deduplicate across entire raw list by normalized key
@@ -653,6 +673,21 @@ def generate_synthetic_relevance_dataset(  # pragma: no cover
 
 def train_and_export_models() -> dict[str, Any]:  # pragma: no cover
     """Train baseline & tuned models, select winner, export dual artifacts & metadata."""
+    ml = _load_ml_dependencies()
+    joblib = ml["joblib"]
+    pd = ml["pd"]
+    TfidfVectorizer = ml["TfidfVectorizer"]
+    LogisticRegression = ml["LogisticRegression"]
+    accuracy_score = ml["accuracy_score"]
+    confusion_matrix = ml["confusion_matrix"]
+    f1_score = ml["f1_score"]
+    precision_score = ml["precision_score"]
+    recall_score = ml["recall_score"]
+    GridSearchCV = ml["GridSearchCV"]
+    StratifiedKFold = ml["StratifiedKFold"]
+    MultinomialNB = ml["MultinomialNB"]
+    Pipeline = ml["Pipeline"]
+
     print(f"Loading synthetic dataset from {DATASET_PATH}...")
     df = pd.read_csv(DATASET_PATH, encoding="utf-8")
 
@@ -785,8 +820,8 @@ def train_and_export_models() -> dict[str, Any]:  # pragma: no cover
 
     # 2. relevance_model_weights.json (for portable zero-dependency inference)
     print(f"Exporting portable model weights to {WEIGHTS_PATH}...")
-    vec_step: TfidfVectorizer = best_pipe.named_steps["tfidf"]
-    clf_step: LogisticRegression = best_pipe.named_steps["clf"]
+    vec_step: Any = best_pipe.named_steps["tfidf"]
+    clf_step: Any = best_pipe.named_steps["clf"]
 
     # Scikit-learn binary LogisticRegression classes: ["out_of_domain", "relevant"]
     coef = clf_step.coef_[0].tolist()
@@ -894,7 +929,7 @@ def generate_experiment_notebook(train_results: dict[str, Any]) -> None:  # prag
     print(f"Generating experiment notebook at {NOTEBOOK_PATH}...")
     NOTEBOOK_DIR.mkdir(parents=True, exist_ok=True)
 
-    df: pd.DataFrame = train_results["df"]
+    df: Any = train_results["df"]
     nb_f1 = train_results["nb_f1"]
     nb_acc = train_results["nb_acc"]
     lr_base_f1 = train_results["lr_base_f1"]
