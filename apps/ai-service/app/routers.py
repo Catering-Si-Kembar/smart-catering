@@ -18,6 +18,10 @@ from app.contracts import (
     SentimentPredictResponse,
 )
 from app.errors import AppProblemError
+from app.ml.sentiment.inference import (
+    SentimentArtifactMissingError,
+    SentimentClassifierService,
+)
 from app.responses import create_success_response
 from app.schemas import HealthData, HealthResponse
 
@@ -36,6 +40,16 @@ def verify_internal_token(request: Request) -> None:
             status_code=401,
             detail="Authentication credentials are required or invalid.",
         )
+
+
+def get_sentiment_service(request: Request) -> SentimentClassifierService:
+    """Dependency provider returning singleton SentimentClassifierService from app state."""
+    service = getattr(request.app.state, "sentiment_service", None)
+    if isinstance(service, SentimentClassifierService):
+        return service
+    service = SentimentClassifierService()
+    request.app.state.sentiment_service = service
+    return service
 
 
 v1_router = APIRouter(prefix="/api/v1")
@@ -106,12 +120,18 @@ async def get_relevance_metadata() -> RelevanceMetadataResponse:
     dependencies=[Depends(verify_internal_token)],
 )
 async def predict_sentiment(
+    request: Request,
     payload: SentimentPredictRequest,
-) -> SentimentPredictResponse:
-    raise AppProblemError(
-        status_code=503,
-        detail="Sentiment analysis capability is temporarily unavailable.",
-    )
+    sentiment_service: SentimentClassifierService = Depends(get_sentiment_service),  # noqa: B008
+) -> Response:
+    try:
+        result = sentiment_service.predict(payload.text)
+    except SentimentArtifactMissingError as exc:
+        raise AppProblemError(
+            status_code=503,
+            detail="Sentiment analysis model artifacts are unavailable.",
+        ) from exc
+    return create_success_response(request, result)
 
 
 @v1_router.post(
@@ -122,12 +142,18 @@ async def predict_sentiment(
     dependencies=[Depends(verify_internal_token)],
 )
 async def predict_sentiment_batch(
+    request: Request,
     payload: SentimentBatchRequest,
-) -> SentimentBatchResponse:
-    raise AppProblemError(
-        status_code=503,
-        detail="Batch sentiment analysis capability is temporarily unavailable.",
-    )
+    sentiment_service: SentimentClassifierService = Depends(get_sentiment_service),  # noqa: B008
+) -> Response:
+    try:
+        results = sentiment_service.predict_batch(payload.items)
+    except SentimentArtifactMissingError as exc:
+        raise AppProblemError(
+            status_code=503,
+            detail="Sentiment analysis model artifacts are unavailable.",
+        ) from exc
+    return create_success_response(request, results)
 
 
 @v1_router.post(

@@ -132,6 +132,32 @@ uv run --frozen pytest --cov=app --cov-report=term-missing --cov-fail-under=80
 
 ---
 
+### Evaluasi Model Analisis Sentimen 2 Kelas (AI-03)
+
+Sebagai bagian dari implementasi `AI-03` (Analisis Sentimen Feedback Pelanggan), model klasifikasi teks 2 kelas (`positive` dan `negative`) dilatih menggunakan pustaka `scikit-learn` pada dataset ulasan pelanggan sintetis (`data/synthetic/sentiment_dataset.csv`, 420 sampel, berlabel eksplisit `is_synthetic=true`, bukan data feedback pelanggan nyata).
+
+#### Perbandingan Model pada Holdout Test Set (80:20)
+
+| Model                         | Holdout F1 | Holdout Accuracy | Catatan                                           |
+| ----------------------------- | ---------- | ---------------- | ------------------------------------------------- |
+| MultinomialNB (Baseline)      | 0.9841     | 0.9881           | Baseline Naive Bayes dengan TF-IDF unigram        |
+| LogisticRegression (Baseline) | 0.9508     | 0.9643           | C=1.0, TF-IDF unigram, tanpa sublinear TF         |
+| LogisticRegression (Tuned)    | 0.9677     | 0.9762           | C=2.0, TF-IDF unigram + bigram, class_weight=None |
+
+#### Alasan Pemilihan Model & Kalibrasi Probabilitas
+
+Meskipun `MultinomialNB` memperoleh F1 baseline sedikit lebih tinggi pada holdout data sintetis, `LogisticRegression (tuned)` dipilih untuk lingkungan produksi karena menghasilkan kalibrasi probabilitas (`predict_proba`) yang jauh lebih stabil dan reliable. Probabilitas terkalibrasi ini sangat penting untuk penentuan indikator prioritas komplain operasional:
+
+- **Aturan `needsAttention`:** Flag `needsAttention: true` ditetapkan ketika ulasan diprediksi bersentimen `negative` dengan probabilitas/skor `>= 0.75`. Indikator ini langsung diteruskan ke Dasbor Analitik `FS-08` agar tim operasional katering segera menindaklanjuti keluhan darurat.
+
+#### Confusion Matrix & Analisis Error (_Mixed Sentiment_)
+
+- **Confusion Matrix Holdout:** 52 True Positive, 30 True Negative, 0 False Positive, 2 False Negative.
+- **Ulasan Campuran (_Mixed Sentiment_):** Pada pengujian ulasan dengan nada campuran (memuji rasa hidangan tetapi mengeluhkan pengantaran/kemasan), model 2 kelas memprioritaskan bobot leksikal terkuat dari kata kunci keluhan (`terlambat`, `penyok`, `basi`), sehingga mampu menandai keluhan dengan akurat.
+- **Notebook Eksperimen:** Rincian kode pelatihan, kurva evaluasi, dan error analysis selengkapnya terdokumentasi secara reproducible pada [`notebooks/05_sentiment_analysis.ipynb`](../../notebooks/05_sentiment_analysis.ipynb).
+
+---
+
 ## 4. Kepatuhan & Guardrails Keamanan AI
 
 1. **Pelatihan Model Mandiri:** Model klasifikasi relevansi (`AI-02`) dan sentimen (`AI-03`) dilatih mandiri menggunakan pustaka scikit-learn pada dataset terkurasi. Tidak menggunakan AutoML, model siap pakai TensorFlow Hub sebagai model utama, atau API LLM komersial sebagai pengganti model klasifikasi inti.

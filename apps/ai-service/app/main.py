@@ -26,6 +26,7 @@ from app.errors import (
     create_problem_response,
     register_exception_handlers,
 )
+from app.ml.sentiment.inference import SentimentClassifierService
 from app.openapi import build_openapi_schema
 from app.responses import create_success_response
 from app.routers import v1_router
@@ -157,6 +158,7 @@ def create_app(
     *,
     env: Mapping[str, str | None] | None = None,
     env_file: Path | str | None = None,
+    sentiment_service: SentimentClassifierService | None = None,
 ) -> FastAPI:
     """Create a configured FastAPI application instance with isolated settings."""
     resolved_settings = (
@@ -171,6 +173,9 @@ def create_app(
         openapi_url=None,
     )
     app.state.settings = resolved_settings
+    app.state.sentiment_service = (
+        sentiment_service if sentiment_service is not None else SentimentClassifierService()
+    )
 
     register_exception_handlers(app)
     app.add_middleware(RequestContextAndSafetyMiddleware)

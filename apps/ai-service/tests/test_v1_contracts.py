@@ -18,6 +18,12 @@ POST_ENDPOINTS: tuple[str, ...] = (
     "/api/v1/insight/generate",
 )
 
+POST_STUB_ENDPOINTS: tuple[str, ...] = (
+    "/api/v1/ml/predict-relevance",
+    "/api/v1/rag/chat",
+    "/api/v1/insight/generate",
+)
+
 GET_STUB_ENDPOINTS: tuple[str, ...] = ("/api/v1/ml/relevance/metadata",)
 
 VALID_POST_PAYLOADS: dict[str, dict[str, Any]] = {
@@ -192,7 +198,7 @@ def test_openapi_documents_official_api_v1_ai_endpoints_and_protocol_responses(
     assert "503" in meta_op["responses"]
 
 
-@pytest.mark.parametrize("path", POST_ENDPOINTS)
+@pytest.mark.parametrize("path", POST_STUB_ENDPOINTS)
 def test_api_v1_valid_post_requests_return_honest_503_problem_details(
     make_client: Callable[[Mapping[str, str | None] | None], TestClient],
     path: str,
@@ -436,19 +442,27 @@ def test_api_v1_response_contract_models_validate_and_forbid_extra_fields() -> N
             sentiment="positive",
             score=0.965,
             probabilities=SentimentProbabilities(positive=0.965, negative=0.035),
+            needsAttention=False,
         ),
         meta=meta,
     )
     assert sent.data.sentiment == "positive"
+    assert sent.data.needsAttention is False
 
     sent_batch = SentimentBatchResponse(
         data=[
-            SentimentBatchItemResult(id="rev_01", sentiment="positive", score=0.952),
-            SentimentBatchItemResult(id="rev_02", sentiment="negative", score=0.884),
+            SentimentBatchItemResult(
+                id="rev_01", sentiment="positive", score=0.952, needsAttention=False
+            ),
+            SentimentBatchItemResult(
+                id="rev_02", sentiment="negative", score=0.884, needsAttention=True
+            ),
         ],
         meta=meta,
     )
     assert len(sent_batch.data) == 2
+    assert sent_batch.data[0].needsAttention is False
+    assert sent_batch.data[1].needsAttention is True
 
     rag = RagChatResponse(
         data=RagChatData(
