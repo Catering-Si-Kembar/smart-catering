@@ -122,7 +122,7 @@ def test_resolve_profile_supports_primary_fallback_and_validates_scale_to_zero()
     assert fallback.gpu == "T4"
 
     awq = resolve_profile({"MODAL_SLM_PROFILE": "fallback_awq"})
-    assert awq.quantization == "awq_marlin"
+    assert awq.quantization == "awq"
     assert awq.gpu == "T4"
 
     custom = resolve_profile(
@@ -162,7 +162,8 @@ def test_resolve_auth_token_and_vllm_command_builder() -> None:
 
     cmd_awq = build_vllm_serve_command(DEPLOYMENT_PROFILES["fallback_awq"], api_key=TEST_TOKEN)
     assert "--quantization" in cmd_awq
-    assert "awq_marlin" in cmd_awq
+    assert "awq" in cmd_awq
+    assert "awq_marlin" not in cmd_awq
 
     assert estimate_inference_cost_usd(DEPLOYMENT_PROFILES["fallback"], 10.0) == pytest.approx(
         0.00164
@@ -265,3 +266,31 @@ def test_serve_vllm_module_metadata_container_env_and_readiness_wait() -> None:
             poll_interval_seconds=0.05,
             process=exited_proc,
         )
+
+
+def test_auth_proxy_reports_503_unhealthy_when_upstream_process_exits() -> None:
+    alive = False
+    proxy = create_auth_proxy_server(
+        host="127.0.0.1",
+        port=0,
+        expected_token=TEST_TOKEN,
+        upstream_base_url="http://127.0.0.1:9",
+        served_model_name="Qwen/Qwen2.5-7B-Instruct",
+        upstream_health_check=lambda: alive,
+    )
+    proxy_port = proxy.server_address[1]
+    threading.Thread(target=proxy.serve_forever, daemon=True).start()
+    try:
+        req = urllib.request.Request(
+            f"http://127.0.0.1:{proxy_port}/health",
+            headers={"Authorization": f"Bearer {TEST_TOKEN}"},
+            method="GET",
+        )
+        with pytest.raises(urllib.error.HTTPError) as exc_503:
+            urllib.request.urlopen(req, timeout=5.0)
+        assert exc_503.value.code == 503
+        body = json.loads(exc_503.value.read().decode("utf-8"))
+        assert body["status"] == "unhealthy"
+    finally:
+        proxy.shutdown()
+        proxy.server_close()

@@ -141,6 +141,7 @@ def launch_authenticated_vllm_runtime(
         expected_token=api_key,
         upstream_base_url=f"http://127.0.0.1:{internal_vllm_port}",
         served_model_name=profile.served_model_name,
+        upstream_health_check=lambda: process.poll() is None,
     )
     proxy_thread = threading.Thread(
         target=proxy_server.serve_forever,

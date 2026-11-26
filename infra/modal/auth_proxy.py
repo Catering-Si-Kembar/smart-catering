@@ -7,6 +7,7 @@ import threading
 import time
 import urllib.error
 import urllib.request
+from collections.abc import Callable
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any, Final
 
@@ -40,13 +41,21 @@ class ProxyRuntimeState:
         upstream_base_url: str,
         served_model_name: str,
         upstream_timeout_seconds: float = 120.0,
+        upstream_health_check: Callable[[], bool] | None = None,
     ) -> None:
         self.expected_token = expected_token
         self.upstream_base_url = upstream_base_url.rstrip("/")
         self.served_model_name = served_model_name
         self.upstream_timeout_seconds = upstream_timeout_seconds
+        self._upstream_health_check = upstream_health_check
         self._lock = threading.Lock()
         self._first_inference_completed = False
+
+    def is_upstream_alive(self) -> bool:
+        """Return False if an attached upstream process liveness probe reports a crash."""
+        if self._upstream_health_check is None:
+            return True
+        return bool(self._upstream_health_check())
 
     def consume_cold_start_flag(self) -> bool:
         """Return True only for the first authenticated inference request after container boot."""
@@ -141,6 +150,20 @@ class _ModalAuthProxyHandler(BaseHTTPRequestHandler):
                 {"error": {"message": "Not found.", "type": "invalid_request_error"}},
             )
             self._log_event(method, path, 404, started_at, cold_start=False)
+            return
+
+        if not state.is_upstream_alive():
+            self._send_json(
+                503,
+                {
+                    "status": "unhealthy",
+                    "error": {
+                        "message": "Internal vLLM worker process is not running.",
+                        "type": "service_unavailable",
+                    },
+                },
+            )
+            self._log_event(method, path, 503, started_at, cold_start=False)
             return
 
         body_bytes: bytes | None = None
@@ -277,6 +300,7 @@ def create_auth_proxy_server(
     upstream_base_url: str,
     served_model_name: str,
     upstream_timeout_seconds: float = 120.0,
+    upstream_health_check: Callable[[], bool] | None = None,
 ) -> AuthenticatedModalProxyServer:
     """Create a configured authenticated reverse proxy server for vLLM."""
     state = ProxyRuntimeState(
@@ -284,5 +308,6 @@ def create_auth_proxy_server(
         upstream_base_url=upstream_base_url,
         served_model_name=served_model_name,
         upstream_timeout_seconds=upstream_timeout_seconds,
+        upstream_health_check=upstream_health_check,
     )
     return AuthenticatedModalProxyServer((host, port), state)
