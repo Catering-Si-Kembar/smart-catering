@@ -556,6 +556,77 @@ def test_modal_vllm_client_sends_bearer_token_detects_cold_start_and_retries_502
         )
 
 
+@pytest.mark.parametrize(
+    ("raw_base_url", "expected_endpoint"),
+    [
+        (
+            "https://ws--smart-catering-slm-serve.modal.run",
+            "https://ws--smart-catering-slm-serve.modal.run/v1/chat/completions",
+        ),
+        (
+            "https://ws--smart-catering-slm-serve.modal.run/",
+            "https://ws--smart-catering-slm-serve.modal.run/v1/chat/completions",
+        ),
+        (
+            "https://ws--smart-catering-slm-serve.modal.run/v1",
+            "https://ws--smart-catering-slm-serve.modal.run/v1/chat/completions",
+        ),
+        (
+            "https://ws--smart-catering-slm-serve.modal.run/v1/",
+            "https://ws--smart-catering-slm-serve.modal.run/v1/chat/completions",
+        ),
+        (
+            "https://ws--smart-catering-slm-serve.modal.run/v1/chat/completions",
+            "https://ws--smart-catering-slm-serve.modal.run/v1/chat/completions",
+        ),
+    ],
+)
+def test_modal_vllm_client_resolves_root_v1_and_full_endpoint_urls(
+    monkeypatch: pytest.MonkeyPatch,
+    raw_base_url: str,
+    expected_endpoint: str,
+) -> None:
+    req = _sample_request()
+    facts = compute_derived_kpi_facts(req)
+    messages = build_insight_messages(req, facts)
+    observed_urls: list[str] = []
+
+    async def fake_post_json(
+        *,
+        url: str,
+        headers: dict[str, str],
+        json_body: dict[str, Any],
+        timeout_seconds: float,
+    ) -> tuple[int, dict[str, str], Any]:
+        del headers, json_body, timeout_seconds
+        observed_urls.append(url)
+        return (
+            200,
+            {"X-Modal-Cold-Start": "false"},
+            {
+                "model": "Qwen/Qwen2.5-7B-Instruct",
+                "choices": [{"message": {"content": _valid_slm_json_for(req)}}],
+                "usage": {"total_tokens": 250},
+            },
+        )
+
+    monkeypatch.setattr("app.insight.modal_client._post_json", fake_post_json)
+    client = ModalVLLMClient(
+        base_url=raw_base_url,
+        api_key="modal-bearer-secret-123",
+        default_model="Qwen/Qwen2.5-7B-Instruct",
+    )
+    completion = asyncio.run(
+        client.generate_insight_json(
+            messages=messages,
+            model="Qwen/Qwen2.5-7B-Instruct",
+            timeout_seconds=18.0,
+        )
+    )
+    assert observed_urls == [expected_endpoint]
+    assert completion.model_used == "Qwen/Qwen2.5-7B-Instruct"
+
+
 def test_modal_vllm_urllib_fallback_handles_success_and_http_errors(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

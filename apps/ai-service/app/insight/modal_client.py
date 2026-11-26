@@ -136,7 +136,9 @@ class ModalVLLMClient:
     def _resolve_endpoint(self) -> str:
         if self._base_url.endswith("/chat/completions"):
             return self._base_url
-        return f"{self._base_url}/chat/completions"
+        if self._base_url.endswith("/v1"):
+            return f"{self._base_url}/chat/completions"
+        return f"{self._base_url}/v1/chat/completions"
 
     async def generate_insight_json(
         self,
