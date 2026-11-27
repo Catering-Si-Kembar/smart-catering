@@ -96,7 +96,9 @@ export function StatusBanner({
         />
         <div className="space-y-0.5">
           <p className={cn('text-sm font-bold leading-snug', config.titleClass)}>{title}</p>
-          {detail ? <p className={cn('text-sm leading-relaxed', config.textClass)}>{detail}</p> : null}
+          {detail ? (
+            <p className={cn('text-sm leading-relaxed', config.textClass)}>{detail}</p>
+          ) : null}
         </div>
       </div>
       {actionLabel && onAction ? (

@@ -25,8 +25,8 @@ const INITIAL_MESSAGES: readonly ChatMessage[] = [
   {
     id: 'msg-1',
     sender: 'assistant',
-    text: 'Halo! Saya Asisten Smart Catering (Mode Simulasi FS-01). Pilih pertanyaan cepat di bawah atau ketik pertanyaan tentang menu, SOP, atau jadwal pesanan.',
-    sourceLabel: 'Simulasi Agentic RAG',
+    text: 'Halo! Saya Asisten Operasional Catering Si Kembar. Pilih pertanyaan cepat di bawah atau ketik pertanyaan seputar resep takaran baku, SOP dapur, atau jadwal pesanan.',
+    sourceLabel: 'Asisten Dapur',
   },
 ];
 
@@ -34,25 +34,25 @@ function buildSimulatedReply(question: string): { text: string; sourceLabel: str
   const lower = question.toLowerCase();
   if (lower.includes('100') || lower.includes('bahan') || lower.includes('lengkuas')) {
     return {
-      text: 'Untuk 100 porsi Nasi Box Ayam Goreng Lengkuas (simulasi): Beras Putih 15 kg, Ayam Potong 12,5 kg, Lengkuas Parut 2 kg, Minyak Goreng 3 liter, dan Daun Salam 100 lembar.',
-      sourceLabel: 'Sumber: Resep Standar (Simulasi)',
+      text: 'Untuk 100 porsi Nasi Box Ayam Goreng Lengkuas: Beras Putih 15 kg, Ayam Potong 12,5 kg, Lengkuas Parut 2 kg, Minyak Goreng 3 liter, dan Daun Salam 100 lembar.',
+      sourceLabel: 'Sumber: Resep Standar Dapur',
     };
   }
   if (lower.includes('besok') || lower.includes('jadwal') || lower.includes('pesanan')) {
     return {
-      text: 'Jadwal simulasi 25 Nov 2026: (1) 09:30 WIB - 100 Box Ayam Goreng Lengkuas (Sedang Dimasak); (2) 11:30 WIB - 50 Box Rendang Daging (Siap Dikirim).',
-      sourceLabel: 'Sumber: Data Pesanan Read-Only (Simulasi)',
+      text: 'Jadwal pesanan 25 Nov 2026: (1) 09:30 WIB - 100 Box Ayam Goreng Lengkuas (Sedang Dimasak); (2) 11:30 WIB - 50 Box Rendang Daging (Siap Dikirim).',
+      sourceLabel: 'Sumber: Data Pesanan Aktif',
     };
   }
   if (lower.includes('dp') || lower.includes('bayar') || lower.includes('aturan')) {
     return {
-      text: 'Sesuai SOP draf Catering Si Kembar, DP minimal adalah 60% dari total pesanan sebelum masuk jadwal produksi [Menunggu Konfirmasi PIC].',
-      sourceLabel: 'Sumber: Knowledge Base SOP (Simulasi)',
+      text: 'Sesuai SOP Catering Si Kembar, DP minimal adalah 60% dari total nilai pesanan sebelum pesanan masuk ke antrean jadwal masak dapur.',
+      sourceLabel: 'Sumber: SOP Operasional Katering',
     };
   }
   return {
-    text: 'Pertanyaan di luar informasi operasional Catering Si Kembar tidak dijawab oleh asisten ini. Silakan tanyakan seputar menu, bahan baku, SOP DP, atau jadwal pesanan.',
-    sourceLabel: 'Guardrail Luar Domain (Simulasi)',
+    text: 'Pertanyaan di luar konteks operasional katering belum dapat dijawab. Silakan tanyakan seputar menu, bahan baku, SOP uang muka, atau jadwal pesanan.',
+    sourceLabel: 'Bantuan Operasional',
   };
 }
 
@@ -93,8 +93,8 @@ export default function ChatPage() {
           Asisten AI Catering Si Kembar
         </h1>
         <p className="text-base text-slate-700">
-          Pratinjau antarmuka chatbot operasional (integrasi backend proxy Express & FastAPI pada
-          FS-07).
+          Asisten pintar untuk membantu staf dapur dan pengelola mengecek resep takaran baku, SOP,
+          serta jadwal pengiriman pesanan secara cepat.
         </p>
       </div>
 

@@ -47,8 +47,12 @@ function MenuCalculatorContent() {
       <Card className="border-[#dad9d6] bg-white shadow-xs">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-xl">
-            <CalculateOutlinedIcon sx={{ fontSize: 22 }} className="text-[#9e1b32]" aria-hidden={true} />
-            Hitung Bahan Otomatis (Simulasi FS-04)
+            <CalculateOutlinedIcon
+              sx={{ fontSize: 22 }}
+              className="text-[#9e1b32]"
+              aria-hidden={true}
+            />
+            Kalkulator Kebutuhan Bahan Dapur
           </CardTitle>
           <CardDescription className="text-sm text-[#63635e]">
             Uji cepat skenario 10, 50, atau 100 nasi box dalam satu ketukan.
@@ -113,7 +117,7 @@ function MenuCalculatorContent() {
             <StatusBanner
               tone="error"
               title="Resep baku belum tersedia untuk menu ini"
-              detail={`Menu "${selectedMenu.name}" belum memiliki takaran bahan standar. Lengkapi resep di modul FS-04 sebelum menghitung kebutuhan belanja.`}
+              detail={`Menu "${selectedMenu.name}" belum memiliki takaran resep standar. Lengkapi data resep menu sebelum menghitung kebutuhan belanja.`}
             />
           ) : (
             <div className="space-y-3">
@@ -132,13 +136,14 @@ function MenuCalculatorContent() {
                     key={row.name}
                     className="rounded-xl border border-slate-200/90 bg-white p-4 shadow-2xs"
                   >
-                    <p className="text-[11px] font-medium uppercase tracking-wider text-slate-500">{row.name}</p>
+                    <p className="text-[11px] font-medium uppercase tracking-wider text-slate-500">
+                      {row.name}
+                    </p>
                     <p className="mt-1 text-2xl font-bold tabular-nums font-mono tracking-tight text-slate-900">
                       {row.formattedShoppingAmount}
                     </p>
                     <p className="mt-1 text-xs tabular-nums text-slate-400 font-normal">
-                      Takaran dasar: {row.totalBaseQuantity.toLocaleString('id-ID')}{' '}
-                      {row.baseUnit}
+                      Takaran dasar: {row.totalBaseQuantity.toLocaleString('id-ID')} {row.baseUnit}
                     </p>
                   </div>
                 ))}
@@ -151,14 +156,20 @@ function MenuCalculatorContent() {
       {/* Daftar Katalog Menu */}
       <section aria-labelledby="judul-katalog-menu" className="space-y-3">
         <h2 id="judul-katalog-menu" className="text-xl font-bold text-slate-950">
-          Daftar Katalog Menu (Simulasi)
+          Daftar Katalog Menu Katering
         </h2>
         <div className="grid gap-4 md:grid-cols-3">
           {MOCK_MENUS.map((menu) => (
-            <Card key={menu.id} className="flex flex-col justify-between border-[#dad9d6] bg-white shadow-xs">
+            <Card
+              key={menu.id}
+              className="flex flex-col justify-between border-[#dad9d6] bg-white shadow-xs"
+            >
               <CardHeader className="space-y-2">
                 <div className="flex items-center justify-between gap-2">
-                  <Badge variant="secondary" className="border-[#dad9d6] bg-[#f1f0ef] text-xs font-semibold text-[#21201c]">
+                  <Badge
+                    variant="secondary"
+                    className="border-[#dad9d6] bg-[#f1f0ef] text-xs font-semibold text-[#21201c]"
+                  >
                     {menu.category}
                   </Badge>
                   {menu.recipe.length === 0 ? (
@@ -166,7 +177,11 @@ function MenuCalculatorContent() {
                       variant="outline"
                       className="border-amber-400 bg-amber-50 text-xs font-bold text-amber-950"
                     >
-                      <WarningAmberRoundedIcon sx={{ fontSize: 15 }} className="mr-1" aria-hidden={true} />
+                      <WarningAmberRoundedIcon
+                        sx={{ fontSize: 15 }}
+                        className="mr-1"
+                        aria-hidden={true}
+                      />
                       Belum Ada Resep
                     </Badge>
                   ) : null}
@@ -178,7 +193,8 @@ function MenuCalculatorContent() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <p className="text-lg font-extrabold tabular-nums text-[#9e1b32]">
-                  {formatRupiah(menu.price)} <span className="text-xs font-normal text-[#82827c]">/ porsi</span>
+                  {formatRupiah(menu.price)}{' '}
+                  <span className="text-xs font-normal text-[#82827c]">/ porsi</span>
                 </p>
                 <Button
                   type="button"

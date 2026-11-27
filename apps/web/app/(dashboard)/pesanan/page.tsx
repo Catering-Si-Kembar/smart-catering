@@ -11,13 +11,12 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import {
   MOCK_ORDERS,
   ORDER_STATUS_META,
-  PAYMENT_STATUS_META,
   formatRupiah,
   formatTanggalIndonesia,
   type MockOrder,
   type OrderStatus,
 } from '@/lib/mock-data';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { StatusBanner } from '@/components/ui/status-banner';
 import { cn } from '@/lib/utils';
@@ -30,8 +29,7 @@ export default function OrdersPage() {
 
   const filteredOrders = React.useMemo(() => {
     return orders.filter((order) => {
-      const matchStatus =
-        filterStatus === 'ALL' ? true : order.status === filterStatus;
+      const matchStatus = filterStatus === 'ALL' ? true : order.status === filterStatus;
       const matchSearch =
         searchQuery === ''
           ? true
@@ -43,9 +41,7 @@ export default function OrdersPage() {
   }, [orders, filterStatus, searchQuery]);
 
   const updateOrderStatus = (orderId: string, nextStatus: OrderStatus) => {
-    setOrders((prev) =>
-      prev.map((o) => (o.id === orderId ? { ...o, status: nextStatus } : o)),
-    );
+    setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: nextStatus } : o)));
     const target = orders.find((o) => o.id === orderId);
     setFeedbackMessage(
       `Status pesanan ${target?.orderNumber ?? orderId} berhasil diperbarui menjadi "${ORDER_STATUS_META[nextStatus].label}".`,
@@ -93,7 +89,11 @@ export default function OrdersPage() {
             />
           </div>
 
-          <div className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 text-xs font-medium" role="group" aria-label="Filter status pesanan">
+          <div
+            className="inline-flex rounded-lg border border-slate-200 bg-slate-50 p-0.5 text-xs font-medium"
+            role="group"
+            aria-label="Filter status pesanan"
+          >
             {[
               { key: 'ALL', label: 'Semua Pesanan' },
               { key: 'IN_PREPARATION', label: 'Sedang Masak' },
@@ -142,7 +142,6 @@ export default function OrdersPage() {
         ) : (
           filteredOrders.map((order) => {
             const statusInfo = ORDER_STATUS_META[order.status];
-            const paymentInfo = PAYMENT_STATUS_META[order.paymentStatus];
             const remainingPayment = Math.max(0, order.totalAmount - order.paidAmount);
 
             return (
@@ -163,7 +162,8 @@ export default function OrdersPage() {
                           className={cn(
                             'h-2 w-2 rounded-full shrink-0',
                             order.status === 'READY' && 'bg-emerald-500 ring-2 ring-emerald-100',
-                            order.status === 'IN_PREPARATION' && 'bg-amber-500 ring-2 ring-amber-100 animate-pulse',
+                            order.status === 'IN_PREPARATION' &&
+                              'bg-amber-500 ring-2 ring-amber-100 animate-pulse',
                             order.status === 'DRAFT' && 'bg-slate-400 ring-2 ring-slate-100',
                           )}
                           aria-hidden="true"
@@ -206,7 +206,10 @@ export default function OrdersPage() {
                           <span className="font-semibold text-slate-800">
                             {formatTanggalIndonesia(order.eventDate)}
                           </span>{' '}
-                          · Pukul <span className="font-mono font-semibold text-slate-800">{order.eventTime}</span>
+                          · Pukul{' '}
+                          <span className="font-mono font-semibold text-slate-800">
+                            {order.eventTime}
+                          </span>
                         </span>
                       </div>
                       <div className="flex items-center gap-1.5">
@@ -240,22 +243,37 @@ export default function OrdersPage() {
                       <div className="mt-0.5 flex items-center sm:justify-end gap-1.5 text-[11px] font-medium">
                         {order.paymentStatus === 'PARTIALLY_PAID' && (
                           <>
-                            <span className="h-1.5 w-1.5 rounded-full bg-amber-500 shrink-0" aria-hidden="true" />
+                            <span
+                              className="h-1.5 w-1.5 rounded-full bg-amber-500 shrink-0"
+                              aria-hidden="true"
+                            />
                             <span className="text-slate-600">
-                              DP Masuk <strong className="text-amber-800 font-semibold">{formatRupiah(order.paidAmount)}</strong> (Sisa: {formatRupiah(remainingPayment)})
+                              DP Masuk{' '}
+                              <strong className="text-amber-800 font-semibold">
+                                {formatRupiah(order.paidAmount)}
+                              </strong>{' '}
+                              (Sisa: {formatRupiah(remainingPayment)})
                             </span>
                           </>
                         )}
                         {order.paymentStatus === 'PAID' && (
                           <>
-                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" aria-hidden="true" />
+                            <span
+                              className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0"
+                              aria-hidden="true"
+                            />
                             <span className="text-emerald-700 font-semibold">Lunas 100%</span>
                           </>
                         )}
                         {order.paymentStatus === 'UNPAID' && (
                           <>
-                            <span className="h-1.5 w-1.5 rounded-full bg-rose-500 shrink-0" aria-hidden="true" />
-                            <span className="text-rose-600 font-medium">Belum Bayar DP (Min. {formatRupiah(order.totalAmount * 0.6)})</span>
+                            <span
+                              className="h-1.5 w-1.5 rounded-full bg-rose-500 shrink-0"
+                              aria-hidden="true"
+                            />
+                            <span className="text-rose-600 font-medium">
+                              Belum Bayar DP (Min. {formatRupiah(order.totalAmount * 0.6)})
+                            </span>
                           </>
                         )}
                       </div>

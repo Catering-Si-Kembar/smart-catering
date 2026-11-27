@@ -6,10 +6,8 @@ import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import CalendarTodayRoundedIcon from '@mui/icons-material/CalendarTodayRounded';
-import CheckCircleOutlineRoundedIcon from '@mui/icons-material/CheckCircleOutlineRounded';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import RestaurantMenuRoundedIcon from '@mui/icons-material/RestaurantMenuRounded';
-import SupportAgentRoundedIcon from '@mui/icons-material/SupportAgentRounded';
 import {
   MOCK_ORDERS,
   ORDER_STATUS_META,
@@ -17,7 +15,6 @@ import {
   formatTanggalIndonesia,
   type MockOrder,
 } from '@/lib/mock-data';
-import { useAppRole } from '@/components/shell/role-context';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { StatusBanner } from '@/components/ui/status-banner';
@@ -26,7 +23,6 @@ import { cn } from '@/lib/utils';
 type UiPreviewState = 'normal' | 'loading' | 'empty' | 'error';
 
 export default function DashboardPage() {
-  const { role } = useAppRole();
   const [uiState, setUiState] = React.useState<UiPreviewState>('normal');
   const [orderList] = React.useState<readonly MockOrder[]>(MOCK_ORDERS);
 
@@ -59,7 +55,8 @@ export default function DashboardPage() {
             </h1>
           </div>
           <p className="text-xs text-[#63635e] sm:text-sm">
-            Rabu, 25 November 2026 · Pantauan dapur utama dan aksi cepat operasional Catering Si Kembar.
+            Rabu, 25 November 2026 · Pantauan dapur utama dan aksi cepat operasional Catering Si
+            Kembar.
           </p>
         </div>
 
@@ -132,12 +129,8 @@ export default function DashboardPage() {
                 dikonfirmasi.
               </p>
             </div>
-            <Button
-              type="button"
-              className="min-h-[44px]"
-              onClick={() => setUiState('normal')}
-            >
-              Kembalikan Data Simulasi
+            <Button type="button" className="min-h-[44px]" onClick={() => setUiState('normal')}>
+              Muat Ulang Pesanan
             </Button>
           </CardContent>
         </Card>
@@ -165,9 +158,7 @@ export default function DashboardPage() {
                   </span>
                   <span className="text-xs font-semibold text-[#63635e]">Porsi Box</span>
                 </div>
-                <p className="mt-1.5 text-xs text-[#82827c]">
-                  2 menu paket dalam antrean aktif
-                </p>
+                <p className="mt-1.5 text-xs text-[#82827c]">2 menu paket dalam antrean aktif</p>
               </CardContent>
             </Card>
 
@@ -188,9 +179,7 @@ export default function DashboardPage() {
                   </span>
                   <span className="text-xs font-semibold text-[#63635e]">Pesanan</span>
                 </div>
-                <p className="mt-1.5 text-xs text-[#82827c]">
-                  1 dimasak · 1 siap antar
-                </p>
+                <p className="mt-1.5 text-xs text-[#82827c]">1 dimasak · 1 siap antar</p>
               </CardContent>
             </Card>
 
@@ -211,9 +200,7 @@ export default function DashboardPage() {
                   </span>
                   <span className="text-xs font-semibold text-[#63635e]">Pesanan</span>
                 </div>
-                <p className="mt-1.5 text-xs text-[#82827c]">
-                  Min. 60% DP sebelum belanja bahan
-                </p>
+                <p className="mt-1.5 text-xs text-[#82827c]">Min. 60% DP sebelum belanja bahan</p>
               </CardContent>
             </Card>
           </div>
@@ -222,10 +209,10 @@ export default function DashboardPage() {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-base font-bold text-[#21201c] sm:text-lg">Antrean Produksi Dapur</h2>
-                <p className="text-xs text-[#63635e]">
-                  Prioritas jadwal kirim hari ini
-                </p>
+                <h2 className="text-base font-bold text-[#21201c] sm:text-lg">
+                  Antrean Produksi Dapur
+                </h2>
+                <p className="text-xs text-[#63635e]">Prioritas jadwal kirim hari ini</p>
               </div>
               <Link
                 href="/pesanan"
@@ -259,7 +246,8 @@ export default function DashboardPage() {
                                 className={cn(
                                   'h-2 w-2 rounded-full shrink-0',
                                   order.status === 'READY' && 'bg-[#166534] ring-2 ring-[#ecfdf5]',
-                                  order.status === 'IN_PREPARATION' && 'bg-[#e6b400] ring-2 ring-[#fef7d6] animate-pulse',
+                                  order.status === 'IN_PREPARATION' &&
+                                    'bg-[#e6b400] ring-2 ring-[#fef7d6] animate-pulse',
                                   order.status === 'DRAFT' && 'bg-[#82827c] ring-2 ring-[#f1f0ef]',
                                 )}
                                 aria-hidden="true"
@@ -281,11 +269,15 @@ export default function DashboardPage() {
                           <div>
                             <h3 className="text-base sm:text-lg font-bold text-[#21201c]">
                               {order.menuName}{' '}
-                              <span className="text-[#9e1b32] font-mono font-bold">· {order.portions} Box</span>
+                              <span className="text-[#9e1b32] font-mono font-bold">
+                                · {order.portions} Box
+                              </span>
                             </h3>
                             <p className="mt-0.5 text-xs text-[#63635e]">
                               <span className="text-[#82827c]">Pemesan:</span>{' '}
-                              <span className="font-semibold text-[#21201c]">{order.customerAlias}</span>
+                              <span className="font-semibold text-[#21201c]">
+                                {order.customerAlias}
+                              </span>
                             </p>
                           </div>
 
@@ -299,8 +291,13 @@ export default function DashboardPage() {
                               />
                               <span>
                                 <span className="text-[#82827c]">Jadwal Kirim:</span>{' '}
-                                <span className="font-semibold text-[#21201c]">{formatTanggalIndonesia(order.eventDate)}</span>{' '}
-                                · Pukul <span className="font-mono font-semibold text-[#21201c]">{order.eventTime}</span>
+                                <span className="font-semibold text-[#21201c]">
+                                  {formatTanggalIndonesia(order.eventDate)}
+                                </span>{' '}
+                                · Pukul{' '}
+                                <span className="font-mono font-semibold text-[#21201c]">
+                                  {order.eventTime}
+                                </span>
                               </span>
                             </div>
                             <span className="text-[#dad9d6]">·</span>
@@ -312,7 +309,9 @@ export default function DashboardPage() {
                               />
                               <span>
                                 <span className="text-[#82827c]">Alamat Kirim:</span>{' '}
-                                <span className="font-medium text-[#21201c]">{order.deliveryArea}</span>
+                                <span className="font-medium text-[#21201c]">
+                                  {order.deliveryArea}
+                                </span>
                               </span>
                             </div>
                           </div>
@@ -331,7 +330,9 @@ export default function DashboardPage() {
                         {/* Kolom Kanan: Total Nilai & Tombol Aksi */}
                         <div className="flex flex-row items-center justify-between gap-3 border-t border-[#dad9d6]/60 pt-3 sm:flex-col sm:items-end sm:justify-between sm:border-t-0 sm:pt-0 shrink-0 self-stretch sm:self-auto">
                           <div className="text-left sm:text-right">
-                            <span className="text-[11px] font-medium text-[#82827c] block">Total Tagihan</span>
+                            <span className="text-[11px] font-medium text-[#82827c] block">
+                              Total Tagihan
+                            </span>
                             <span className="text-base sm:text-lg font-bold font-mono text-[#21201c]">
                               {formatRupiah(order.totalAmount)}
                             </span>
@@ -369,35 +370,6 @@ export default function DashboardPage() {
                   </Card>
                 );
               })}
-            </div>
-          </div>
-
-          {/* Quick Assistant AI Banner (Third Color - Purple Plum) */}
-          <div className="rounded-lg border border-[#5c3271]/20 bg-[#f5eff8] p-4 sm:p-5 shadow-xs">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#5c3271] text-white">
-                  <SupportAgentRoundedIcon sx={{ fontSize: 24 }} aria-hidden={true} />
-                </div>
-                <div>
-                  <h4 className="text-base font-bold text-[#3d1f4d]">
-                    Butuh Bantuan Cepat SOP Dapur?
-                  </h4>
-                  <p className="text-sm text-[#5c3271] leading-relaxed">
-                    Tanyakan takaran bumbu, estimasi waktu masak, atau jadwal pengiriman ke Asisten AI
-                    katering.
-                  </p>
-                </div>
-              </div>
-              <Link
-                href="/chat"
-                className={cn(
-                  buttonVariants({ variant: 'secondary' }),
-                  'min-h-[44px] shrink-0 border border-[#5c3271]/30 text-[#5c3271] hover:bg-[#f5eff8] font-bold text-sm',
-                )}
-              >
-                Tanya Asisten AI
-              </Link>
             </div>
           </div>
         </>

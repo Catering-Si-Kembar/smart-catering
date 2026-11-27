@@ -224,7 +224,8 @@ export const MOCK_NOTIFICATIONS: readonly MockNotification[] = [
   {
     id: 'notif-01',
     title: 'Pengingat Masak: 100 Box Nasi Ayam',
-    message: 'ORD-202611-0001 untuk Ibu Hj. Aminah harus selesai dimasak dan siap kirim pukul 09:30 WIB.',
+    message:
+      'ORD-202611-0001 untuk Ibu Hj. Aminah harus selesai dimasak dan siap kirim pukul 09:30 WIB.',
     timeLabel: 'Hari ini · 08:00 WIB',
     category: 'JADWAL',
     adminOnly: false,
@@ -242,7 +243,8 @@ export const MOCK_NOTIFICATIONS: readonly MockNotification[] = [
   {
     id: 'notif-03',
     title: 'Uang Muka (DP) Belum Masuk',
-    message: 'Pesanan Ibu Sri Wahyuni (ORD-202611-0003) sebesar Rp 1.000.000 belum menerima DP min. Rp 600.000.',
+    message:
+      'Pesanan Ibu Sri Wahyuni (ORD-202611-0003) sebesar Rp 1.000.000 belum menerima DP min. Rp 600.000.',
     timeLabel: 'Hari ini · 09:00 WIB',
     category: 'KEUANGAN',
     adminOnly: true,
@@ -261,8 +263,18 @@ export function formatTanggalIndonesia(dateStr: string): string {
     const date = new Date(year, month - 1, day);
     const hari = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'][date.getDay()];
     const bulan = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
-      'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'Mei',
+      'Jun',
+      'Jul',
+      'Agu',
+      'Sep',
+      'Okt',
+      'Nov',
+      'Des',
     ][month - 1];
     return `${hari}, ${day} ${bulan} ${year}`;
   } catch {

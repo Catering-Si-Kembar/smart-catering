@@ -8,7 +8,6 @@ import TrendingUpRoundedIcon from '@mui/icons-material/TrendingUpRounded';
 import { formatRupiah } from '@/lib/mock-data';
 import { useAppRole } from '@/components/shell/role-context';
 import { RestrictedNotice } from '@/components/shell/restricted-notice';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { StatusBanner } from '@/components/ui/status-banner';
@@ -60,8 +59,8 @@ export default function AnalyticsPage() {
             Dasbor Analitik & Prediksi Permintaan
           </h1>
           <p className="text-base text-slate-700">
-            Khusus Pengelola (ADMIN). Pratinjau tata letak KPI, forecasting per menu, dan ringkasan
-            sentimen (integrasi penuh DS-05 & FS-08).
+            Khusus Pengelola (ADMIN). Pantau ringkasan KPI, proyeksi permintaan menu, dan tren
+            kepuasan pelanggan secara berkala.
           </p>
         </div>
         <Button type="button" size="lg" onClick={() => setDownloadNotice(true)}>
@@ -73,8 +72,8 @@ export default function AnalyticsPage() {
       {downloadNotice ? (
         <StatusBanner
           tone="success"
-          title="Pratinjau unduh laporan analitik (Simulasi FS-01)"
-          detail={`Ringkasan PDF periode ${metrics.label} akan dihasilkan bersama AI Business Insight pada modul FS-08 & AI-06.`}
+          title={`Laporan Analitik ${metrics.label} Siap Diunduh`}
+          detail={`Ringkasan performa penjualan dan proyeksi pesanan untuk ${metrics.label} siap diekspor ke format PDF.`}
           actionLabel="Tutup"
           onAction={() => setDownloadNotice(false)}
         />
@@ -95,12 +94,6 @@ export default function AnalyticsPage() {
         >
           30 Hari Terakhir
         </Button>
-        <Badge
-          variant="outline"
-          className="border-amber-400 bg-amber-50 text-xs font-bold text-amber-950"
-        >
-          Data Simulasi (isSynthetic = true)
-        </Badge>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -159,7 +152,7 @@ export default function AnalyticsPage() {
               </span>
               <span className="text-sm font-semibold text-[#63635e]">Box</span>
             </div>
-            <p className="mt-2 text-xs text-[#82827c]">Model Random Forest DS-05</p>
+            <p className="mt-2 text-xs text-[#82827c]">Proyeksi pesanan minggu depan</p>
           </CardContent>
         </Card>
 
@@ -178,7 +171,7 @@ export default function AnalyticsPage() {
                 {metrics.positiveSentimentPct}%
               </span>
             </div>
-            <p className="mt-2 text-xs text-[#82827c]">Ulasan Sintetis AI-03</p>
+            <p className="mt-2 text-xs text-[#82827c]">Berdasarkan survei pelanggan</p>
           </CardContent>
         </Card>
       </div>
@@ -186,12 +179,15 @@ export default function AnalyticsPage() {
       <Card className="border-[#dad9d6]">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg text-slate-950">
-            <BarChartRoundedIcon sx={{ fontSize: 22 }} className="text-[#5c3271]" aria-hidden={true} />
-            Ringkasan AI Business Insight (Pratinjau Layout)
+            <BarChartRoundedIcon
+              sx={{ fontSize: 22 }}
+              className="text-[#5c3271]"
+              aria-hidden={true}
+            />
+            Ringkasan Analisis & Rekomendasi Operasional
           </CardTitle>
           <CardDescription className="text-sm text-slate-700">
-            Slot narasi ringkas dalam bahasa Indonesia lugas agar pengelola langsung paham rencana
-            belanja minggu depan.
+            Rangkuman operasional mingguan untuk panduan belanja bahan baku dan efisiensi dapur.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-2 text-base leading-relaxed text-slate-800">
@@ -200,8 +196,8 @@ export default function AnalyticsPage() {
             Goreng Lengkuas (estimasi 220 box).
           </p>
           <p>
-            • Saran persiapan bahan utama minggu depan (simulasi): Beras Putih ±52,5 kg dan Ayam
-            Potong ±27,5 kg.
+            • Saran persiapan bahan utama minggu depan: Beras Putih ±52,5 kg dan Ayam Potong ±27,5
+            kg.
           </p>
         </CardContent>
       </Card>

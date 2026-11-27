@@ -27,30 +27,30 @@ export function RestrictedNotice({ featureName }: RestrictedNoticeProps) {
             Akses Terbatas: Khusus Pengelola (ADMIN)
           </CardTitle>
           <CardDescription className="text-base text-slate-700">
-            Halaman <span className="font-semibold text-slate-900">{featureName}</span> dikhususkan untuk
-            pemilik dan pengelola katering. Akun Anda saat ini berada dalam mode staf dapur (STAFF).
+            Halaman <span className="font-semibold text-slate-900">{featureName}</span> dikhususkan
+            untuk pemilik dan pengelola katering. Akun Anda saat ini berada dalam mode staf dapur
+            (STAFF).
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="rounded-md border border-amber-300 bg-white p-4 text-sm text-slate-800">
-            <p className="font-semibold text-slate-900">Perlu menguji halaman ini?</p>
+            <p className="font-semibold text-slate-900">Ingin beralih ke peran Pengelola?</p>
             <p className="mt-1 leading-relaxed text-slate-700">
-              Gunakan simulasi switcher peran di bawah atau di pojok atas untuk berganti ke peran ADMIN
-              (simulasi FS-01).
+              Gunakan tombol di bawah atau menu profil akun di pojok kanan atas untuk beralih ke
+              akun Pengelola (ADMIN).
             </p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button
-              type="button"
-              className="flex-1 min-h-[44px]"
-              onClick={() => setRole('ADMIN')}
-            >
+            <Button type="button" className="flex-1 min-h-[44px]" onClick={() => setRole('ADMIN')}>
               <AdminPanelSettingsRoundedIcon sx={{ fontSize: 20 }} aria-hidden={true} />
               Beralih ke Mode ADMIN
             </Button>
             <Link
               href="/"
-              className={cn(buttonVariants({ variant: 'outline' }), 'flex-1 min-h-[44px] text-center')}
+              className={cn(
+                buttonVariants({ variant: 'outline' }),
+                'flex-1 min-h-[44px] text-center',
+              )}
             >
               <ArrowBackRoundedIcon sx={{ fontSize: 20 }} aria-hidden={true} />
               Kembali ke Jadwal

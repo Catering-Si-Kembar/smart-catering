@@ -4,7 +4,6 @@ import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import BarChartRoundedIcon from '@mui/icons-material/BarChartRounded';
 import CalendarTodayRoundedIcon from '@mui/icons-material/CalendarTodayRounded';
@@ -17,16 +16,10 @@ import NotificationsNoneRoundedIcon from '@mui/icons-material/NotificationsNoneR
 import ReceiptLongRoundedIcon from '@mui/icons-material/ReceiptLongRounded';
 import RestaurantMenuRoundedIcon from '@mui/icons-material/RestaurantMenuRounded';
 import SupportAgentRoundedIcon from '@mui/icons-material/SupportAgentRounded';
-import SwapHorizRoundedIcon from '@mui/icons-material/SwapHorizRounded';
 import WifiOffRoundedIcon from '@mui/icons-material/WifiOffRounded';
 import type { SvgIconProps } from '@mui/material/SvgIcon';
-import {
-  getMobileBarItemsForRole,
-  getNavItemsForRole,
-  type NavIconKey,
-} from '@/lib/navigation';
+import { getMobileBarItemsForRole, getNavItemsForRole, type NavIconKey } from '@/lib/navigation';
 import { useAppRole } from '@/components/shell/role-context';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
 const ICON_MAP: Record<NavIconKey, React.ComponentType<SvgIconProps>> = {
@@ -137,7 +130,10 @@ export function AppShell({ appName, children }: AppShellProps) {
               </span>
               <KeyboardArrowDownRoundedIcon
                 sx={{ fontSize: 18 }}
-                className={cn('text-[#82827c] transition-transform duration-150', profileMenuOpen && 'rotate-180')}
+                className={cn(
+                  'text-[#82827c] transition-transform duration-150',
+                  profileMenuOpen && 'rotate-180',
+                )}
                 aria-hidden={true}
               />
             </button>
@@ -158,7 +154,7 @@ export function AppShell({ appName, children }: AppShellProps) {
 
                 <div className="space-y-1">
                   <p className="px-2.5 pt-1 text-[10px] font-bold uppercase tracking-wider text-[#82827c]">
-                    Ganti Peran (Simulasi):
+                    Beralih Peran Akun:
                   </p>
                   <button
                     type="button"
@@ -178,7 +174,9 @@ export function AppShell({ appName, children }: AppShellProps) {
                       <div className="h-2 w-2 rounded-full bg-[#9e1b32]" />
                       <span>Pengelola (ADMIN)</span>
                     </div>
-                    {role === 'ADMIN' && <span className="text-[10px] font-bold text-[#8e182d]">Aktif</span>}
+                    {role === 'ADMIN' && (
+                      <span className="text-[10px] font-bold text-[#8e182d]">Aktif</span>
+                    )}
                   </button>
 
                   <button
@@ -199,7 +197,9 @@ export function AppShell({ appName, children }: AppShellProps) {
                       <div className="h-2 w-2 rounded-full bg-[#5c3271]" />
                       <span>Staf Dapur (STAFF)</span>
                     </div>
-                    {role === 'STAFF' && <span className="text-[10px] font-bold text-[#5c3271]">Aktif</span>}
+                    {role === 'STAFF' && (
+                      <span className="text-[10px] font-bold text-[#5c3271]">Aktif</span>
+                    )}
                   </button>
                 </div>
               </div>
@@ -297,33 +297,11 @@ export function AppShell({ appName, children }: AppShellProps) {
           </div>
 
           {/* Sidebar Footer info & Keluar Akun */}
-          <div className="border-t border-[#dad9d6] p-4 space-y-3">
-            <div className="space-y-1 rounded-lg bg-white border border-[#dad9d6] p-3 text-xs text-[#63635e] shadow-[0_1px_2px_0_rgba(33,32,28,0.06)]">
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-[#21201c]">Peran Aktif</span>
-                <Badge
-                  variant="outline"
-                  className={cn(
-                    'text-xs font-bold',
-                    role === 'ADMIN'
-                      ? 'border-[#9e1b32] bg-[#fdf2f4] text-[#8e182d]'
-                      : 'border-[#5c3271] bg-[#f5eff8] text-[#5c3271]',
-                  )}
-                >
-                  {role}
-                </Badge>
-              </div>
-              <p className="leading-snug text-[#63635e]">
-                {role === 'ADMIN'
-                  ? 'Akses penuh seluruh modul & tagihan.'
-                  : 'Fokus jadwal produksi & persiapan bahan.'}
-              </p>
-            </div>
-
-            {/* Tombol Keluar di Sidebar Pojok Kiri */}
+          {/* Bottom Desktop Sidebar: Clean Logout Action */}
+          <div className="border-t border-[#dad9d6] p-3">
             <Link
               href="/login"
-              className="flex min-h-[40px] items-center gap-2.5 rounded-lg border border-[#dad9d6] bg-white px-3 py-2 text-xs font-bold text-[#b91c1c] transition hover:bg-[#fdf2f4] hover:border-[#b91c1c]/30 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b91c1c]"
+              className="flex min-h-[40px] w-full items-center gap-2.5 rounded-lg border border-[#dad9d6] bg-white px-3 py-2 text-xs font-bold text-[#b91c1c] transition hover:bg-[#fdf2f4] hover:border-[#b91c1c]/30 shadow-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b91c1c]"
             >
               <LogoutRoundedIcon sx={{ fontSize: 18 }} aria-hidden={true} />
               <span>Keluar Akun</span>
@@ -439,7 +417,11 @@ export function AppShell({ appName, children }: AppShellProps) {
                     onClick={() => setMobileDrawerOpen(false)}
                     className="flex min-h-[44px] items-center gap-3 rounded-lg px-3 py-2 text-base font-semibold text-[#b91c1c] hover:bg-[#fdf2f4]"
                   >
-                    <LogoutRoundedIcon sx={{ fontSize: 20 }} className="shrink-0" aria-hidden={true} />
+                    <LogoutRoundedIcon
+                      sx={{ fontSize: 20 }}
+                      className="shrink-0"
+                      aria-hidden={true}
+                    />
                     <span>Keluar Akun</span>
                   </Link>
                 </div>
@@ -466,8 +448,7 @@ export function AppShell({ appName, children }: AppShellProps) {
         <div className="grid h-full w-full auto-cols-fr grid-flow-col">
           {mobileBarItems.map((item) => {
             const Icon = ICON_MAP[item.icon];
-            const isActive =
-              item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+            const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
             return (
               <Link
                 key={item.href}

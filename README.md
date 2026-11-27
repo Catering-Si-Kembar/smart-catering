@@ -405,6 +405,7 @@ App Shell di `apps/web` dirancang khusus untuk operasional dapur **Catering Si K
 
 - **Navigasi ≤ 2 ketukan:** Sidebar vertikal tetap pada desktop (`>= 1024px`) dan bottom bar 5 slot + laci menu pada mobile (`< 768px`), dengan label familiar (_Jadwal Hari Ini_, _Pesanan_, _Menu & Bahan_, _Tagihan_) dan tombol kata kerja lugas (_Simpan Pesanan_, _Hitung Bahan_, _Cetak Invoice_).
 - **Aksesibilitas & keterbacaan dapur:** Area sentuh minimal **`44×44 px`**, teks isi `16px` dengan angka `tabular-nums`, tema terang ber-kontras tinggi **WCAG AA (≥ 4.5:1)** tanpa dark mode berlebih, dan indikator status jelas (_memuat_, _berhasil_, _gagal_, serta status koneksi jaringan).
+- **Standar UI operasional anti-slop:** Antarmuka bebas dari kode isu developer internal, status model matematis, dan label "simulasi/mockup". Menggunakan badging editorial status dot tipis, menyatukan status pembayaran ke kolom finansial, dan tombol keluar akun langsung di pojok bawah sidebar.
 - **Keterpisahan tampilan peran:** Menu _Tagihan_ dan _Analitik_ disembunyikan pada pratinjau peran `STAFF` (otorisasi resmi ditegakkan di backend `FS-03`). Rincian wireframe dan tabel alasan desain tersedia di [Mockup UI & Desain Responsif (`FS-01`)](docs/spec/ui-mockup-fs-01.md).
 
 ## Kontribusi

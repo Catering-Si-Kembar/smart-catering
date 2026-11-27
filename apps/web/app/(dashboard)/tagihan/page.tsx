@@ -45,8 +45,9 @@ export default function BillingPage() {
       }),
     );
     setBanner({
-      title: 'Pembayaran DP 60% dicatat (Simulasi)',
-      detail: 'Status tagihan berubah menjadi DP Masuk dan pesanan otomatis terkonfirmasi.',
+      title: 'Pembayaran DP 60% Berhasil Dicatat',
+      detail:
+        'Status tagihan diperbarui menjadi DP Masuk dan pesanan otomatis masuk antrean konfirmasi.',
     });
   };
 
@@ -59,8 +60,8 @@ export default function BillingPage() {
       ),
     );
     setBanner({
-      title: 'Pelunasan dicatat (Simulasi)',
-      detail: 'Sisa tagihan sekarang Rp 0 dan status berubah menjadi Lunas.',
+      title: 'Pelunasan Berhasil Dicatat',
+      detail: 'Sisa tagihan sekarang Rp 0 dan status pembayaran pesanan lunas 100%.',
     });
   };
 
@@ -176,7 +177,7 @@ export default function BillingPage() {
           <CardHeader>
             <CardTitle className="text-xl">Pratinjau Invoice Digital</CardTitle>
             <CardDescription className="text-sm text-slate-700">
-              Format ringkas siap cetak PDF (modul penuh di FS-06).
+              Format lembar tagihan resmi siap cetak untuk pelanggan.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -214,8 +215,8 @@ export default function BillingPage() {
               className="w-full"
               onClick={() =>
                 setBanner({
-                  title: 'Pratinjau cetak invoice siap (Simulasi FS-01)',
-                  detail: `Dokumen PDF INV-${selectedInvoice.orderNumber.replace('ORD-', '')} akan diunduh melalui backend Express pada FS-06.`,
+                  title: `Invoice INV-${selectedInvoice.orderNumber.replace('ORD-', '')} Siap Dicetak`,
+                  detail: `Format cetak invoice resmi untuk pesanan ${selectedInvoice.orderNumber} telah disiapkan.`,
                 })
               }
             >

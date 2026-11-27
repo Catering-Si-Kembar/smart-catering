@@ -17,7 +17,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { setRole } = useAppRole();
   const [username, setUsername] = useState('admin_catering');
-  const [password, setPassword] = useState('demo-simulasi-fs01');
+  const [password, setPassword] = useState('katering-rahasia-2026');
   const [showPassword, setShowPassword] = useState(false);
   const [selectedRole, setSelectedRole] = useState<'ADMIN' | 'STAFF'>('ADMIN');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -66,8 +66,7 @@ export default function LoginPage() {
           <CardHeader>
             <CardTitle className="text-xl">Masuk Akun Staf</CardTitle>
             <CardDescription className="text-sm text-slate-700">
-              Mode mockup FS-01: pilih peran simulasi di bawah untuk mencoba tampilan Pengelola atau
-              Staf Dapur.
+              Pilih peran akun di bawah untuk masuk sebagai Pengelola atau Staf Dapur.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -75,7 +74,11 @@ export default function LoginPage() {
               <StatusBanner tone="error" title="Data masuk belum lengkap" detail={errorMessage} />
             ) : null}
 
-            <div className="grid grid-cols-2 gap-2.5" role="group" aria-label="Pilih akun simulasi">
+            <div
+              className="grid grid-cols-2 gap-2.5"
+              role="group"
+              aria-label="Pilih akun operasional"
+            >
               <Button
                 type="button"
                 variant={selectedRole === 'ADMIN' ? 'default' : 'outline'}
