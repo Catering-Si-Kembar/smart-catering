@@ -15,10 +15,12 @@ RUN groupadd --system --gid 10001 aiservice \
   && useradd --system --uid 10001 --gid aiservice --create-home --home-dir /home/aiservice aiservice \
   && pip install --no-cache-dir uv==0.13.7
 
+ARG AI_SERVICE_EXTRAS="--extra ml --extra rag --extra insight"
+
 COPY apps/ai-service/pyproject.toml apps/ai-service/uv.lock apps/ai-service/.python-version ./
 COPY apps/ai-service/app ./app
 
-RUN uv sync --frozen --no-dev \
+RUN uv sync --frozen --no-dev ${AI_SERVICE_EXTRAS} \
   && chown -R aiservice:aiservice /app /home/aiservice
 
 ENV PATH="/app/apps/ai-service/.venv/bin:${PATH}" \

@@ -69,24 +69,39 @@ jobs:
           working-directory: apps/ai-service
           enable-cache: true
       - run: npm run ai:sync
+      - run: npm run security:check
+      - run: npm run infra:vps:check
       - run: npm run format:check
       - run: npm run lint
+      - name: Check Modal GPU deployment scripts (OPS-04)
+        env:
+          PYTHONPATH: .
+        run: |
+          apps/ai-service/.venv/bin/ruff format --config apps/ai-service/pyproject.toml --check infra/modal
+          apps/ai-service/.venv/bin/ruff check --config apps/ai-service/pyproject.toml infra/modal
+          apps/ai-service/.venv/bin/mypy --strict --namespace-packages --explicit-package-bases infra/modal
+          apps/ai-service/.venv/bin/pytest infra/modal/test_modal_infra.py -v
       - run: npm run db:validate
       - run: npm run db:generate
       - run: npm run typecheck
       - run: npm run build -- --force
       - run: npm run smoke
-      - name: Validate development and VPS Compose models
+      - name: Validate development, VPS Compose models, and Caddyfile
         env:
           POSTGRES_PASSWORD: ci-compose-validation-only
           WAHA_API_KEY: ci-compose-validation-only
           VPS_DATABASE_URL: postgresql://smartcatering:ci-compose-validation-only@postgres:5432/smart_catering?schema=public
+          API_DOMAIN: api.example.com
+          TLS_EMAIL: ops@example.com
         run: |
           docker compose --env-file .env.example -f infra/docker/compose.dev.yaml --profile waha config --quiet
-          docker compose --env-file .env.example -f infra/docker/compose.vps.yaml --profile waha config --quiet
+          docker compose --env-file .env.example -f infra/docker/compose.vps.yaml --profile proxy --profile waha config --quiet
+          docker run --rm -e API_DOMAIN=api.example.com -e TLS_EMAIL=ops@example.com -v "$PWD/infra/docker/Caddyfile:/etc/caddy/Caddyfile:ro" caddy:2.10.2-alpine@sha256:4c6e91c6ed0e2fa03efd5b44747b625fec79bc9cd06ac5235a779726618e530d caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
       - name: Build VPS images without deploying
         env:
           POSTGRES_PASSWORD: ci-compose-validation-only
           WAHA_API_KEY: ci-compose-validation-only
           VPS_DATABASE_URL: postgresql://smartcatering:ci-compose-validation-only@postgres:5432/smart_catering?schema=public
+          API_DOMAIN: api.example.com
+          TLS_EMAIL: ops@example.com
         run: docker compose --env-file .env.example -f infra/docker/compose.vps.yaml build api ai-service worker

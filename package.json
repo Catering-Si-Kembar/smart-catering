@@ -34,6 +34,8 @@
     "infra:up": "docker compose --env-file .env -f infra/docker/compose.dev.yaml up -d",
     "infra:down": "docker compose --env-file .env -f infra/docker/compose.dev.yaml --profile waha down",
     "infra:config": "docker compose --env-file .env -f infra/docker/compose.dev.yaml config --quiet",
+    "infra:vps:check": "node scripts/check-vps-compose.mjs",
+    "infra:vps:config": "docker compose --env-file .env -f infra/docker/compose.vps.yaml --profile proxy --profile waha config --quiet",
     "infra:waha": "docker compose --env-file .env -f infra/docker/compose.dev.yaml --profile waha up -d",
     "start": "turbo run start --filter=@smart-catering/web --filter=@smart-catering/api",
     "start:all": "turbo run start --filter=@smart-catering/web --filter=@smart-catering/api --filter=@smart-catering/worker --filter=@smart-catering/ai-service",
@@ -42,6 +44,7 @@
     "start:api": "npm run start --workspace=@smart-catering/api",
     "start:worker": "npm run start --workspace=@smart-catering/worker",
     "start:ai": "npm run start --workspace=@smart-catering/ai-service",
+    "security:check": "node scripts/check-secrets-hygiene.mjs",
     "smoke": "node scripts/smoke.mjs"
   },
   "allowScripts": {

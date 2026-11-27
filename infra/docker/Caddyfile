@@ -1,0 +1,61 @@
+{
+	email {$TLS_EMAIL}
+	admin off
+}
+
+http://127.0.0.1:2020 {
+	respond /healthz "ok" 200
+}
+
+{$API_DOMAIN} {
+	encode zstd gzip
+
+	log {
+		output stdout
+		format filter {
+			wrap json
+			fields {
+				request>headers>Authorization delete
+				request>headers>Cookie delete
+				request>headers>X-Internal-Token delete
+				request>uri query {
+					replace token [REDACTED]
+					replace access_token [REDACTED]
+					replace api_key [REDACTED]
+					replace key [REDACTED]
+				}
+			}
+		}
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "no-referrer"
+		-Server
+	}
+
+	request_body {
+		max_size 2MB
+	}
+
+	@disallowed_method {
+		not method GET HEAD POST PUT PATCH DELETE OPTIONS
+	}
+	respond @disallowed_method "Method Not Allowed" 405
+
+	@public_api {
+		path /api/v1 /api/v1/* /health /docs /docs/* /api/openapi
+	}
+	handle @public_api {
+		reverse_proxy api:3001 {
+			header_up X-Forwarded-Proto {scheme}
+			header_up X-Real-IP {remote_host}
+		}
+	}
+
+	handle {
+		respond "Not Found" 404
+	}
+}
