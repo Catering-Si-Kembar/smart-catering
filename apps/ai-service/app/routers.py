@@ -24,6 +24,10 @@ from app.ml.relevance.inference import (
     ModelArtifactMissingError,
     RelevanceClassifierService,
 )
+from app.ml.sentiment.inference import (
+    SentimentArtifactMissingError,
+    SentimentClassifierService,
+)
 from app.rag.service import AgenticRagService, build_default_rag_service
 from app.responses import create_success_response
 from app.schemas import HealthData, HealthResponse
@@ -46,11 +50,22 @@ def verify_internal_token(request: Request) -> None:
 
 
 def get_relevance_service(request: Request) -> RelevanceClassifierService:
+    """Dependency provider returning singleton RelevanceClassifierService from app state."""
     service = getattr(request.app.state, "relevance_service", None)
     if isinstance(service, RelevanceClassifierService):
         return service
     service = RelevanceClassifierService()
     request.app.state.relevance_service = service
+    return service
+
+
+def get_sentiment_service(request: Request) -> SentimentClassifierService:
+    """Dependency provider returning singleton SentimentClassifierService from app state."""
+    service = getattr(request.app.state, "sentiment_service", None)
+    if isinstance(service, SentimentClassifierService):
+        return service
+    service = SentimentClassifierService()
+    request.app.state.sentiment_service = service
     return service
 
 
@@ -179,12 +194,18 @@ async def get_relevance_metadata(
     dependencies=[Depends(verify_internal_token)],
 )
 async def predict_sentiment(
+    request: Request,
     payload: SentimentPredictRequest,
-) -> SentimentPredictResponse:
-    raise AppProblemError(
-        status_code=503,
-        detail="Sentiment analysis capability is temporarily unavailable.",
-    )
+    sentiment_service: SentimentClassifierService = Depends(get_sentiment_service),  # noqa: B008
+) -> Response:
+    try:
+        result = sentiment_service.predict(payload.text)
+    except SentimentArtifactMissingError as exc:
+        raise AppProblemError(
+            status_code=503,
+            detail="Sentiment analysis model artifacts are unavailable.",
+        ) from exc
+    return create_success_response(request, result)
 
 
 @v1_router.post(
@@ -195,12 +216,18 @@ async def predict_sentiment(
     dependencies=[Depends(verify_internal_token)],
 )
 async def predict_sentiment_batch(
+    request: Request,
     payload: SentimentBatchRequest,
-) -> SentimentBatchResponse:
-    raise AppProblemError(
-        status_code=503,
-        detail="Batch sentiment analysis capability is temporarily unavailable.",
-    )
+    sentiment_service: SentimentClassifierService = Depends(get_sentiment_service),  # noqa: B008
+) -> Response:
+    try:
+        results = sentiment_service.predict_batch(payload.items)
+    except SentimentArtifactMissingError as exc:
+        raise AppProblemError(
+            status_code=503,
+            detail="Sentiment analysis model artifacts are unavailable.",
+        ) from exc
+    return create_success_response(request, results)
 
 
 def get_rag_service(request: Request) -> AgenticRagService:
