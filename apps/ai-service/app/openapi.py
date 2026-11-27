@@ -105,13 +105,14 @@ _V1_EXAMPLES: Final[dict[str, dict[str, Any]]] = {
             "sentiment": "positive",
             "score": 0.965,
             "probabilities": {"positive": 0.965, "negative": 0.035},
+            "needsAttention": False,
         },
         "meta": {"requestId": EXAMPLE_REQUEST_ID},
     },
     "/api/v1/ml/predict-sentiment/batch": {
         "data": [
-            {"id": "rev_01", "sentiment": "positive", "score": 0.952},
-            {"id": "rev_02", "sentiment": "negative", "score": 0.884},
+            {"id": "rev_01", "sentiment": "positive", "score": 0.952, "needsAttention": False},
+            {"id": "rev_02", "sentiment": "negative", "score": 0.884, "needsAttention": True},
         ],
         "meta": {"requestId": EXAMPLE_REQUEST_ID},
     },

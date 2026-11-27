@@ -18,11 +18,6 @@ POST_ENDPOINTS: tuple[str, ...] = (
     "/api/v1/insight/generate",
 )
 
-POST_STUB_ENDPOINTS: tuple[str, ...] = (
-    "/api/v1/ml/predict-sentiment",
-    "/api/v1/ml/predict-sentiment/batch",
-)
-
 VALID_POST_PAYLOADS: dict[str, dict[str, Any]] = {
     "/api/v1/ml/predict-relevance": {
         "text": "Apakah ada paket nasi box ayam bakar untuk acara kantor 100 orang?",
@@ -201,35 +196,6 @@ def test_openapi_documents_official_api_v1_ai_endpoints_and_protocol_responses(
     assert "#/components/parameters/RequestIdHeader" in meta_param_refs
     assert "200" in meta_op["responses"]
     assert "503" in meta_op["responses"]
-
-
-@pytest.mark.parametrize("path", POST_STUB_ENDPOINTS)
-def test_api_v1_valid_post_requests_return_honest_503_problem_details(
-    make_client: Callable[[Mapping[str, str | None] | None], TestClient],
-    path: str,
-) -> None:
-    client = make_client({"APP_ENV": "test"})
-    incoming_id = "01941234-5678-7abc-8def-0123456789ab"
-
-    response = client.post(
-        path,
-        json=VALID_POST_PAYLOADS[path],
-        headers={"X-Request-Id": incoming_id},
-    )
-
-    assert response.status_code == 503
-    assert response.headers["content-type"].startswith("application/problem+json")
-    assert response.headers["x-request-id"] == incoming_id
-    assert response.headers["cache-control"] == "no-store"
-
-    problem = response.json()
-    assert problem["type"] == "about:blank"
-    assert problem["title"] == "Service Unavailable"
-    assert problem["status"] == 503
-    assert problem["instance"] == path
-    assert problem["requestId"] == incoming_id
-    assert isinstance(problem["detail"], str) and len(problem["detail"]) >= 10
-    assert "errors" not in problem
 
 
 def test_internal_service_secret_protects_api_v1_endpoints_without_blocking_health(
@@ -434,19 +400,27 @@ def test_api_v1_response_contract_models_validate_and_forbid_extra_fields() -> N
             sentiment="positive",
             score=0.965,
             probabilities=SentimentProbabilities(positive=0.965, negative=0.035),
+            needsAttention=False,
         ),
         meta=meta,
     )
     assert sent.data.sentiment == "positive"
+    assert sent.data.needsAttention is False
 
     sent_batch = SentimentBatchResponse(
         data=[
-            SentimentBatchItemResult(id="rev_01", sentiment="positive", score=0.952),
-            SentimentBatchItemResult(id="rev_02", sentiment="negative", score=0.884),
+            SentimentBatchItemResult(
+                id="rev_01", sentiment="positive", score=0.952, needsAttention=False
+            ),
+            SentimentBatchItemResult(
+                id="rev_02", sentiment="negative", score=0.884, needsAttention=True
+            ),
         ],
         meta=meta,
     )
     assert len(sent_batch.data) == 2
+    assert sent_batch.data[0].needsAttention is False
+    assert sent_batch.data[1].needsAttention is True
 
     rag = RagChatResponse(
         data=RagChatData(
