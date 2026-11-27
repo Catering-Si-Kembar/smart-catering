@@ -1,16 +1,37 @@
 from __future__ import annotations
 
+import re
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
+from pydantic import (
+    AfterValidator,
+    BaseModel,
+    ConfigDict,
+    Field,
+    StringConstraints,
+    model_validator,
+)
 
 from app.schemas import ApiMeta
+
+_NON_ALNUM_PATTERN = re.compile(r"[^0-9a-zA-Z]")
+
+
+def _validate_meaningful_sentiment_text(value: str) -> str:
+    """Require at least 3 meaningful alphanumeric characters for sentiment input."""
+    meaningful = _NON_ALNUM_PATTERN.sub("", value)
+    if len(meaningful) < 3:
+        raise ValueError("Input review text must contain at least 3 meaningful characters.")
+    return value
+
 
 NonEmptyText = Annotated[
     str, StringConstraints(strip_whitespace=True, min_length=1, max_length=2000)
 ]
 SentimentText = Annotated[
-    str, StringConstraints(strip_whitespace=True, min_length=3, max_length=2000)
+    str,
+    StringConstraints(strip_whitespace=True, min_length=3, max_length=2000),
+    AfterValidator(_validate_meaningful_sentiment_text),
 ]
 NonEmptyShortText = Annotated[
     str, StringConstraints(strip_whitespace=True, min_length=1, max_length=200)
@@ -89,6 +110,10 @@ class RelevanceMetadataData(BaseModel):
     )
     metrics: RelevanceModelMetrics = Field(
         description="Holdout evaluation metrics summary.",
+    )
+    isSynthetic: bool = Field(
+        default=True,
+        description="Whether the training dataset includes synthetic samples (is_synthetic=true).",
     )
 
 

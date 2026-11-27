@@ -12,7 +12,7 @@
     "recall": 0.9375,
     "accuracy": 0.9762
   },
-  "imbalanceHandling": "StratifiedKFold 5-split + class_weight balancing",
+  "imbalanceHandling": "StratifiedKFold 5-split + GridSearchCV evaluated class_weight in ['balanced', None]; selected class_weight=None by CV f1_macro",
   "datasetStats": {
     "totalSamples": 420,
     "trainSamples": 336,
@@ -128,5 +128,5 @@
     ],
     "summary": "Evaluasi holdout test set menunjukkan bahwa LogisticRegression dengan TF-IDF mencapai kinerja tinggi (F1 >= 0.85). Analisis error pada ulasan bernada campuran (mixed sentiment) mengungkapkan bahwa model 2 kelas bergantung pada bobot dominan kata kunci keluhan (mis. 'terlambat', 'penyok', 'basi'). Threshold needsAttention=0.75 secara efektif menyaring keluhan prioritas tinggi untuk eskalasi Dasbor Analitik FS-08."
   },
-  "avgInferenceLatencyMs": 2.478
+  "avgInferenceLatencyMs": 1.778
 }

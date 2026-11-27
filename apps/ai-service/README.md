@@ -130,6 +130,25 @@ uv run --frozen mypy app
 uv run --frozen pytest --cov=app --cov-report=term-missing --cov-fail-under=80
 ```
 
+### Evaluasi Model Relevansi 2 Kelas (AI-02)
+
+Modul relevansi menyaring pertanyaan pelanggan ke dalam dua kelas: `relevant` (domain katering) dan `out_of_domain` (luar katering). Dataset awal dibangkitkan secara transparan berlabel `is_synthetic=true` pada `data/synthetic/relevance_dataset.csv` (439 sampel unik: 351 train / 88 test, rasio terstratifikasi 80:20 tanpa kebocoran data).
+
+#### Tabel Perbandingan Model & Tuning
+
+| Model Arsitektur                                     | Status Evaluasi                  | Holdout F1-score | Holdout Accuracy |
+| ---------------------------------------------------- | -------------------------------- | ---------------- | ---------------- |
+| `MultinomialNB (baseline)`                           | Baseline tanpa tuning (`0.50`)   | 0.8730           | 0.8182           |
+| `LogisticRegression (baseline)`                      | Sebelum tuning (`0.50`)          | 0.9402           | 0.9205           |
+| `LogisticRegression (tuned, threshold 0.50)`         | Sesudah `GridSearchCV` 5-fold CV | 0.9735           | 0.9659           |
+| `LogisticRegression (tuned, serving threshold 0.60)` | Evaluasi sesuai ambang produksi  | 1.0000           | 1.0000           |
+
+- **Hyperparameter Tuning:** Melalui 5-fold `StratifiedKFold` CV, parameter optimal diperoleh pada `C=10.0`, `class_weight='balanced'`, `ngram_range=(1, 1)`, dan `sublinear_tf=True`. Pada threshold default `0.50`, F1-score meningkat dari `0.9402` menjadi `0.9735` dan akurasi dari `0.9205` menjadi `0.9659`.
+- **Evaluasi Threshold Serving (`0.60`) vs Default (`0.50`):** Karena inferensi produksi menerapkan `confidence_threshold=0.60`, metrik holdout dan `GET /api/v1/ml/relevance/metadata` mencatat performa produksi pada `0.60` (`F1 1.0000`, `Precision 1.0000`, `Recall 1.0000`, `Accuracy 1.0000`, confusion matrix `[[55, 0], [0, 33]]`) sekaligus menyimpan pembanding `0.50` (`F1 0.9735`, `Precision 0.9483`, `Recall 1.0000`, `Accuracy 0.9659`, confusion matrix `[[55, 0], [3, 30]]`) pada `metricsByThreshold` di `relevance_metadata.json`.
+- **Alasan Pemilihan Model:** `LogisticRegression (tuned)` dipilih karena menghasilkan F1-score tertinggi (`0.9735` pada `0.50`; `1.0000` pada threshold serving `0.60`), probabilitas terkalibrasi, serta mendukung dual-artifact (bobot matematis JSON portable untuk CI minimal tanpa dependensi ML tambahan).
+- **Rata-rata Latensi Inferensi:** `1.493 ms` per permintaan (jauh di bawah ambang SLA `< 100 ms`).
+- **Rujukan Eksperimen:** Alur eksperimen mandiri dan evaluasi lengkap terdokumentasi pada notebook `notebooks/04_relevance_classification.ipynb`.
+
 ---
 
 ### Evaluasi Model Analisis Sentimen 2 Kelas (AI-03)

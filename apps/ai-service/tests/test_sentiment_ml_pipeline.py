@@ -186,7 +186,7 @@ def test_portable_sentiment_inference_accuracy_batch_and_latency_under_50ms() ->
 
     service = SentimentClassifierService(artifacts_dir=ARTIFACTS_DIR, prefer_joblib=False)
 
-    for bad_text in ("", "   ", "ok", "ya"):
+    for bad_text in ("", "   ", "ok", "ya", "!!!", "...", "-- --", "a! b?"):
         with pytest.raises(ValueError):
             service.predict(bad_text)
 

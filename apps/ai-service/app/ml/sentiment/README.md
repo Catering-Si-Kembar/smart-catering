@@ -44,7 +44,7 @@ Perintah di atas akan:
 - **F1-Score (Keluhan/Negative):** 96.77% (`0.9677`)
 - **Precision:** 100.0% (`1.0000`)
 - **Recall:** 93.75% (`0.9375`)
-- **Rata-rata Latensi Inferensi:** 2.478 ms (jauh di bawah SLA target < 50 ms).
+- **Rata-rata Latensi Inferensi:** 1.778 ms (jauh di bawah SLA target < 50 ms).
 
 ### Perbandingan Model
 

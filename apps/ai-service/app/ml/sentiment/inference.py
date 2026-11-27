@@ -5,6 +5,7 @@ from __future__ import annotations
 import importlib
 import json
 import math
+import re
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
@@ -16,7 +17,9 @@ from app.contracts import (
     SentimentPredictData,
     SentimentProbabilities,
 )
-from app.ml.sentiment.preprocess import tokenize_sentiment_text
+from app.ml.sentiment.preprocess import normalize_sentiment_text, tokenize_sentiment_text
+
+_NON_ALNUM_PATTERN = re.compile(r"[^0-9a-zA-Z]")
 
 
 class SentimentArtifactMissingError(RuntimeError):
@@ -107,7 +110,9 @@ class SentimentClassifierService:
             )
 
         stripped = text.strip()
-        if len(stripped) < 3:
+        meaningful_chars = _NON_ALNUM_PATTERN.sub("", stripped)
+        normalized = normalize_sentiment_text(stripped)
+        if len(stripped) < 3 or len(meaningful_chars) < 3 or len(normalized) < 3:
             raise ValueError("Input review text must contain at least 3 meaningful characters.")
 
         if self._joblib_pipeline is not None:

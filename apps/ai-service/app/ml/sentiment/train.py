@@ -427,21 +427,11 @@ def train_and_export_models() -> dict[str, Any]:  # pragma: no cover
     best_pipe = grid.best_estimator_
     y_pred = best_pipe.predict(X_test)
 
-    # Holdout metrics
+    # Holdout metrics evaluated once on the CV-selected winner (no holdout-based re-selection)
     holdout_f1 = float(f1_score(y_test, y_pred, pos_label="negative"))
     holdout_prec = float(precision_score(y_test, y_pred, pos_label="negative"))
     holdout_rec = float(recall_score(y_test, y_pred, pos_label="negative"))
     holdout_acc = float(accuracy_score(y_test, y_pred))
-
-    # Ensure afterTuning F1 >= beforeTuning F1
-    if holdout_f1 < lr_base_f1:  # pragma: no cover
-        best_pipe = lr_base_pipe
-        y_pred = lr_base_preds
-        holdout_f1 = lr_base_f1
-        holdout_prec = float(precision_score(y_test, y_pred, pos_label="negative"))
-        holdout_rec = float(recall_score(y_test, y_pred, pos_label="negative"))
-        holdout_acc = lr_base_acc
-
     macro_f1 = float(f1_score(y_test, y_pred, average="macro"))
 
     print("Model Evaluation on Holdout Set:")
@@ -574,7 +564,11 @@ def train_and_export_models() -> dict[str, Any]:  # pragma: no cover
             "recall": round(holdout_rec, 4),
             "accuracy": round(holdout_acc, 4),
         },
-        "imbalanceHandling": "StratifiedKFold 5-split + class_weight balancing",
+        "imbalanceHandling": (
+            "StratifiedKFold 5-split + GridSearchCV evaluated class_weight in "
+            "['balanced', None]; selected "
+            f"class_weight={grid.best_params_['clf__class_weight']!r} by CV f1_macro"
+        ),
         "datasetStats": {
             "totalSamples": len(df),
             "trainSamples": len(train_df),
@@ -672,6 +666,22 @@ def generate_experiment_notebook(results: dict[str, Any]) -> None:  # pragma: no
     acc = results["holdout_acc"]
     cm = results["cm"]
     latency = results["avg_latency_ms"]
+    mixed_analysis: list[dict[str, Any]] = results["mixed_analysis"]
+
+    mixed_output_lines: list[str] = ["Evaluasi Mixed Sentiment & needsAttention Threshold:\n"]
+    for item in mixed_analysis:
+        probs = item["probabilities"]
+        mixed_output_lines.append(f"  Ulasan: {item['text']!r}\n")
+        mixed_output_lines.append(
+            f"    -> Prediksi: {item['predicted']} "
+            f"(pos={probs['positive']:.4f}, neg={probs['negative']:.4f}) | "
+            f"needsAttention: {item['needsAttention']}\n"
+        )
+    mixed_output_lines.append(
+        "Kesimpulan: Pada ulasan campuran, probabilitas kelas cenderung moderat "
+        "sehingga ambang needsAttention >= 0.75 menahan false alarm sambil tetap "
+        "memprioritaskan keluhan tegas berkeyakinan tinggi.\n"
+    )
 
     cells: list[dict[str, Any]] = [
         {
@@ -722,7 +732,9 @@ def generate_experiment_notebook(results: dict[str, Any]) -> None:  # pragma: no
                 "import pandas as pd\n",
                 "from pathlib import Path\n",
                 "\n",
-                'dataset_path = Path("../../data/synthetic/sentiment_dataset.csv")\n',
+                'dataset_path = Path("../data/synthetic/sentiment_dataset.csv")\n',
+                "if not dataset_path.exists():\n",
+                '    dataset_path = Path("../../data/synthetic/sentiment_dataset.csv")\n',
                 "if not dataset_path.exists():\n",
                 '    dataset_path = Path("data/synthetic/sentiment_dataset.csv")\n',
                 "df = pd.read_csv(dataset_path)\n",
@@ -964,33 +976,7 @@ def generate_experiment_notebook(results: dict[str, Any]) -> None:  # pragma: no
                 {
                     "name": "stdout",
                     "output_type": "stream",
-                    "text": [
-                        "Evaluasi Mixed Sentiment & needsAttention Threshold:\n",
-                        (
-                            "  Ulasan: 'Makanannya enak dan bumbunya pas, tapi pengantarannya "
-                            "terlambat 40 menit.'\n"
-                        ),
-                        "    -> Prediksi: negative | needsAttention: True\n",
-                        (
-                            "  Ulasan: 'Ayam bakarnya mantap sekali, cuma sayang porsi "
-                            "nasinya terlalu sedikit.'\n"
-                        ),
-                        "    -> Prediksi: negative | needsAttention: True\n",
-                        (
-                            "  Ulasan: 'Datang tepat waktu dan rapi, namun rasa sayurnya agak "
-                            "hambar dan dingin.'\n"
-                        ),
-                        "    -> Prediksi: negative | needsAttention: True\n",
-                        (
-                            "  Ulasan: 'Harga terjangkau dan admin ramah, tetapi kemasan beberapa "
-                            "dus penyok.'\n"
-                        ),
-                        "    -> Prediksi: negative | needsAttention: True\n",
-                        (
-                            "Kesimpulan: Model sensitif menangkap kata kunci keluhan krusial "
-                            "untuk alert prioritas.\n"
-                        ),
-                    ],
+                    "text": mixed_output_lines,
                 }
             ],
             "source": [
@@ -1010,16 +996,24 @@ def generate_experiment_notebook(results: dict[str, Any]) -> None:  # pragma: no
                 ("    'Harga terjangkau dan admin ramah, tetapi kemasan beberapa dus penyok.',\n"),
                 "]\n",
                 "print('Evaluasi Mixed Sentiment & needsAttention Threshold:')\n",
+                "classes_list = list(best_model.classes_)\n",
                 "for text in mixed_examples:\n",
                 "    prob = best_model.predict_proba([text])[0]\n",
-                "    pred = best_model.predict([text])[0]\n",
-                "    p_neg = prob[list(best_model.classes_).index('negative')]\n",
-                "    needs_att = (pred == 'negative') and (p_neg >= 0.75)\n",
+                "    prob_dict = {str(c): float(p) for c, p in zip(classes_list, prob)}\n",
+                "    p_pos = round(prob_dict.get('positive', 0.0), 4)\n",
+                "    p_neg = round(1.0 - p_pos, 4)\n",
+                "    pred = 'positive' if p_pos >= p_neg else 'negative'\n",
+                "    score = p_pos if pred == 'positive' else p_neg\n",
+                "    needs_att = (pred == 'negative') and (score >= 0.75)\n",
                 "    print(f'  Ulasan: {text!r}')\n",
-                "    print(f'    -> Prediksi: {pred} | needsAttention: {needs_att}')\n",
                 (
-                    "print('Kesimpulan: Model sensitif menangkap kata kunci keluhan krusial "
-                    "untuk alert prioritas.')\n"
+                    "    print(f'    -> Prediksi: {pred} (pos={p_pos:.4f}, neg={p_neg:.4f}) "
+                    "| needsAttention: {needs_att}')\n"
+                ),
+                (
+                    "print('Kesimpulan: Pada ulasan campuran, probabilitas kelas cenderung "
+                    "moderat sehingga ambang needsAttention >= 0.75 menahan false alarm sambil "
+                    "tetap memprioritaskan keluhan tegas berkeyakinan tinggi.')\n"
                 ),
             ],
         },

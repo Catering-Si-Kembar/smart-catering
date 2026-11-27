@@ -18,10 +18,6 @@ POST_ENDPOINTS: tuple[str, ...] = (
     "/api/v1/insight/generate",
 )
 
-POST_STUB_ENDPOINTS: tuple[str, ...] = ("/api/v1/ml/predict-relevance",)
-
-GET_STUB_ENDPOINTS: tuple[str, ...] = ("/api/v1/ml/relevance/metadata",)
-
 VALID_POST_PAYLOADS: dict[str, dict[str, Any]] = {
     "/api/v1/ml/predict-relevance": {
         "text": "Apakah ada paket nasi box ayam bakar untuk acara kantor 100 orang?",
@@ -202,51 +198,6 @@ def test_openapi_documents_official_api_v1_ai_endpoints_and_protocol_responses(
     assert "503" in meta_op["responses"]
 
 
-@pytest.mark.parametrize("path", POST_STUB_ENDPOINTS)
-def test_api_v1_valid_post_requests_return_honest_503_problem_details(
-    make_client: Callable[[Mapping[str, str | None] | None], TestClient],
-    path: str,
-) -> None:
-    client = make_client({"APP_ENV": "test"})
-    incoming_id = "01941234-5678-7abc-8def-0123456789ab"
-
-    response = client.post(
-        path,
-        json=VALID_POST_PAYLOADS[path],
-        headers={"X-Request-Id": incoming_id},
-    )
-
-    assert response.status_code == 503
-    assert response.headers["content-type"].startswith("application/problem+json")
-    assert response.headers["x-request-id"] == incoming_id
-    assert response.headers["cache-control"] == "no-store"
-
-    problem = response.json()
-    assert problem["type"] == "about:blank"
-    assert problem["title"] == "Service Unavailable"
-    assert problem["status"] == 503
-    assert problem["instance"] == path
-    assert problem["requestId"] == incoming_id
-    assert isinstance(problem["detail"], str) and len(problem["detail"]) >= 10
-    assert "errors" not in problem
-
-
-@pytest.mark.parametrize("path", GET_STUB_ENDPOINTS)
-def test_api_v1_valid_get_stub_returns_honest_503_problem_details(
-    make_client: Callable[[Mapping[str, str | None] | None], TestClient],
-    path: str,
-) -> None:
-    client = make_client({"APP_ENV": "test"})
-    response = client.get(path)
-
-    assert response.status_code == 503
-    assert response.headers["content-type"].startswith("application/problem+json")
-    problem = response.json()
-    assert problem["title"] == "Service Unavailable"
-    assert problem["status"] == 503
-    assert problem["instance"] == path
-
-
 def test_internal_service_secret_protects_api_v1_endpoints_without_blocking_health(
     make_client: Callable[[Mapping[str, str | None] | None], TestClient],
 ) -> None:
@@ -276,7 +227,8 @@ def test_internal_service_secret_protects_api_v1_endpoints_without_blocking_heal
         json=VALID_POST_PAYLOADS["/api/v1/ml/predict-relevance"],
         headers={"X-Internal-Token": secret},
     )
-    assert authorized.status_code == 503
+    assert authorized.status_code == 200
+    assert authorized.json()["data"]["label"] == "relevant"
 
 
 @pytest.mark.parametrize("path", POST_ENDPOINTS)
@@ -435,10 +387,12 @@ def test_api_v1_response_contract_models_validate_and_forbid_extra_fields() -> N
             algorithm="LogisticRegression",
             classes=["relevant", "out_of_domain"],
             metrics=RelevanceModelMetrics(f1Score=0.935, accuracy=0.941),
+            isSynthetic=True,
         ),
         meta=meta,
     )
     assert rel_meta.data.classes == ["relevant", "out_of_domain"]
+    assert rel_meta.data.isSynthetic is True
 
     sent = SentimentPredictResponse(
         data=SentimentPredictData(

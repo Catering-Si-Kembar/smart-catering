@@ -65,7 +65,7 @@ def test_predict_sentiment_positive_negative_and_mixed_return_200_envelope(
     assert isinstance(mixed_data["needsAttention"], bool)
 
 
-@pytest.mark.parametrize("bad_text", ["", "   ", "a", "ab"])
+@pytest.mark.parametrize("bad_text", ["", "   ", "a", "ab", "!!!", "...", "-- --", "a! b?"])
 def test_predict_sentiment_rejects_empty_or_short_text_with_422_rfc9457(
     make_client: Callable[[Mapping[str, str | None] | None], TestClient],
     bad_text: str,
@@ -80,6 +80,16 @@ def test_predict_sentiment_rejects_empty_or_short_text_with_422_rfc9457(
     assert problem["status"] == 422
     assert problem["instance"] == "/api/v1/ml/predict-sentiment"
     assert any(err["path"] == "text" for err in problem["errors"])
+
+    batch_res = client.post(
+        "/api/v1/ml/predict-sentiment/batch",
+        json={"items": [{"id": "rev_bad", "text": bad_text}]},
+    )
+    assert batch_res.status_code == 422
+    assert batch_res.headers["content-type"].startswith("application/problem+json")
+    batch_problem = batch_res.json()
+    assert batch_problem["status"] == 422
+    assert any(err["path"] == "items.0.text" for err in batch_problem["errors"])
 
 
 def test_predict_sentiment_batch_returns_200_ordered_and_rejects_invalid_batch(
@@ -229,3 +239,14 @@ def test_openapi_examples_and_docs_document_ai03_evaluation_and_needs_attention(
         "Notebook cell 3 must transparently state MultinomialNB had higher baseline F1 while "
         "LogisticRegression was selected for probability calibration (needsAttention >= 0.75)."
     )
+
+    nb_json: dict[str, Any] = json.loads(nb_text)
+    code_cells = [c for c in nb_json["cells"] if c.get("cell_type") == "code"]
+    mixed_cell_output = "".join(
+        "".join(out.get("text", [])) for out in code_cells[4].get("outputs", [])
+    )
+    for example in metadata["errorAnalysis"]["mixedSentimentExamples"]:
+        expected_pred = f"Prediksi: {example['predicted']}"
+        expected_att = f"needsAttention: {example['needsAttention']}"
+        assert expected_pred in mixed_cell_output
+        assert expected_att in mixed_cell_output
