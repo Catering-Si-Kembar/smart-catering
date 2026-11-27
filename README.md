@@ -375,10 +375,11 @@ Hasil lokal tercatat pada [bukti validasi](docs/README.md#status-dan-batas-bukti
 
 ## Deployment
 
-| Target | Cakupan                                                        | Panduan                                        |
-| ------ | -------------------------------------------------------------- | ---------------------------------------------- |
-| Vercel | `apps/web` saja                                                | [Deployment Vercel](docs/deployment-vercel.md) |
-| VPS    | API, AI service, worker, PostgreSQL, Chroma, dan WAHA opsional | [Deployment VPS](docs/deployment-vps.md)       |
+| Target    | Cakupan                                                                | Panduan                                                  |
+| --------- | ---------------------------------------------------------------------- | -------------------------------------------------------- |
+| Vercel    | `apps/web` saja                                                        | [Deployment Vercel](docs/deployment-vercel.md)           |
+| VPS       | API, AI service, worker, PostgreSQL, Chroma, dan WAHA opsional         | [Deployment VPS](docs/deployment-vps.md)                 |
+| Modal GPU | Inference SLM/LLM open-source vLLM untuk AI Business Insight (`AI-06`) | [Deployment Modal GPU (`OPS-04`)](infra/modal/README.md) |
 
 Reverse proxy, TLS, DNS, backup, rahasia, dan akses server dikelola operator. Scheduler/reminder fase berikutnya dapat berada di VPS; tidak memerlukan worker terus-menerus di Vercel atau ketergantungan pada Vercel Cron Hobby.
 

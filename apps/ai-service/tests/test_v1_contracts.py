@@ -20,7 +20,6 @@ POST_ENDPOINTS: tuple[str, ...] = (
 
 POST_STUB_ENDPOINTS: tuple[str, ...] = (
     "/api/v1/ml/predict-relevance",
-    "/api/v1/rag/chat",
     "/api/v1/insight/generate",
 )
 
