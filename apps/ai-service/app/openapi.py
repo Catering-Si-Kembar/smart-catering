@@ -95,6 +95,7 @@ _V1_EXAMPLES: Final[dict[str, dict[str, Any]]] = {
             "algorithm": "LogisticRegression",
             "classes": ["relevant", "out_of_domain"],
             "metrics": {"f1Score": 0.935, "accuracy": 0.941},
+            "isSynthetic": True,
         },
         "meta": {"requestId": EXAMPLE_REQUEST_ID},
     },

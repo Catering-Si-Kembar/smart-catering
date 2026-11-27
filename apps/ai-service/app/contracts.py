@@ -90,6 +90,10 @@ class RelevanceMetadataData(BaseModel):
     metrics: RelevanceModelMetrics = Field(
         description="Holdout evaluation metrics summary.",
     )
+    isSynthetic: bool = Field(
+        default=True,
+        description="Whether the training dataset includes synthetic samples (is_synthetic=true).",
+    )
 
 
 class RelevanceMetadataResponse(BaseModel):

@@ -27,6 +27,7 @@ from app.errors import (
     register_exception_handlers,
 )
 from app.insight.service import BusinessInsightService, build_default_insight_service
+from app.ml.relevance.inference import RelevanceClassifierService
 from app.openapi import build_openapi_schema
 from app.rag.service import AgenticRagService, build_default_rag_service
 from app.responses import create_success_response
@@ -159,6 +160,7 @@ def create_app(
     *,
     env: Mapping[str, str | None] | None = None,
     env_file: Path | str | None = None,
+    relevance_service: RelevanceClassifierService | None = None,
     insight_service: BusinessInsightService | None = None,
     rag_service: AgenticRagService | None = None,
 ) -> FastAPI:
@@ -175,6 +177,9 @@ def create_app(
         openapi_url=None,
     )
     app.state.settings = resolved_settings
+    app.state.relevance_service = (
+        relevance_service if relevance_service is not None else RelevanceClassifierService()
+    )
     app.state.insight_service = (
         insight_service
         if insight_service is not None
