@@ -31,6 +31,12 @@ Operasional Catering Si Kembar melibatkan pengelola (`ADMIN`) serta staf operasi
 - Area sentuh tombol aksi utama minimal `44x44 px` dengan kontras teks memenuhi WCAG AA (rasio minimal `4.5:1`).
 - Breakpoint responsif teruji pada resolusi mobile (`390x844`) dan desktop (`1440x900`) tanpa _horizontal overflow_.
 - Indikator status jelas untuk kondisi berhasil, gagal, dan sedang diproses (_loading/error states_).
+- **Standar UI Operasional Anti-Slop (Acuan Isu Lanjutan):**
+  - Bebas kode isu tiket developer (`FS-xx`, `DS-xx`, `AI-xx`) dan status model internal (`Random Forest`, `isSynthetic`) pada teks yang tampil ke pengguna.
+  - Bebas kata `(Simulasi)` dan `Mockup` pada UI operasional (nama pelanggan, katalog menu, pesan chat, invoice).
+  - Bebas banner promosi di tengah alur kerja aktif dapur.
+  - Format status dot editorial bersih (`ORD-xxx · 🟡 Status`) menggantikan tumpukan pill badge tebal.
+  - Penempatan tombol keluar akun langsung di pojok kiri bawah navigasi desktop tanpa kartu widget peran redundan.
 
 **Out-of-Scope:**
 
@@ -43,6 +49,7 @@ Operasional Catering Si Kembar melibatkan pengelola (`ADMIN`) serta staf operasi
 - Navigasi utama dapat dijangkau maksimal dalam 2 ketukan/klik dari layar mana pun.
 - Label tombol aksi menggunakan kata kerja bahasa Indonesia yang lugas (misal: "Simpan Pesanan", "Hitung Bahan", "Cetak Invoice").
 - Menu sensitif seperti Keuangan (`FS-06`) dan Dasbor Analitik (`FS-08`) tidak ditampilkan pada navigasi peran `STAFF` (otorisasi tetap ditegakkan di backend `FS-03`).
+- Tampilan operasional mengutamakan efisiensi visual dapur tanpa elemen dekoratif berlebih atau badge bertumpuk.
 
 ### API Contract
 
@@ -50,11 +57,11 @@ Tidak berlaku (tugas non-API). Menghasilkan aset/dokumen mockup dan kerangka UI 
 
 ### Acceptance Criteria
 
-- [ ] Tersedia mockup UI seluruh alur utama yang disepakati tim sebelum implementasi M2.
-- [ ] _App Shell_ Next.js terimplementasi dengan navigasi responsif: sidebar vertikal pada desktop (`>= 1024px`) dan bottom bar / drawer pada mobile (`< 768px`).
-- [ ] Tidak terdapat pergeseran tata letak horizontal (_horizontal overflow_) pada tampilan ponsel `390x844` maupun desktop `1440x900`.
-- [ ] Kontras warna teks memenuhi standar aksesibilitas WCAG AA (minimal 4.5:1) dan tombol aksi penting memiliki area sentuh memadai (`>= 44x44 px`).
-- [ ] Keputusan desain responsif untuk staf senior dan alasannya tercatat di README atau user manual.
+- [x] Tersedia mockup UI seluruh alur utama yang disepakati tim sebelum implementasi M2.
+- [x] _App Shell_ Next.js terimplementasi dengan navigasi responsif: sidebar vertikal pada desktop (`>= 1024px`) dan bottom bar / drawer pada mobile (`< 768px`).
+- [x] Tidak terdapat pergeseran tata letak horizontal (_horizontal overflow_) pada tampilan ponsel `390x844` maupun desktop `1440x900`.
+- [x] Kontras warna teks memenuhi standar aksesibilitas WCAG AA (minimal 4.5:1) dan tombol aksi penting memiliki area sentuh memadai (`>= 44x44 px`).
+- [x] Keputusan desain responsif untuk staf senior dan standar operasional anti-slop tercatat di README dan dokumen spesifikasi UI.
 
 ### Keputusan yang Membutuhkan Konfirmasi (PIC / Tim)
 
@@ -63,9 +70,9 @@ Tidak berlaku (tugas non-API). Menghasilkan aset/dokumen mockup dan kerangka UI 
 
 ### DoD
 
-- [ ] Mockup UI disepakati tim dan diimplementasikan ke dalam App Shell Next.js.
-- [ ] Uji render responsif desktop (`1440x900`) dan ponsel (`390x844`) lulus tanpa error console.
-- [ ] `npm run format:check`, `npm run lint`, dan `npm run typecheck` pada `apps/web` lulus tanpa peringatan.
+- [x] Mockup UI disepakati tim dan diimplementasikan ke dalam App Shell Next.js.
+- [x] Uji render responsif desktop (`1440x900`) dan ponsel (`390x844`) lulus tanpa error console.
+- [x] `npm run format:check`, `npm run lint`, dan `npm run typecheck` pada `apps/web` lulus tanpa peringatan.
 
 ### Dependencies
 
