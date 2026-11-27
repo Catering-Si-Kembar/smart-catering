@@ -41,3 +41,20 @@ def make_client(
         return TestClient(application, raise_server_exceptions=False)
 
     return _make_client
+
+
+def pytest_configure(config: pytest.Config) -> None:
+    config.addinivalue_line("markers", "asyncio: mark test function to run asynchronously")
+
+
+@pytest.hookimpl(tryfirst=True)
+def pytest_pyfunc_call(pyfuncitem: pytest.Function) -> bool | None:
+    import inspect
+
+    import anyio
+
+    if inspect.iscoroutinefunction(pyfuncitem.obj):
+        argvalues = [pyfuncitem.funcargs[arg] for arg in pyfuncitem._fixtureinfo.argnames]
+        anyio.run(pyfuncitem.obj, *argvalues)
+        return True
+    return None
