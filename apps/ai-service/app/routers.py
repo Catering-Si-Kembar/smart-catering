@@ -4,6 +4,7 @@ import hmac
 
 from fastapi import APIRouter, Depends, Request, Response
 
+from app.context import get_request_id
 from app.contracts import (
     InsightGenerateRequest,
     InsightGenerateResponse,
@@ -18,6 +19,7 @@ from app.contracts import (
     SentimentPredictResponse,
 )
 from app.errors import AppProblemError
+from app.rag.service import AgenticRagService, build_default_rag_service
 from app.responses import create_success_response
 from app.schemas import HealthData, HealthResponse
 
@@ -130,6 +132,22 @@ async def predict_sentiment_batch(
     )
 
 
+def get_rag_service(request: Request) -> AgenticRagService:
+    """Resolve AgenticRagService via FastAPI dependency injection."""
+    service = getattr(request.app.state, "rag_service", None)
+    if isinstance(service, AgenticRagService):
+        return service
+    settings = getattr(request.app.state, "settings", None)
+    if settings is None:
+        raise AppProblemError(
+            status_code=503,
+            detail="RAG chat assistant service is not initialized.",
+        )
+    resolved = build_default_rag_service(settings)
+    request.app.state.rag_service = resolved
+    return resolved
+
+
 @v1_router.post(
     "/rag/chat",
     response_model=RagChatResponse,
@@ -138,12 +156,12 @@ async def predict_sentiment_batch(
     dependencies=[Depends(verify_internal_token)],
 )
 async def rag_chat(
+    request: Request,
     payload: RagChatRequest,
-) -> RagChatResponse:
-    raise AppProblemError(
-        status_code=503,
-        detail="RAG chat assistant capability is temporarily unavailable.",
-    )
+    rag_service: AgenticRagService = Depends(get_rag_service),  # noqa: B008
+) -> Response:
+    result = await rag_service.chat(payload, request_id=get_request_id(request))
+    return create_success_response(request, result)
 
 
 @v1_router.post(

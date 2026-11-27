@@ -18,6 +18,13 @@ POST_ENDPOINTS: tuple[str, ...] = (
     "/api/v1/insight/generate",
 )
 
+POST_STUB_ENDPOINTS: tuple[str, ...] = (
+    "/api/v1/ml/predict-relevance",
+    "/api/v1/ml/predict-sentiment",
+    "/api/v1/ml/predict-sentiment/batch",
+    "/api/v1/insight/generate",
+)
+
 GET_STUB_ENDPOINTS: tuple[str, ...] = ("/api/v1/ml/relevance/metadata",)
 
 VALID_POST_PAYLOADS: dict[str, dict[str, Any]] = {
@@ -192,7 +199,7 @@ def test_openapi_documents_official_api_v1_ai_endpoints_and_protocol_responses(
     assert "503" in meta_op["responses"]
 
 
-@pytest.mark.parametrize("path", POST_ENDPOINTS)
+@pytest.mark.parametrize("path", POST_STUB_ENDPOINTS)
 def test_api_v1_valid_post_requests_return_honest_503_problem_details(
     make_client: Callable[[Mapping[str, str | None] | None], TestClient],
     path: str,
