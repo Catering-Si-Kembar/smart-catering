@@ -258,6 +258,7 @@ def get_rag_service(request: Request) -> AgenticRagService:
     resolved = build_default_rag_service(
         settings,
         relevance_service=get_relevance_service(request),
+        knowledge_base=get_chroma_service(request),
     )
     request.app.state.rag_service = resolved
     return resolved

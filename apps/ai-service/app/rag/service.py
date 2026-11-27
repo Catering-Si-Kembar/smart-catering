@@ -6,7 +6,6 @@ from app.config import AppSettings
 from app.contracts import RagChatData, RagChatRequest
 from app.ml.relevance.inference import RelevanceClassifierService
 from app.rag.adapters import (
-    ChromaKnowledgeBaseAdapter,
     ExpressReadOnlyToolsAdapter,
     OpenAICompatibleLLMClient,
 )
@@ -116,15 +115,18 @@ def build_default_rag_service(
     settings: AppSettings,
     *,
     relevance_service: RelevanceClassifierService | None = None,
+    knowledge_base: KnowledgeBasePort | None = None,
 ) -> AgenticRagService:
     """Assemble default AgenticRagService from isolated AppSettings."""
+    if knowledge_base is not None:
+        resolved_kb: KnowledgeBasePort = knowledge_base
+    else:
+        from app.chroma.client import build_default_chroma_service
+
+        resolved_kb = build_default_chroma_service(settings)
     return AgenticRagService(
         relevance_classifier=DomainRelevanceClassifier(relevance_service=relevance_service),
-        knowledge_base=ChromaKnowledgeBaseAdapter(
-            chroma_url=settings.chroma_url,
-            collection_name=settings.chroma_collection_name,
-            timeout_seconds=settings.rag_timeout_seconds,
-        ),
+        knowledge_base=resolved_kb,
         operational_backend=ExpressReadOnlyToolsAdapter(
             backend_api_url=settings.backend_api_url,
             internal_service_secret=settings.internal_service_secret,

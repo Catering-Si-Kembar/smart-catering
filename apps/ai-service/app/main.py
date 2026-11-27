@@ -195,18 +195,19 @@ def create_app(
         if insight_service is not None
         else build_default_insight_service(resolved_settings)
     )
+    app.state.chroma_service = (
+        chroma_service
+        if chroma_service is not None
+        else build_default_chroma_service(resolved_settings)
+    )
     app.state.rag_service = (
         rag_service
         if rag_service is not None
         else build_default_rag_service(
             resolved_settings,
             relevance_service=app.state.relevance_service,
+            knowledge_base=app.state.chroma_service,
         )
-    )
-    app.state.chroma_service = (
-        chroma_service
-        if chroma_service is not None
-        else build_default_chroma_service(resolved_settings)
     )
 
     register_exception_handlers(app)

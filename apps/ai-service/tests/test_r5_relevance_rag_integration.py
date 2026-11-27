@@ -24,6 +24,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 ARTIFACTS_DIR = Path(__file__).resolve().parents[1] / "app" / "ml" / "relevance" / "artifacts"
 METADATA_PATH = ARTIFACTS_DIR / "relevance_metadata.json"
 NOTEBOOK_PATH = REPO_ROOT / "notebooks" / "04_relevance_classification.ipynb"
+EXPECTED_MODEL_VERSION = str(json.loads(METADATA_PATH.read_text(encoding="utf-8"))["modelVersion"])
 
 STAFF_OPERATIONAL_PROBES: tuple[str, ...] = (
     "Bagaimana jadwal produksi dan rincian pesanan ORD-202612-0001?",
@@ -50,7 +51,7 @@ async def test_domain_relevance_classifier_uses_ai02_service_in_both_artifact_mo
 
     for query in STAFF_OPERATIONAL_PROBES:
         decision = await classifier.classify(query)
-        assert decision.model_version == "relevance_lr_v1.0", (
+        assert decision.model_version == EXPECTED_MODEL_VERSION, (
             f"Expected real AI-02 model_version, got {decision.model_version!r}"
         )
         assert decision.is_relevant is True, (
@@ -61,7 +62,7 @@ async def test_domain_relevance_classifier_uses_ai02_service_in_both_artifact_mo
 
     for ood_query in TEN_OUT_OF_DOMAIN_QUESTIONS:
         decision = await classifier.classify(ood_query)
-        assert decision.model_version == "relevance_lr_v1.0", (
+        assert decision.model_version == EXPECTED_MODEL_VERSION, (
             f"Expected real AI-02 model_version, got {decision.model_version!r}"
         )
         assert decision.is_relevant is False, (
@@ -79,7 +80,7 @@ async def test_domain_relevance_classifier_default_uses_ai02_and_falls_back_only
     decision = await default_classifier.classify(
         "Bagaimana jadwal produksi dan rincian pesanan ORD-202612-0001?"
     )
-    assert decision.model_version == "relevance_lr_v1.0"
+    assert decision.model_version == EXPECTED_MODEL_VERSION
     assert decision.is_relevant is True
 
     empty_decision = await default_classifier.classify("   ")
@@ -171,3 +172,31 @@ def test_r5_metadata_and_notebook_remain_consistent_after_retrain() -> None:
     nb_text = NOTEBOOK_PATH.read_text(encoding="utf-8")
     assert "Verifikasi label is_synthetic: True" in nb_text
     assert "Pipeline([" in nb_text
+
+
+@pytest.mark.anyio
+async def test_domain_relevance_classifier_respects_custom_confidence_threshold() -> None:
+    service = RelevanceClassifierService(
+        artifacts_dir=ARTIFACTS_DIR,
+        prefer_joblib=False,
+    )
+    strict_classifier = DomainRelevanceClassifier(
+        relevance_service=service,
+        confidence_threshold=0.9999,
+    )
+    permissive_classifier = DomainRelevanceClassifier(
+        relevance_service=service,
+        confidence_threshold=0.01,
+    )
+
+    sample = "Berapa minimal porsi pesanan nasi box untuk rapat kantor?"
+    strict_decision = await strict_classifier.classify(sample)
+    permissive_decision = await permissive_classifier.classify(sample)
+
+    assert strict_decision.model_version == EXPECTED_MODEL_VERSION
+    assert strict_decision.is_relevant is False
+    assert strict_decision.label == "out_of_domain"
+
+    assert permissive_decision.model_version == EXPECTED_MODEL_VERSION
+    assert permissive_decision.is_relevant is True
+    assert permissive_decision.label == "relevant"

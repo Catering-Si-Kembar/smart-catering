@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import importlib
 from collections.abc import Sequence
 from pathlib import Path
@@ -21,6 +22,7 @@ from app.chroma.schemas import (
     KnowledgeChunkRecord,
 )
 from app.config import AppSettings
+from app.rag.ports import RagUpstreamError
 from app.rag.schemas import KnowledgeChunk
 
 
@@ -361,7 +363,21 @@ class ChromaKnowledgeService:
         top_k: int = 3,
         category: str | None = None,
     ) -> list[KnowledgeChunk]:
-        hits = self.query(query, top_k=top_k, category=category)
+        try:
+            hits = await asyncio.to_thread(
+                self.query,
+                query,
+                top_k=top_k,
+                category=category,
+            )
+        except ChromaCollectionNotFoundError:
+            return []
+        except ChromaUnavailableError as exc:
+            raise RagUpstreamError(
+                "ChromaDB knowledge base is temporarily unavailable.",
+                retryable=True,
+            ) from exc
+
         return [
             KnowledgeChunk(
                 chunk_id=hit.chunk_id,

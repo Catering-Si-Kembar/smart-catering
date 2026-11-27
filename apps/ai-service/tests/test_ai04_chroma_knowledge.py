@@ -17,7 +17,9 @@ from app.chroma.client import (
 )
 from app.chroma.ingest import DEFAULT_EVAL_SAMPLES, evaluate_knowledge_base_hit_at_3
 from app.main import create_app
-from app.rag.service import evaluate_retrieval_hit_at_3
+from app.rag.ports import RagUpstreamError
+from app.rag.schemas import AgentContext
+from app.rag.service import AgenticRagService, evaluate_retrieval_hit_at_3
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 KNOWLEDGE_DIR = REPO_ROOT / "data" / "knowledge"
@@ -300,3 +302,66 @@ def test_in_memory_adapter_raises_not_found_before_ingest() -> None:
     adapter = InMemoryVectorStoreAdapter(collection_name="empty_kb")
     with pytest.raises(ChromaCollectionNotFoundError):
         adapter.query("menu ayam bakar", top_k=3)
+
+
+@pytest.mark.asyncio
+async def test_create_app_shares_singleton_chroma_service_with_rag_service() -> None:
+    service = _build_in_memory_service()
+    app = create_app(env={"APP_ENV": "test"}, chroma_service=service)
+    assert app.state.chroma_service is service
+
+    rag_service: AgenticRagService = app.state.rag_service
+    assert rag_service._knowledge_base is service
+
+    # Before ingest: search maps collection-not-found to empty list (anti-hallucination)
+    empty_chunks = await service.search("aturan minimal DP pembayaran katering")
+    assert empty_chunks == []
+
+    # After ingest via HTTP endpoint, AI-05 ToolRegistry retrieves grounded PIC chunks directly
+    with TestClient(app) as client:
+        ingest_res = client.post("/api/v1/chroma/ingest", json={})
+        assert ingest_res.status_code == 200
+
+    ctx = AgentContext(
+        conversation_id="ses_ai04_rag_link",
+        user_role="STAFF",
+        user_id="usr_staf_01",
+        request_id="01941234-5678-7abc-8def-0123456789ab",
+    )
+    outcome = await rag_service.tool_registry.execute(
+        "search_catering_knowledge",
+        {"query": "Berapa ketentuan minimal DP pembayaran katering?", "category": "payment"},
+        ctx,
+    )
+    assert outcome.status == "ok"
+    assert any(src.source == "payment_policy.md" and src.is_verified for src in outcome.sources)
+
+
+@pytest.mark.asyncio
+async def test_chroma_service_search_maps_unavailable_to_rag_upstream_error() -> None:
+    class _DownAdapter:
+        def collection_exists(self) -> bool:
+            raise ChromaUnavailableError("unreachable")
+
+        def count(self) -> int:
+            raise ChromaUnavailableError("unreachable")
+
+        def upsert_chunks(self, chunks: Any) -> int:
+            raise ChromaUnavailableError("unreachable")
+
+        def query(
+            self,
+            query_text: str,
+            *,
+            top_k: int = 3,
+            category: str | None = None,
+            max_distance: float = 0.65,
+        ) -> Any:
+            raise ChromaUnavailableError("unreachable")
+
+    service = ChromaKnowledgeService(
+        adapter=_DownAdapter(),  # type: ignore[arg-type]
+        default_knowledge_dir=KNOWLEDGE_DIR,
+    )
+    with pytest.raises(RagUpstreamError):
+        await service.search("menu nasi box")
