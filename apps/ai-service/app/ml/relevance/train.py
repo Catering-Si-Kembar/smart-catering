@@ -71,6 +71,13 @@ def _norm_key(text: str) -> str:  # pragma: no cover
     return re.sub(r"\s+", " ", re.sub(r"[^0-9a-zA-Z\s]", " ", text.lower())).strip()
 
 
+def _format_json_with_inline_short_arrays(payload: Any) -> str:  # pragma: no cover
+    raw = json.dumps(payload, indent=2)
+    raw = re.sub(r'\[\s*\n\s*("[^"]*")\s*,\s*\n\s*("[^"]*")\s*\n\s*\]', r"[\1, \2]", raw)
+    raw = re.sub(r"\[\s*\n\s*(-?\d+)\s*,\s*\n\s*(-?\d+)\s*\n\s*\]", r"[\1, \2]", raw)
+    return raw
+
+
 def build_raw_synthetic_examples() -> list[tuple[str, str, str]]:  # pragma: no cover
     """Build raw synthetic examples of (text, label, category)."""
     examples: list[tuple[str, str, str]] = []
@@ -386,6 +393,42 @@ def build_raw_synthetic_examples() -> list[tuple[str, str, str]]:  # pragma: no 
     for text in informal_wa:
         examples.append((text, "relevant", "informal_wa"))
 
+    # RELEVANT: operasional_staf (~30)
+    operasional_staf = [
+        "Berapa kapasitas masak dapur utama untuk pesanan nasi kotak akhir pekan ini?",
+        "Tolong cek rincian menu dan alamat pengiriman pesanan ORD-202611-0012.",
+        "Apakah pesanan katering ORD-202611-0045 sudah berstatus CONFIRMED di sistem?",
+        "Bagaimana status pelunasan invoice INV-202611-0021 atas nama instansi dinas?",
+        "Tampilkan rekap jadwal produksi menu prasmanan tanggal 20 November besok.",
+        "Berapa sisa tagihan yang belum dibayar pada invoice INV-202611-0034?",
+        "Cek jadwal masak dapur untuk katering syukuran 200 porsi lusa pagi.",
+        "Apakah uang muka DP untuk pesanan ORD-202612-0015 sudah terverifikasi admin?",
+        "Daftar pesanan dengan status IN_PRODUCTION hari ini ada berapa banyak?",
+        "Tolong periksa detail pesanan ORD-202611-0088 apakah sudah siap kirim.",
+        "Kapan jadwal persiapan bahan baku dapur untuk order nasi liwet 80 porsi?",
+        "Cek invoice INV-202612-0008 apakah bukti transfer pelunasan sudah masuk.",
+        "Berapa total porsi nasi box yang harus dimasak tim dapur pagi ini?",
+        "Tolong cek status pembayaran pesanan ORD-202611-0003 apakah sudah lunas.",
+        "Bagaimana jadwal produksi katering pernikahan untuk shift Sabtu siang?",
+        "Apakah pesanan tumpeng tampah ORD-202612-0022 sudah mulai diproses dapur?",
+        "Tampilkan rincian pesanan katering ORD-202611-0077 beserta catatan alergi.",
+        "Cek daftar antrean pesanan katering berstatus CONFIRMED minggu ini.",
+        "Berapa porsi kapasitas masak tersisa di dapur untuk tanggal 25 Desember?",
+        "Status pesanan katering ORD-202612-0009 apakah masih menunggu DP atau sudah fix?",
+        "Tolong cek invoice INV-202611-0090 terkait pelunasan katering seminar.",
+        "Jadwal produksi dapur untuk orderan snack box 300 kotak jam berapa mulai?",
+        "Rincian item menu untuk order katering ORD-202611-0050 apa saja?",
+        "Apakah invoice katering INV-202612-0011 sudah diterbitkan tanda lunasnya?",
+        "Tolong tampilkan daftar pesanan buffet prasmanan yang aktif minggu ini.",
+        "Berapa kekurangan pembayaran pada pesanan katering ORD-202612-0030?",
+        "Cek kesiapan produksi dapur untuk menu ayam bakar madu 250 kotak besok.",
+        "Apakah pesanan katering ORD-202611-0062 sudah selesai dimasak tim koki?",
+        "Bagaimana rincian jadwal masak dan pengemasan pesanan ORD-202612-0041?",
+        "Cek status faktur invoice INV-202611-0044 apakah sudah diverifikasi finance.",
+    ]
+    for text in operasional_staf:
+        examples.append((text, "relevant", "operasional_staf"))
+
     # OUT_OF_DOMAIN: programming_tech (~16)
     programming_tech = [
         "Bagaimana cara membuat fungsi asynchronous di JavaScript dengan async await?",
@@ -606,6 +649,18 @@ def build_raw_synthetic_examples() -> list[tuple[str, str, str]]:  # pragma: no 
         "Berapa biaya penggantian oli mesin dan filter udara kendaraan roda empat?",
         "Bagaimana prosedur menutup kartu kredit perbankan tanpa dikenakan denda tahunan?",
         "Berapa estimasi harga beli rumah cluster subsidi di kawasan pinggiran kota?",
+        "Apakah harga saham perbankan dan koin bitcoin sedang mengalami kenaikan tren pasar?",
+        "Apakah harga bitcoin dan aset kripto ethereum sedang naik tajam di bursa derivatif?",
+        "Apakah nilai tukar saham teknologi dan bitcoin sedang terkoreksi turun minggu ini?",
+        "Apakah tren harga saham bursa efek sedang menunjukkan kenaikan grafik perdagangan?",
+        "Berapa prediksi pergerakan harga bitcoin dan saham unggulan yang sedang naik daun?",
+        "Apakah harga emas murni batangan dan mata uang kripto sedang naik drastis?",
+        "Apakah jadwal rilis indeks harga saham gabungan sedang diumumkan analis keuangan?",
+        "Kapan jadwal final basket playoff dan turnamen sepak bola disiarkan minggu ini?",
+        "Apakah jadwal penerbangan pesawat carter sedang mengalami penundaan jadwal minggu ini?",
+        "Apakah biaya sewa kamar hotel berbintang sedang naik harga saat liburan akhir pekan?",
+        "Bagaimana pergerakan harga saham emiten energi dan koin bitcoin minggu ini?",
+        "Apakah fluktuasi harga komoditas tambang dan saham batu bara sedang stabil minggu ini?",
     ]
     for text in hard_negatives:
         examples.append((text, "out_of_domain", "hard_negatives"))
@@ -872,7 +927,9 @@ def train_and_export_models() -> dict[str, Any]:  # pragma: no cover
             "intercept": intercept,
         },
     }
-    WEIGHTS_PATH.write_text(json.dumps(weights_payload, indent=2) + "\n", encoding="utf-8")
+    WEIGHTS_PATH.write_text(
+        _format_json_with_inline_short_arrays(weights_payload) + "\n", encoding="utf-8"
+    )
 
     # 3. relevance_metadata.json
     print(f"Exporting metadata to {METADATA_PATH}...")
@@ -954,7 +1011,9 @@ def train_and_export_models() -> dict[str, Any]:  # pragma: no cover
         },
         "avgInferenceLatencyMs": round(avg_latency_ms, 3),
     }
-    METADATA_PATH.write_text(json.dumps(metadata_payload, indent=2) + "\n", encoding="utf-8")
+    METADATA_PATH.write_text(
+        _format_json_with_inline_short_arrays(metadata_payload) + "\n", encoding="utf-8"
+    )
 
     return {
         "df": df,
