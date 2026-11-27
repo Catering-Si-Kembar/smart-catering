@@ -188,16 +188,26 @@ def test_notebook_code_cells_are_valid_python_and_self_contained() -> None:
 
 
 def test_readmes_document_measured_ai02_evaluation_metrics() -> None:
+    metadata: dict[str, Any] = json.loads(
+        (
+            AI_SERVICE_ROOT / "app" / "ml" / "relevance" / "artifacts" / "relevance_metadata.json"
+        ).read_text(encoding="utf-8")
+    )
+    f1_050 = f"{float(metadata['metricsByThreshold']['0.50']['f1Score']):.4f}"
+    acc_050 = f"{float(metadata['metricsByThreshold']['0.50']['accuracy']):.4f}"
+    f1_060 = f"{float(metadata['metricsByThreshold']['0.60']['f1Score']):.4f}"
+
     root_readme = README_PATH.read_text(encoding="utf-8")
     for token in (
         "AI-02",
         "MultinomialNB",
         "LogisticRegression",
-        "0.9735",
+        f1_050,
+        f1_060,
         "is_synthetic",
         "04_relevance_classification.ipynb",
     ):
         assert token in root_readme, f"apps/ai-service/README.md missing: {token}"
 
     mod_readme = MODULE_README_PATH.read_text(encoding="utf-8")
-    assert "0.9735" in mod_readme and "0.9659" in mod_readme
+    assert f1_050 in mod_readme and acc_050 in mod_readme and f1_060 in mod_readme

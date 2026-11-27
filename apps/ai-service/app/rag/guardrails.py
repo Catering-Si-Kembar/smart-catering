@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import importlib
 import json
 import logging
 import re
@@ -8,6 +7,10 @@ from pathlib import Path
 from typing import Any, Final
 
 from app.contracts import RagUserRole
+from app.ml.relevance.inference import (
+    ModelArtifactMissingError,
+    RelevanceClassifierService,
+)
 from app.rag.schemas import (
     GuardrailCategory,
     GuardrailVerdict,
@@ -217,51 +220,56 @@ def log_security_event(
 
 
 class DomainRelevanceClassifier:
-    """Two-class relevance gate (AI-02): loads joblib artifact when present, else rule fallback."""
+    """Two-class relevance gate (AI-02): delegates to RelevanceClassifierService,
+    else rule fallback.
+    """
 
     def __init__(
         self,
         *,
+        relevance_service: RelevanceClassifierService | None = None,
         artifact_path: Path | None = None,
-        confidence_threshold: float = 0.55,
+        confidence_threshold: float | None = None,
     ) -> None:
-        self._artifact_path = artifact_path or (
-            Path(__file__).resolve().parent.parent
-            / "ml"
-            / "relevance"
-            / "artifacts"
-            / "relevance_model.joblib"
-        )
+        if relevance_service is not None:
+            self._relevance_service = relevance_service
+        else:
+            artifacts_dir = artifact_path.parent if artifact_path is not None else None
+            self._relevance_service = RelevanceClassifierService(
+                artifacts_dir=artifacts_dir,
+            )
         self._confidence_threshold = confidence_threshold
-        self._model: Any = self._try_load_artifact()
-
-    def _try_load_artifact(self) -> Any:
-        if not self._artifact_path.is_file():
-            return None
-        try:
-            joblib = importlib.import_module("joblib")
-            return joblib.load(self._artifact_path)
-        except Exception:
-            return None
 
     async def classify(self, text: str) -> RelevanceDecision:
-        if self._model is not None:
-            return self._classify_with_model(text)
-        return self._classify_with_fallback_rules(text)
+        if not text.strip():
+            return RelevanceDecision(
+                label="out_of_domain",
+                is_relevant=False,
+                confidence=1.0,
+                model_version="fallback_rule_relevance_v0",
+            )
+        try:
+            res = self._relevance_service.predict(text)
+        except ModelArtifactMissingError:
+            return self._classify_with_fallback_rules(text)
 
-    def _classify_with_model(self, text: str) -> RelevanceDecision:
-        predicted = str(self._model.predict([text])[0])
-        confidence = 0.85
-        if hasattr(self._model, "predict_proba"):
-            probs = self._model.predict_proba([text])[0]
-            confidence = float(max(probs))
-        is_rel = predicted == "relevant" and confidence >= self._confidence_threshold
-        label: RelevanceLabel = "relevant" if is_rel else "out_of_domain"
+        if self._confidence_threshold is not None:
+            p_rel = res.confidence if res.is_relevant else round(1.0 - res.confidence, 4)
+            is_rel = p_rel >= self._confidence_threshold
+            label: RelevanceLabel = "relevant" if is_rel else "out_of_domain"
+            conf = p_rel if is_rel else round(1.0 - p_rel, 4)
+            return RelevanceDecision(
+                label=label,
+                is_relevant=is_rel,
+                confidence=round(min(max(conf, 0.0), 1.0), 4),
+                model_version=res.model_version,
+            )
+
         return RelevanceDecision(
-            label=label,
-            is_relevant=is_rel,
-            confidence=round(min(max(confidence, 0.0), 1.0), 4),
-            model_version="ai02_joblib_artifact",
+            label=res.label,
+            is_relevant=res.is_relevant,
+            confidence=res.confidence,
+            model_version=res.model_version,
         )
 
     def _classify_with_fallback_rules(self, text: str) -> RelevanceDecision:
