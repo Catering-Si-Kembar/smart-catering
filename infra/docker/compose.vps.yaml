@@ -1,9 +1,55 @@
 name: smart-catering-vps
 
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: '10m'
+    max-file: '3'
+
 services:
+  caddy:
+    image: caddy:2.10.2-alpine@sha256:4c6e91c6ed0e2fa03efd5b44747b625fec79bc9cd06ac5235a779726618e530d
+    profiles:
+      - proxy
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: ${CADDY_MEM_LIMIT:-128m}
+    logging: *default-logging
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    environment:
+      API_DOMAIN: ${API_DOMAIN:?API_DOMAIN must be set in .env when enabling proxy profile}
+      TLS_EMAIL: ${TLS_EMAIL:?TLS_EMAIL must be set in .env when enabling proxy profile}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - smart_catering_vps_caddy_data:/data
+      - smart_catering_vps_caddy_config:/config
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - smart_catering_vps_app
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'wget --no-verbose --tries=1 --spider http://127.0.0.1:2020/healthz || exit 1',
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
   postgres:
     image: postgres:17.11-alpine3.23@sha256:05aa77262db9277fde6374bb2f901c9604b8a9373029e1a7993440c6aae48736
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: ${POSTGRES_MEM_LIMIT:-768m}
+    logging: *default-logging
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-smartcatering}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in .env}
@@ -11,7 +57,7 @@ services:
     volumes:
       - smart_catering_vps_postgres_data:/var/lib/postgresql/data
     networks:
-      - smart_catering_vps_net
+      - smart_catering_vps_data
     healthcheck:
       test:
         [
@@ -26,13 +72,17 @@ services:
   chroma:
     image: chromadb/chroma:1.5.9@sha256:1e0b73a187a28757c572acba508c46f48c9e8b0acaf5c20e6d95cdedce1acdf6
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: ${CHROMA_MEM_LIMIT:-768m}
+    logging: *default-logging
     environment:
       IS_PERSISTENT: 'TRUE'
       ANONYMIZED_TELEMETRY: 'FALSE'
     volumes:
       - smart_catering_vps_chroma_data:/data
     networks:
-      - smart_catering_vps_net
+      - smart_catering_vps_data
     healthcheck:
       test:
         [
@@ -49,6 +99,10 @@ services:
     profiles:
       - waha
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: ${WAHA_MEM_LIMIT:-512m}
+    logging: *default-logging
     environment:
       WHATSAPP_API_PORT: '3000'
       WHATSAPP_DEFAULT_ENGINE: 'NOWEB'
@@ -64,7 +118,7 @@ services:
       - smart_catering_vps_waha_sessions:/app/.sessions
       - smart_catering_vps_waha_files:/tmp/whatsapp-files
     networks:
-      - smart_catering_vps_net
+      - smart_catering_vps_app
     healthcheck:
       test:
         [
@@ -81,6 +135,10 @@ services:
       context: ../..
       dockerfile: infra/docker/api.Dockerfile
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: ${API_MEM_LIMIT:-512m}
+    logging: *default-logging
     ports:
       - '127.0.0.1:${API_PORT:-3001}:3001'
     environment:
@@ -90,7 +148,13 @@ services:
       DATABASE_URL: ${VPS_DATABASE_URL:?VPS_DATABASE_URL must use internal postgres host and URL-encoded credentials}
       AI_SERVICE_URL: 'http://ai-service:8001'
       WAHA_BASE_URL: 'http://waha:3000'
-      WAHA_API_KEY: ${WAHA_API_KEY:?WAHA_API_KEY must be set in .env}
+      WAHA_API_KEY: ${WAHA_API_KEY:-}
+      INTERNAL_SERVICE_SECRET: ${INTERNAL_SERVICE_SECRET:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-}
       DOCS_ENABLED: ${DOCS_ENABLED:-false}
       DOCS_USERNAME: ${DOCS_USERNAME:-}
       DOCS_PASSWORD: ${DOCS_PASSWORD:-}
@@ -98,7 +162,8 @@ services:
       postgres:
         condition: service_healthy
     networks:
-      - smart_catering_vps_net
+      - smart_catering_vps_app
+      - smart_catering_vps_data
     healthcheck:
       test:
         [
@@ -115,9 +180,26 @@ services:
       context: ../..
       dockerfile: infra/docker/ai-service.Dockerfile
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: ${AI_SERVICE_MEM_LIMIT:-1024m}
+    logging: *default-logging
     environment:
       APP_ENV: 'production'
+      BACKEND_API_URL: 'http://api:3001'
       CHROMA_URL: 'http://chroma:8000'
+      CHROMA_COLLECTION_NAME: ${CHROMA_COLLECTION_NAME:-catering_knowledge}
+      RAG_TIMEOUT_SECONDS: ${RAG_TIMEOUT_SECONDS:-15}
+      INTERNAL_SERVICE_SECRET: ${INTERNAL_SERVICE_SECRET:-}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_BASE_URL: ${LLM_BASE_URL:-}
+      LLM_MODEL: ${LLM_MODEL:-}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-}
+      MODAL_SLM_BASE_URL: ${MODAL_SLM_BASE_URL:-}
+      MODAL_API_KEY: ${MODAL_API_KEY:-}
+      MODAL_SLM_MODEL: ${MODAL_SLM_MODEL:-}
+      MODAL_SLM_FALLBACK_MODEL: ${MODAL_SLM_FALLBACK_MODEL:-}
+      MODAL_TIMEOUT_SECONDS: ${MODAL_TIMEOUT_SECONDS:-18}
       DOCS_ENABLED: ${DOCS_ENABLED:-false}
       DOCS_USERNAME: ${DOCS_USERNAME:-}
       DOCS_PASSWORD: ${DOCS_PASSWORD:-}
@@ -125,7 +207,8 @@ services:
       chroma:
         condition: service_healthy
     networks:
-      - smart_catering_vps_net
+      - smart_catering_vps_app
+      - smart_catering_vps_data
     healthcheck:
       test:
         [
@@ -142,12 +225,26 @@ services:
       context: ../..
       dockerfile: infra/docker/worker.Dockerfile
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: ${WORKER_MEM_LIMIT:-256m}
+    logging: *default-logging
     environment:
       NODE_ENV: 'production'
       WORKER_HOST: '0.0.0.0'
       WORKER_PORT: '3002'
+      API_BASE_URL: 'http://api:3001'
+      INTERNAL_SERVICE_SECRET: ${INTERNAL_SERVICE_SECRET:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM: ${SMTP_FROM:-}
+    depends_on:
+      api:
+        condition: service_healthy
     networks:
-      - smart_catering_vps_net
+      - smart_catering_vps_app
     healthcheck:
       test:
         [
@@ -160,10 +257,15 @@ services:
       start_period: 10s
 
 networks:
-  smart_catering_vps_net:
+  smart_catering_vps_app:
     driver: bridge
+  smart_catering_vps_data:
+    driver: bridge
+    internal: true
 
 volumes:
+  smart_catering_vps_caddy_data:
+  smart_catering_vps_caddy_config:
   smart_catering_vps_postgres_data:
   smart_catering_vps_chroma_data:
   smart_catering_vps_waha_sessions:
