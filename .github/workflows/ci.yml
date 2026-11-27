@@ -69,9 +69,18 @@ jobs:
           working-directory: apps/ai-service
           enable-cache: true
       - run: npm run ai:sync
+      - run: npm run security:check
       - run: npm run infra:vps:check
       - run: npm run format:check
       - run: npm run lint
+      - name: Check Modal GPU deployment scripts (OPS-04)
+        env:
+          PYTHONPATH: .
+        run: |
+          apps/ai-service/.venv/bin/ruff format --config apps/ai-service/pyproject.toml --check infra/modal
+          apps/ai-service/.venv/bin/ruff check --config apps/ai-service/pyproject.toml infra/modal
+          apps/ai-service/.venv/bin/mypy --strict --namespace-packages --explicit-package-bases infra/modal
+          apps/ai-service/.venv/bin/pytest infra/modal/test_modal_infra.py -v
       - run: npm run db:validate
       - run: npm run db:generate
       - run: npm run typecheck

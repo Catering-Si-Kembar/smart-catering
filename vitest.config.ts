@@ -16,6 +16,7 @@ export default defineConfig({
         'apps/worker/src/environment.ts',
         'apps/web/lib/**/*.ts',
         'scripts/service-environment.mjs',
+        'scripts/check-secrets-hygiene.mjs',
         'scripts/check-vps-compose.mjs',
       ],
       exclude: ['apps/api/src/**/*.test.ts', 'apps/web/lib/**/*.test.ts'],
