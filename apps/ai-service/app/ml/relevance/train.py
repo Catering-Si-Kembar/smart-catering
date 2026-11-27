@@ -52,6 +52,7 @@ def _load_ml_dependencies() -> dict[str, Any]:  # pragma: no cover
 
 
 RANDOM_STATE = 42
+CONFIDENCE_THRESHOLD = 0.60
 
 # Root directories
 REPO_ROOT = Path(__file__).resolve().parents[5]
@@ -784,19 +785,43 @@ def train_and_export_models() -> dict[str, Any]:  # pragma: no cover
     best_pipe = grid_search.best_estimator_
     print(f"Best Params: {grid_search.best_params_}")
 
-    # Evaluate best tuned model on holdout test set
-    y_pred_tuned = best_pipe.predict(x_test)
-    _ = best_pipe.predict_proba(x_test)
+    # Evaluate best tuned model on holdout test set at default (0.50) and serving (0.60) thresholds
+    y_pred_tuned_050 = best_pipe.predict(x_test)
+    proba_tuned = best_pipe.predict_proba(x_test)
+    classes_list = [str(c) for c in best_pipe.classes_]
+    rel_idx = classes_list.index("relevant")
+    y_pred_tuned_060 = [
+        "relevant" if float(row[rel_idx]) >= CONFIDENCE_THRESHOLD else "out_of_domain"
+        for row in proba_tuned
+    ]
 
-    tuned_f1 = float(f1_score(y_test, y_pred_tuned, pos_label="relevant"))
-    tuned_prec = float(precision_score(y_test, y_pred_tuned, pos_label="relevant"))
-    tuned_rec = float(recall_score(y_test, y_pred_tuned, pos_label="relevant"))
-    tuned_acc = float(accuracy_score(y_test, y_pred_tuned))
-    cm = confusion_matrix(y_test, y_pred_tuned, labels=["relevant", "out_of_domain"])
+    tuned_050_f1 = float(f1_score(y_test, y_pred_tuned_050, pos_label="relevant"))
+    tuned_050_prec = float(precision_score(y_test, y_pred_tuned_050, pos_label="relevant"))
+    tuned_050_rec = float(recall_score(y_test, y_pred_tuned_050, pos_label="relevant"))
+    tuned_050_acc = float(accuracy_score(y_test, y_pred_tuned_050))
+    cm_050 = confusion_matrix(y_test, y_pred_tuned_050, labels=["relevant", "out_of_domain"])
 
-    print(f"LogisticRegression Tuned -> Holdout F1: {tuned_f1:.4f}, Acc: {tuned_acc:.4f}")
-    print(f"Precision: {tuned_prec:.4f}, Recall: {tuned_rec:.4f}")
-    print(f"Confusion Matrix (relevant, out_of_domain):\n{cm}")
+    tuned_f1 = float(f1_score(y_test, y_pred_tuned_060, pos_label="relevant"))
+    tuned_prec = float(precision_score(y_test, y_pred_tuned_060, pos_label="relevant"))
+    tuned_rec = float(recall_score(y_test, y_pred_tuned_060, pos_label="relevant"))
+    tuned_acc = float(accuracy_score(y_test, y_pred_tuned_060))
+    cm = confusion_matrix(y_test, y_pred_tuned_060, labels=["relevant", "out_of_domain"])
+
+    print(
+        f"LogisticRegression Tuned (threshold 0.50) -> "
+        f"Holdout F1: {tuned_050_f1:.4f}, Acc: {tuned_050_acc:.4f}"
+    )
+    print(f"Precision (0.50): {tuned_050_prec:.4f}, Recall (0.50): {tuned_050_rec:.4f}")
+    print(f"Confusion Matrix @0.50 (relevant, out_of_domain):\n{cm_050}")
+    print(
+        f"LogisticRegression Tuned (serving threshold {CONFIDENCE_THRESHOLD:.2f}) -> "
+        f"Holdout F1: {tuned_f1:.4f}, Acc: {tuned_acc:.4f}"
+    )
+    print(
+        f"Precision ({CONFIDENCE_THRESHOLD:.2f}): {tuned_prec:.4f}, "
+        f"Recall ({CONFIDENCE_THRESHOLD:.2f}): {tuned_rec:.4f}"
+    )
+    print(f"Confusion Matrix @{CONFIDENCE_THRESHOLD:.2f} (relevant, out_of_domain):\n{cm}")
 
     # Benchmark average inference latency
     warmup_texts = x_test[:10]
@@ -832,7 +857,7 @@ def train_and_export_models() -> dict[str, Any]:  # pragma: no cover
     weights_payload = {
         "model_version": "relevance_lr_v1.0",
         "classes": ["relevant", "out_of_domain"],
-        "confidence_threshold": 0.60,
+        "confidence_threshold": CONFIDENCE_THRESHOLD,
         "vectorizer": {
             "vocabulary": vocab,
             "idf": idf_list,
@@ -847,7 +872,7 @@ def train_and_export_models() -> dict[str, Any]:  # pragma: no cover
             "intercept": intercept,
         },
     }
-    WEIGHTS_PATH.write_text(json.dumps(weights_payload, indent=2), encoding="utf-8")
+    WEIGHTS_PATH.write_text(json.dumps(weights_payload, indent=2) + "\n", encoding="utf-8")
 
     # 3. relevance_metadata.json
     print(f"Exporting metadata to {METADATA_PATH}...")
@@ -858,12 +883,28 @@ def train_and_export_models() -> dict[str, Any]:  # pragma: no cover
         "algorithm": "LogisticRegression (tuned)",
         "classes": ["relevant", "out_of_domain"],
         "isSynthetic": True,
-        "confidenceThreshold": 0.60,
+        "confidenceThreshold": CONFIDENCE_THRESHOLD,
         "metrics": {
             "f1Score": round(tuned_f1, 4),
             "precision": round(tuned_prec, 4),
             "recall": round(tuned_rec, 4),
             "accuracy": round(tuned_acc, 4),
+        },
+        "metricsByThreshold": {
+            "0.50": {
+                "f1Score": round(tuned_050_f1, 4),
+                "precision": round(tuned_050_prec, 4),
+                "recall": round(tuned_050_rec, 4),
+                "accuracy": round(tuned_050_acc, 4),
+                "confusionMatrix": cm_050.tolist(),
+            },
+            "0.60": {
+                "f1Score": round(tuned_f1, 4),
+                "precision": round(tuned_prec, 4),
+                "recall": round(tuned_rec, 4),
+                "accuracy": round(tuned_acc, 4),
+                "confusionMatrix": cm.tolist(),
+            },
         },
         "imbalanceHandling": f"class_weight='{grid_search.best_params_['clf__class_weight']}'",
         "datasetStats": {
@@ -885,7 +926,12 @@ def train_and_export_models() -> dict[str, Any]:  # pragma: no cover
                 "holdoutAccuracy": round(lr_base_acc, 4),
             },
             {
-                "model": "LogisticRegression (tuned)",
+                "model": "LogisticRegression (tuned, threshold=0.50)",
+                "holdoutF1": round(tuned_050_f1, 4),
+                "holdoutAccuracy": round(tuned_050_acc, 4),
+            },
+            {
+                "model": "LogisticRegression (tuned, serving threshold=0.60)",
                 "holdoutF1": round(tuned_f1, 4),
                 "holdoutAccuracy": round(tuned_acc, 4),
             },
@@ -898,6 +944,8 @@ def train_and_export_models() -> dict[str, Any]:  # pragma: no cover
             "afterTuning": {
                 "holdoutF1": round(tuned_f1, 4),
                 "holdoutAccuracy": round(tuned_acc, 4),
+                "holdoutF1At050": round(tuned_050_f1, 4),
+                "holdoutAccuracyAt050": round(tuned_050_acc, 4),
             },
         },
         "confusionMatrix": {
@@ -906,7 +954,7 @@ def train_and_export_models() -> dict[str, Any]:  # pragma: no cover
         },
         "avgInferenceLatencyMs": round(avg_latency_ms, 3),
     }
-    METADATA_PATH.write_text(json.dumps(metadata_payload, indent=2), encoding="utf-8")
+    METADATA_PATH.write_text(json.dumps(metadata_payload, indent=2) + "\n", encoding="utf-8")
 
     return {
         "df": df,
@@ -914,6 +962,11 @@ def train_and_export_models() -> dict[str, Any]:  # pragma: no cover
         "nb_acc": nb_acc,
         "lr_base_f1": lr_base_f1,
         "lr_base_acc": lr_base_acc,
+        "tuned_050_f1": tuned_050_f1,
+        "tuned_050_prec": tuned_050_prec,
+        "tuned_050_rec": tuned_050_rec,
+        "tuned_050_acc": tuned_050_acc,
+        "cm_050": cm_050,
         "tuned_f1": tuned_f1,
         "tuned_prec": tuned_prec,
         "tuned_rec": tuned_rec,
@@ -934,12 +987,19 @@ def generate_experiment_notebook(train_results: dict[str, Any]) -> None:  # prag
     nb_acc = train_results["nb_acc"]
     lr_base_f1 = train_results["lr_base_f1"]
     lr_base_acc = train_results["lr_base_acc"]
+    tuned_050_f1 = train_results["tuned_050_f1"]
+    tuned_050_prec = train_results["tuned_050_prec"]
+    tuned_050_rec = train_results["tuned_050_rec"]
+    tuned_050_acc = train_results["tuned_050_acc"]
+    cm_050 = train_results["cm_050"]
     tuned_f1 = train_results["tuned_f1"]
     tuned_prec = train_results["tuned_prec"]
     tuned_rec = train_results["tuned_rec"]
     tuned_acc = train_results["tuned_acc"]
     cm = train_results["cm"]
     avg_latency = train_results["avg_latency_ms"]
+    best_params = train_results["best_params"]
+    is_synth_all = bool((df["is_synthetic"].astype(str).str.lower() == "true").all())
 
     cells: list[dict[str, Any]] = [
         {
@@ -959,7 +1019,10 @@ def generate_experiment_notebook(train_results: dict[str, Any]) -> None:  # prag
                 "3. Preprocessing Bahasa Indonesia & Ekstraksi Fitur TF-IDF\n",
                 "4. Perbandingan Baseline: `MultinomialNB` vs `LogisticRegression`\n",
                 "5. Hyperparameter Tuning (`GridSearchCV` + `StratifiedKFold`)\n",
-                "6. Evaluasi Holdout Test Set & Analisis Confusion Matrix\n",
+                (
+                    "6. Evaluasi Holdout Test Set (Threshold `0.50` & Serving `0.60`) "
+                    "& Confusion Matrix\n"
+                ),
                 "7. Benchmark Latensi Inferensi & Ekspor Dual-Artifact\n",
             ],
         },
@@ -974,7 +1037,7 @@ def generate_experiment_notebook(train_results: dict[str, Any]) -> None:  # prag
                     "text": [
                         f"Dataset loaded: {len(df)} baris\n",
                         f"Kolom: {list(df.columns)}\n",
-                        f"Verifikasi label is_synthetic: {(df['is_synthetic'] == 'true').all()}\n",
+                        f"Verifikasi label is_synthetic: {is_synth_all}\n",
                         (
                             f"Train count: {(df['split'] == 'train').sum()}, "
                             f"Test count: {(df['split'] == 'test').sum()}\n"
@@ -987,13 +1050,16 @@ def generate_experiment_notebook(train_results: dict[str, Any]) -> None:  # prag
                 "from pathlib import Path\n",
                 "\n",
                 "dataset_path = Path('../data/synthetic/relevance_dataset.csv')\n",
+                "if not dataset_path.exists():\n",
+                "    dataset_path = Path('data/synthetic/relevance_dataset.csv')\n",
                 "df = pd.read_csv(dataset_path)\n",
                 "print(f'Dataset loaded: {len(df)} baris')\n",
                 "print(f'Kolom: {list(df.columns)}')\n",
                 (
-                    'print("Verifikasi label is_synthetic: " + '
-                    'str((df["is_synthetic"] == "true").all()))\n'
+                    "is_synth_all = bool("
+                    "(df['is_synthetic'].astype(str).str.lower() == 'true').all())\n"
                 ),
+                "print(f'Verifikasi label is_synthetic: {is_synth_all}')\n",
                 (
                     'print("Train count: " + str((df["split"] == "train").sum()) + '
                     '", Test count: " + str((df["split"] == "test").sum()))\n'
@@ -1072,7 +1138,8 @@ def generate_experiment_notebook(train_results: dict[str, Any]) -> None:  # prag
             "source": [
                 "## 4. Perbandingan Model: MultinomialNB vs LogisticRegression\n",
                 "Melatih minimal dua arsitektur model scikit-learn (`MultinomialNB` dan\n",
-                "`LogisticRegression`) dan menguji performa holdout F1-score & akurasi.\n",
+                "`LogisticRegression`) menggunakan `Pipeline` yang identik dengan `train.py`\n",
+                "dan menguji performa holdout F1-score & akurasi.\n",
             ],
         },
         {
@@ -1085,41 +1152,57 @@ def generate_experiment_notebook(train_results: dict[str, Any]) -> None:  # prag
                     "output_type": "stream",
                     "text": [
                         f"MultinomialNB Baseline -> F1: {nb_f1:.4f}, Acc: {nb_acc:.4f}\n",
-                        f"LogisticRegression -> F1: {lr_base_f1:.4f}, Acc: {lr_base_acc:.4f}\n",
+                        (
+                            f"LogisticRegression Baseline -> "
+                            f"F1: {lr_base_f1:.4f}, Acc: {lr_base_acc:.4f}\n"
+                        ),
                     ],
                 }
             ],
             "source": [
-                "# Evaluasi model baseline scikit-learn\n",
+                "# Evaluasi model baseline scikit-learn (identik dengan train.py)\n",
                 "from sklearn.feature_extraction.text import TfidfVectorizer\n",
                 "from sklearn.naive_bayes import MultinomialNB\n",
                 "from sklearn.linear_model import LogisticRegression\n",
                 "from sklearn.metrics import f1_score, accuracy_score\n",
+                "from sklearn.pipeline import Pipeline\n",
                 "\n",
                 "train_df = df[df['split'] == 'train']\n",
                 "test_df = df[df['split'] == 'test']\n",
+                "x_train = train_df['text'].tolist()\n",
+                "y_train = train_df['label'].tolist()\n",
+                "x_test = test_df['text'].tolist()\n",
+                "y_test = test_df['label'].tolist()\n",
                 "\n",
-                "vec = TfidfVectorizer(ngram_range=(1, 2), sublinear_tf=True)\n",
-                "X_train = vec.fit_transform(train_df['text'].map(normalize_indonesian_text))\n",
-                "X_test = vec.transform(test_df['text'].map(normalize_indonesian_text))\n",
-                "y_train = (train_df['label'] == 'relevant').astype(int)\n",
-                "y_test = (test_df['label'] == 'relevant').astype(int)\n",
-                "\n",
-                "nb = MultinomialNB()\n",
-                "nb.fit(X_train, y_train)\n",
-                "nb_preds = nb.predict(X_test)\n",
+                "pipe_nb_base = Pipeline([\n",
+                (
+                    "    ('tfidf', TfidfVectorizer("
+                    "preprocessor=normalize_indonesian_text, "
+                    "token_pattern=r'(?u)\\b\\w+\\b')),\n"
+                ),
+                "    ('clf', MultinomialNB(fit_prior=True)),\n",
+                "])\n",
+                "pipe_nb_base.fit(x_train, y_train)\n",
+                "nb_preds = pipe_nb_base.predict(x_test)\n",
                 (
                     "print(f'MultinomialNB Baseline -> '\n"
-                    "      f'F1: {f1_score(y_test, nb_preds):.4f}, '\n"
+                    "      f'F1: {f1_score(y_test, nb_preds, pos_label=\"relevant\"):.4f}, '\n"
                     "      f'Acc: {accuracy_score(y_test, nb_preds):.4f}')\n"
                 ),
                 "\n",
-                "lr = LogisticRegression(random_state=42)\n",
-                "lr.fit(X_train, y_train)\n",
-                "lr_preds = lr.predict(X_test)\n",
+                "pipe_lr_base = Pipeline([\n",
+                (
+                    "    ('tfidf', TfidfVectorizer("
+                    "preprocessor=normalize_indonesian_text, "
+                    "token_pattern=r'(?u)\\b\\w+\\b')),\n"
+                ),
+                "    ('clf', LogisticRegression(random_state=42, max_iter=1000)),\n",
+                "])\n",
+                "pipe_lr_base.fit(x_train, y_train)\n",
+                "lr_preds = pipe_lr_base.predict(x_test)\n",
                 (
                     "print(f'LogisticRegression Baseline -> '\n"
-                    "      f'F1: {f1_score(y_test, lr_preds):.4f}, '\n"
+                    "      f'F1: {f1_score(y_test, lr_preds, pos_label=\"relevant\"):.4f}, '\n"
                     "      f'Acc: {accuracy_score(y_test, lr_preds):.4f}')\n"
                 ),
             ],
@@ -1129,7 +1212,9 @@ def generate_experiment_notebook(train_results: dict[str, Any]) -> None:  # prag
             "metadata": {},
             "source": [
                 "## 5. Hyperparameter Tuning & Evaluasi Akhir\n",
-                "Tuning hyperparameter model dengan GridSearchCV 5-Fold Stratified CV.\n",
+                "Tuning hyperparameter `Pipeline` TF-IDF + LogisticRegression dengan\n",
+                "`GridSearchCV` 5-Fold Stratified CV (`f1_macro`), lalu evaluasi holdout\n",
+                "pada threshold default `0.50` dan serving threshold `0.60`.\n",
             ],
         },
         {
@@ -1141,45 +1226,117 @@ def generate_experiment_notebook(train_results: dict[str, Any]) -> None:  # prag
                     "name": "stdout",
                     "output_type": "stream",
                     "text": [
-                        "LogisticRegression Tuned:\n",
+                        f"Best Params: {best_params}\n",
+                        "\nLogisticRegression Tuned (threshold 0.50):\n",
+                        f"  Holdout F1-score : {tuned_050_f1:.4f} (target >= 0.88)\n",
+                        f"  Precision        : {tuned_050_prec:.4f}\n",
+                        f"  Recall           : {tuned_050_rec:.4f}\n",
+                        f"  Accuracy         : {tuned_050_acc:.4f}\n",
+                        "Confusion matrix @0.50 (labels=['relevant', 'out_of_domain']):\n",
+                        f"{cm_050}\n",
+                        (
+                            "\nLogisticRegression Tuned "
+                            f"(serving threshold {CONFIDENCE_THRESHOLD:.2f}):\n"
+                        ),
                         f"  Holdout F1-score : {tuned_f1:.4f} (target >= 0.88)\n",
                         f"  Precision        : {tuned_prec:.4f}\n",
                         f"  Recall           : {tuned_rec:.4f}\n",
                         f"  Accuracy         : {tuned_acc:.4f}\n",
-                        "\nConfusion matrix (labels=['relevant', 'out_of_domain']):\n",
+                        (
+                            f"Confusion matrix @{CONFIDENCE_THRESHOLD:.2f} "
+                            "(labels=['relevant', 'out_of_domain']):\n"
+                        ),
                         f"{cm}\n",
                     ],
                 }
             ],
             "source": [
-                "# Hyperparameter tuning model dengan GridSearchCV 5-Fold Stratified CV\n",
+                "# Hyperparameter tuning Pipeline dengan GridSearchCV 5-Fold Stratified CV\n",
                 "from sklearn.model_selection import GridSearchCV, StratifiedKFold\n",
                 "from sklearn.metrics import precision_score, recall_score, confusion_matrix\n",
                 "\n",
-                "param_grid = {'C': [0.1, 1.0, 10.0], 'class_weight': ['balanced', None]}\n",
+                "param_grid = {\n",
+                "    'tfidf__ngram_range': [(1, 1), (1, 2)],\n",
+                "    'tfidf__sublinear_tf': [True, False],\n",
+                "    'clf__C': [0.5, 1.0, 2.0, 5.0, 10.0],\n",
+                "    'clf__class_weight': ['balanced', None],\n",
+                "}\n",
                 "cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)\n",
                 "grid = GridSearchCV(\n",
+                "    estimator=Pipeline([\n",
                 (
-                    "    LogisticRegression(random_state=42, max_iter=1000), "
-                    "param_grid, cv=cv, scoring='f1'\n"
+                    "        ('tfidf', TfidfVectorizer("
+                    "preprocessor=normalize_indonesian_text, "
+                    "token_pattern=r'(?u)\\b\\w+\\b')),\n"
                 ),
+                "        ('clf', LogisticRegression(random_state=42, max_iter=1000)),\n",
+                "    ]),\n",
+                "    param_grid=param_grid,\n",
+                "    cv=cv,\n",
+                "    scoring='f1_macro',\n",
+                "    n_jobs=-1,\n",
                 ")\n",
-                "grid.fit(X_train, y_train)\n",
-                "best_lr = grid.best_estimator_\n",
+                "grid.fit(x_train, y_train)\n",
+                "best_pipe = grid.best_estimator_\n",
+                "print(f'Best Params: {grid.best_params_}')\n",
                 "\n",
-                "test_preds = best_lr.predict(X_test)\n",
-                "cm_calc = confusion_matrix(y_test, test_preds, labels=[1, 0])\n",
-                "\n",
-                "print('LogisticRegression Tuned:')\n",
+                "test_preds_050 = best_pipe.predict(x_test)\n",
                 (
-                    "print(f'  Holdout F1-score : {f1_score(y_test, test_preds):.4f} "
+                    "cm_050 = confusion_matrix("
+                    "y_test, test_preds_050, labels=['relevant', 'out_of_domain'])\n"
+                ),
+                "print('\\nLogisticRegression Tuned (threshold 0.50):')\n",
+                (
+                    "print(f'  Holdout F1-score : "
+                    '{f1_score(y_test, test_preds_050, pos_label="relevant"):.4f} '
                     "(target >= 0.88)')\n"
                 ),
-                "print(f'  Precision        : {precision_score(y_test, test_preds):.4f}')\n",
-                "print(f'  Recall           : {recall_score(y_test, test_preds):.4f}')\n",
-                "print(f'  Accuracy         : {accuracy_score(y_test, test_preds):.4f}')\n",
-                'print(\'\\nConfusion matrix (labels=["relevant", "out_of_domain"]):\')\n',
-                "print(cm_calc)\n",
+                (
+                    "print(f'  Precision        : "
+                    '{precision_score(y_test, test_preds_050, pos_label="relevant"):.4f}\')\n'
+                ),
+                (
+                    "print(f'  Recall           : "
+                    '{recall_score(y_test, test_preds_050, pos_label="relevant"):.4f}\')\n'
+                ),
+                "print(f'  Accuracy         : {accuracy_score(y_test, test_preds_050):.4f}')\n",
+                'print(\'Confusion matrix @0.50 (labels=["relevant", "out_of_domain"]):\')\n',
+                "print(cm_050)\n",
+                "\n",
+                "serving_threshold = 0.60\n",
+                "proba = best_pipe.predict_proba(x_test)\n",
+                "rel_idx = list(best_pipe.classes_).index('relevant')\n",
+                "test_preds_060 = [\n",
+                "    'relevant' if float(row[rel_idx]) >= serving_threshold else 'out_of_domain'\n",
+                "    for row in proba\n",
+                "]\n",
+                (
+                    "cm_060 = confusion_matrix("
+                    "y_test, test_preds_060, labels=['relevant', 'out_of_domain'])\n"
+                ),
+                (
+                    "print(f'\\nLogisticRegression Tuned "
+                    "(serving threshold {serving_threshold:.2f}):')\n"
+                ),
+                (
+                    "print(f'  Holdout F1-score : "
+                    '{f1_score(y_test, test_preds_060, pos_label="relevant"):.4f} '
+                    "(target >= 0.88)')\n"
+                ),
+                (
+                    "print(f'  Precision        : "
+                    '{precision_score(y_test, test_preds_060, pos_label="relevant"):.4f}\')\n'
+                ),
+                (
+                    "print(f'  Recall           : "
+                    '{recall_score(y_test, test_preds_060, pos_label="relevant"):.4f}\')\n'
+                ),
+                "print(f'  Accuracy         : {accuracy_score(y_test, test_preds_060):.4f}')\n",
+                (
+                    "print(f'Confusion matrix @{serving_threshold:.2f} "
+                    '(labels=["relevant", "out_of_domain"]):\')\n'
+                ),
+                "print(cm_060)\n",
             ],
         },
         {
@@ -1218,8 +1375,7 @@ def generate_experiment_notebook(train_results: dict[str, Any]) -> None:  # prag
                 "t0 = time.perf_counter()\n",
                 "for _ in range(50):\n",
                 "    for q in sample_queries:\n",
-                "        feat = vec.transform([normalize_indonesian_text(q)])\n",
-                "        _ = best_lr.predict_proba(feat)\n",
+                "        _ = best_pipe.predict_proba([q])\n",
                 "latency_ms = ((time.perf_counter() - t0) / 100) * 1000.0\n",
                 "\n",
                 "print(f'Benchmark latensi: {latency_ms:.3f} ms (SLA < 100 ms: LOLOS)')\n",
@@ -1248,7 +1404,7 @@ def generate_experiment_notebook(train_results: dict[str, Any]) -> None:  # prag
         "nbformat_minor": 5,
     }
 
-    NOTEBOOK_PATH.write_text(json.dumps(nb_json, indent=2), encoding="utf-8")
+    NOTEBOOK_PATH.write_text(json.dumps(nb_json, indent=2) + "\n", encoding="utf-8")
     print(f"Notebook written successfully to {NOTEBOOK_PATH}")
 
 

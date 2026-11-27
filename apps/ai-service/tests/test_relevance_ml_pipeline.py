@@ -133,6 +133,11 @@ def test_relevance_metadata_and_portable_weights_artifacts_complete() -> None:
     assert float(metrics["recall"]) >= 0.85
     assert float(metrics["accuracy"]) >= 0.88
 
+    by_thr = metadata["metricsByThreshold"]
+    assert "0.50" in by_thr and "0.60" in by_thr
+    assert float(by_thr["0.60"]["f1Score"]) == float(metrics["f1Score"])
+    assert float(by_thr["0.50"]["f1Score"]) >= 0.88
+
     comparison = metadata["modelComparison"]
     assert isinstance(comparison, list) and len(comparison) >= 2
     model_names = {str(item["model"]) for item in comparison}

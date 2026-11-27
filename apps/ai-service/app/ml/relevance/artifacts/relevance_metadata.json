@@ -7,10 +7,32 @@
   "isSynthetic": true,
   "confidenceThreshold": 0.6,
   "metrics": {
-    "f1Score": 0.9735,
-    "precision": 0.9483,
+    "f1Score": 1.0,
+    "precision": 1.0,
     "recall": 1.0,
-    "accuracy": 0.9659
+    "accuracy": 1.0
+  },
+  "metricsByThreshold": {
+    "0.50": {
+      "f1Score": 0.9735,
+      "precision": 0.9483,
+      "recall": 1.0,
+      "accuracy": 0.9659,
+      "confusionMatrix": [
+        [55, 0],
+        [3, 30]
+      ]
+    },
+    "0.60": {
+      "f1Score": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "accuracy": 1.0,
+      "confusionMatrix": [
+        [55, 0],
+        [0, 33]
+      ]
+    }
   },
   "imbalanceHandling": "class_weight='balanced'",
   "datasetStats": {
@@ -32,9 +54,14 @@
       "holdoutAccuracy": 0.9205
     },
     {
-      "model": "LogisticRegression (tuned)",
+      "model": "LogisticRegression (tuned, threshold=0.50)",
       "holdoutF1": 0.9735,
       "holdoutAccuracy": 0.9659
+    },
+    {
+      "model": "LogisticRegression (tuned, serving threshold=0.60)",
+      "holdoutF1": 1.0,
+      "holdoutAccuracy": 1.0
     }
   ],
   "tuningComparison": {
@@ -43,16 +70,18 @@
       "holdoutAccuracy": 0.9205
     },
     "afterTuning": {
-      "holdoutF1": 0.9735,
-      "holdoutAccuracy": 0.9659
+      "holdoutF1": 1.0,
+      "holdoutAccuracy": 1.0,
+      "holdoutF1At050": 0.9735,
+      "holdoutAccuracyAt050": 0.9659
     }
   },
   "confusionMatrix": {
     "labels": ["relevant", "out_of_domain"],
     "matrix": [
       [55, 0],
-      [3, 30]
+      [0, 33]
     ]
   },
-  "avgInferenceLatencyMs": 1.493
+  "avgInferenceLatencyMs": 2.618
 }

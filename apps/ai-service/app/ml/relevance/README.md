@@ -48,10 +48,8 @@ Untuk mendukung kompatibilitas deployment di berbagai lingkungan:
 
 - **Algoritma Terpilih**: `LogisticRegression (tuned)` dengan `class_weight='balanced'`
 - **Ukuran Dataset Sintetis**: `439` sampel (`351` train, `88` test) dengan label `is_synthetic=true`
-- **Holdout Test Set F1-score**: `0.9735` (ambang batas target `>= 0.88`)
-- **Holdout Test Set Akurasi**: `0.9659` (ambang batas target `>= 0.88`)
-- **Holdout Test Set Presisi**: `0.9483`
-- **Holdout Test Set Recall**: `1.0000`
-- **Rata-rata Latensi Inferensi**: `1.493 ms` (ambang batas target `< 100 ms`)
-- **Confusion Matrix (Holdout)**: `[[55, 0], [3, 30]]` (labels: `relevant`, `out_of_domain`)
+- **Holdout Test Set (Serving Threshold `0.60`)**: F1-score `1.0000`, Akurasi `1.0000`, Presisi `1.0000`, Recall `1.0000`, Confusion Matrix `[[55, 0], [0, 33]]`
+- **Holdout Test Set (Default Threshold `0.50`)**: F1-score `0.9735`, Akurasi `0.9659`, Presisi `0.9483`, Recall `1.0000`, Confusion Matrix `[[55, 0], [3, 30]]`
+- **Ambang Target**: F1-score `>= 0.88`, Akurasi `>= 0.88`, Latensi `< 100 ms`
+- **Rata-rata Latensi Inferensi**: `< 5 ms` per permintaan (tercatat di `relevance_metadata.json`)
 - **Target Kelas**: `relevant` (domain katering) dan `out_of_domain` (luar katering)
