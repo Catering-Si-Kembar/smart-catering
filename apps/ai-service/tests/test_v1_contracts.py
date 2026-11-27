@@ -22,7 +22,6 @@ POST_STUB_ENDPOINTS: tuple[str, ...] = (
     "/api/v1/ml/predict-relevance",
     "/api/v1/ml/predict-sentiment",
     "/api/v1/ml/predict-sentiment/batch",
-    "/api/v1/insight/generate",
 )
 
 GET_STUB_ENDPOINTS: tuple[str, ...] = ("/api/v1/ml/relevance/metadata",)
@@ -191,6 +190,14 @@ def test_openapi_documents_official_api_v1_ai_endpoints_and_protocol_responses(
             assert code in responses, f"Missing response {code} on {path}"
             resolved = _resolve_response_spec(document, responses[code])
             assert "application/problem+json" in resolved["content"]
+
+    insight_op = document["paths"]["/api/v1/insight/generate"]["post"]
+    insight_param_refs = [
+        p.get("$ref") for p in insight_op.get("parameters", []) if isinstance(p, dict)
+    ]
+    assert "#/components/parameters/ActorRoleHeader" in insight_param_refs
+    assert "403" in insight_op["responses"]
+    assert "504" in insight_op["responses"]
 
     meta_op = document["paths"]["/api/v1/ml/relevance/metadata"]["get"]
     meta_param_refs = [p.get("$ref") for p in meta_op.get("parameters", []) if isinstance(p, dict)]

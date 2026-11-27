@@ -28,6 +28,8 @@ ALLOWED_SETTING_KEYS: Final[frozenset[str]] = frozenset(
         "MODAL_SLM_BASE_URL",
         "MODAL_API_KEY",
         "MODAL_SLM_MODEL",
+        "MODAL_SLM_FALLBACK_MODEL",
+        "MODAL_TIMEOUT_SECONDS",
     }
 )
 
@@ -52,6 +54,8 @@ class AppSettings:
     modal_slm_base_url: str = ""
     modal_api_key: str = ""
     modal_slm_model: str = ""
+    modal_slm_fallback_model: str = ""
+    modal_timeout_seconds: float = 18.0
 
     def __repr__(self) -> str:
         return (
@@ -70,7 +74,9 @@ class AppSettings:
             f"embedding_model={self.embedding_model!r}, "
             f"modal_slm_base_url={self.modal_slm_base_url!r}, "
             "modal_api_key='[REDACTED]', "
-            f"modal_slm_model={self.modal_slm_model!r})"
+            f"modal_slm_model={self.modal_slm_model!r}, "
+            f"modal_slm_fallback_model={self.modal_slm_fallback_model!r}, "
+            f"modal_timeout_seconds={self.modal_timeout_seconds!r})"
         )
 
     def __str__(self) -> str:
@@ -159,6 +165,17 @@ def load_settings(
     modal_slm_base_url = (merged.get("MODAL_SLM_BASE_URL") or "").strip()
     modal_api_key = merged.get("MODAL_API_KEY") or ""
     modal_slm_model = (merged.get("MODAL_SLM_MODEL") or "").strip()
+    modal_slm_fallback_model = (merged.get("MODAL_SLM_FALLBACK_MODEL") or "").strip()
+
+    raw_modal_timeout = (merged.get("MODAL_TIMEOUT_SECONDS") or "").strip()
+    modal_timeout_seconds = 18.0
+    if raw_modal_timeout:
+        try:
+            parsed_modal_timeout = float(raw_modal_timeout)
+            if 1.0 <= parsed_modal_timeout <= 60.0:
+                modal_timeout_seconds = parsed_modal_timeout
+        except ValueError:
+            modal_timeout_seconds = 18.0
 
     return AppSettings(
         app_env=app_env,
@@ -177,4 +194,6 @@ def load_settings(
         modal_slm_base_url=modal_slm_base_url,
         modal_api_key=modal_api_key,
         modal_slm_model=modal_slm_model,
+        modal_slm_fallback_model=modal_slm_fallback_model,
+        modal_timeout_seconds=modal_timeout_seconds,
     )
