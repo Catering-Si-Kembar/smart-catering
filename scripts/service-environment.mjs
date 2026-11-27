@@ -6,6 +6,9 @@ const ROOT_ENV_PATH = fileURLToPath(new URL('../.env', import.meta.url));
 const DOCS_KEYS = ['DOCS_ENABLED', 'DOCS_USERNAME', 'DOCS_PASSWORD'];
 const SMTP_KEYS = ['SMTP_HOST', 'SMTP_PORT', 'SMTP_USER', 'SMTP_PASS', 'SMTP_FROM'];
 const AI_KEYS = [
+  'BACKEND_API_URL',
+  'CHROMA_COLLECTION_NAME',
+  'RAG_TIMEOUT_SECONDS',
   'LLM_API_KEY',
   'LLM_BASE_URL',
   'LLM_MODEL',

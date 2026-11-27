@@ -45,10 +45,6 @@ class RelevancePredictData(BaseModel):
         le=1.0,
         description="Model confidence score between 0 and 1.",
     )
-    intent: str | None = Field(
-        default=None,
-        description="Optional classified intent if extended classification is enabled.",
-    )
     model_version: str = Field(
         description="Identifier or version of the relevance model.",
     )
@@ -204,6 +200,19 @@ class SentimentBatchResponse(BaseModel):
 
 # AI-05: RAG Chat
 RagUserRole = Literal["ADMIN", "STAFF"]
+RagHistoryRole = Literal["user", "assistant"]
+RagValidationStatus = Literal["verified", "draft"]
+
+
+class RagChatHistoryItem(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    role: RagHistoryRole = Field(
+        description="Speaker role for a prior conversation turn.",
+    )
+    content: NonEmptyText = Field(
+        description="Message content of the prior conversation turn.",
+    )
 
 
 class RagChatRequest(BaseModel):
@@ -216,7 +225,18 @@ class RagChatRequest(BaseModel):
         description="Unique conversation session identifier.",
     )
     user_role: RagUserRole = Field(
-        description="Role of the user interacting with the chat assistant.",
+        description="Backend-verified role of the user interacting with the chat assistant.",
+    )
+    user_id: NonEmptyShortText | None = Field(
+        default=None,
+        description=(
+            "Optional backend-verified user identifier for audit and scoped read-only tools."
+        ),
+    )
+    history: list[RagChatHistoryItem] = Field(
+        default_factory=list,
+        max_length=20,
+        description="Optional recent conversation turns forwarded from Express ChatLog.",
     )
 
 
@@ -224,13 +244,38 @@ class RagSourceItem(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
     source: str = Field(
-        description="Knowledge base document name or source identifier.",
+        description="Knowledge base document name or backend operational source identifier.",
     )
     category: str = Field(
-        description="Category classification of the knowledge chunk.",
+        description="Category classification of the knowledge chunk or operational data.",
     )
-    chunk_id: str = Field(
-        description="Unique identifier of the retrieved context chunk.",
+    chunk_id: str | None = Field(
+        default=None,
+        description=(
+            "Unique identifier of the retrieved ChromaDB context chunk, if sourced from KB."
+        ),
+    )
+    version: str | None = Field(
+        default=None,
+        description="Document version metadata for PIC-validated knowledge base entries.",
+    )
+    validated_at: str | None = Field(
+        default=None,
+        description="Validation or last-updated date (YYYY-MM-DD) of the knowledge base document.",
+    )
+    validation_status: RagValidationStatus | None = Field(
+        default=None,
+        description="PIC validation status of the knowledge base document.",
+    )
+    is_verified: bool | None = Field(
+        default=None,
+        description="Boolean flag indicating whether the knowledge source is PIC-verified.",
+    )
+    reference_id: str | None = Field(
+        default=None,
+        description=(
+            "Operational record reference (e.g., orderNumber/invoiceNumber) from read-only tools."
+        ),
     )
 
 
@@ -242,10 +287,6 @@ class RagChatData(BaseModel):
     )
     is_relevant: bool = Field(
         description="Whether the inquiry belongs to the catering domain.",
-    )
-    intent: str | None = Field(
-        default=None,
-        description="Classified intent of the inquiry if applicable.",
     )
     tools_called: list[str] = Field(
         default_factory=list,

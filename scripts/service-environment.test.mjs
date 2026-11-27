@@ -15,6 +15,9 @@ const backendValues = Object.freeze({
   DOCS_ENABLED: 'true',
   WAHA_API_KEY: 'private-whatsapp-key',
   CHROMA_URL: 'http://private-chroma:8000',
+  BACKEND_API_URL: 'http://private-api:3001',
+  CHROMA_COLLECTION_NAME: 'catering_knowledge',
+  RAG_TIMEOUT_SECONDS: '15',
   AI_SERVICE_URL: 'http://private-ai:8001',
   API_BASE_URL: 'http://must-not-reach-web',
   NEXT_PUBLIC_APP_NAME: 'must-not-reach-web',
@@ -153,6 +156,9 @@ describe('service environment ownership', () => {
   test('AI receives Chroma and uv settings without Node API secrets', () => {
     const environment = createServiceEnvironment('ai', 'start', backendValues, inherited);
     expect(environment.CHROMA_URL).toBe('http://private-chroma:8000');
+    expect(environment.BACKEND_API_URL).toBe('http://private-api:3001');
+    expect(environment.CHROMA_COLLECTION_NAME).toBe('catering_knowledge');
+    expect(environment.RAG_TIMEOUT_SECONDS).toBe('15');
     expect(environment.DOCS_PASSWORD).toBe('injected-docs-password');
     expect(environment.APP_ENV).toBe('production');
     expect(environment.AI_PORT).toBe('8101');

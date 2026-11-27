@@ -13,7 +13,10 @@ VALID_APP_ENVS: Final[frozenset[str]] = frozenset({"development", "test", "produ
 ALLOWED_SETTING_KEYS: Final[frozenset[str]] = frozenset(
     {
         "APP_ENV",
+        "BACKEND_API_URL",
         "CHROMA_URL",
+        "CHROMA_COLLECTION_NAME",
+        "RAG_TIMEOUT_SECONDS",
         "DOCS_ENABLED",
         "DOCS_USERNAME",
         "DOCS_PASSWORD",
@@ -36,7 +39,10 @@ class AppSettings:
     """Immutable runtime configuration for the AI service with secret redaction."""
 
     app_env: str = "development"
+    backend_api_url: str = "http://127.0.0.1:3001"
     chroma_url: str = "http://127.0.0.1:8000"
+    chroma_collection_name: str = "catering_knowledge"
+    rag_timeout_seconds: float = 15.0
     docs_enabled_raw: str | None = None
     docs_username: str = ""
     docs_password: str = ""
@@ -54,7 +60,10 @@ class AppSettings:
     def __repr__(self) -> str:
         return (
             f"AppSettings(app_env={self.app_env!r}, "
+            f"backend_api_url={self.backend_api_url!r}, "
             f"chroma_url={self.chroma_url!r}, "
+            f"chroma_collection_name={self.chroma_collection_name!r}, "
+            f"rag_timeout_seconds={self.rag_timeout_seconds!r}, "
             f"docs_enabled_raw={self.docs_enabled_raw!r}, "
             f"docs_username={self.docs_username!r}, "
             "docs_password='[REDACTED]', "
@@ -113,12 +122,36 @@ def load_settings(
         else "development"
     )
 
+    raw_backend_api_url = merged.get("BACKEND_API_URL")
+    backend_api_url = (
+        raw_backend_api_url.strip()
+        if raw_backend_api_url is not None and raw_backend_api_url.strip() != ""
+        else "http://127.0.0.1:3001"
+    )
+
     raw_chroma_url = merged.get("CHROMA_URL")
     chroma_url = (
         raw_chroma_url.strip()
         if raw_chroma_url is not None and raw_chroma_url.strip() != ""
         else "http://127.0.0.1:8000"
     )
+
+    raw_collection = merged.get("CHROMA_COLLECTION_NAME")
+    chroma_collection_name = (
+        raw_collection.strip()
+        if raw_collection is not None and raw_collection.strip() != ""
+        else "catering_knowledge"
+    )
+
+    raw_timeout = (merged.get("RAG_TIMEOUT_SECONDS") or "").strip()
+    rag_timeout_seconds = 15.0
+    if raw_timeout:
+        try:
+            parsed_timeout = float(raw_timeout)
+            if 1.0 <= parsed_timeout <= 60.0:
+                rag_timeout_seconds = parsed_timeout
+        except ValueError:
+            rag_timeout_seconds = 15.0
 
     docs_enabled_raw = merged.get("DOCS_ENABLED")
     docs_username = merged.get("DOCS_USERNAME") or ""
@@ -146,7 +179,10 @@ def load_settings(
 
     return AppSettings(
         app_env=app_env,
+        backend_api_url=backend_api_url,
         chroma_url=chroma_url,
+        chroma_collection_name=chroma_collection_name,
+        rag_timeout_seconds=rag_timeout_seconds,
         docs_enabled_raw=docs_enabled_raw,
         docs_username=docs_username,
         docs_password=docs_password,

@@ -28,6 +28,7 @@ from app.errors import (
 )
 from app.insight.service import BusinessInsightService, build_default_insight_service
 from app.openapi import build_openapi_schema
+from app.rag.service import AgenticRagService, build_default_rag_service
 from app.responses import create_success_response
 from app.routers import v1_router
 from app.schemas import HealthData, HealthResponse
@@ -159,6 +160,7 @@ def create_app(
     env: Mapping[str, str | None] | None = None,
     env_file: Path | str | None = None,
     insight_service: BusinessInsightService | None = None,
+    rag_service: AgenticRagService | None = None,
 ) -> FastAPI:
     """Create a configured FastAPI application instance with isolated settings."""
     resolved_settings = (
@@ -177,6 +179,9 @@ def create_app(
         insight_service
         if insight_service is not None
         else build_default_insight_service(resolved_settings)
+    )
+    app.state.rag_service = (
+        rag_service if rag_service is not None else build_default_rag_service(resolved_settings)
     )
 
     register_exception_handlers(app)
