@@ -33,6 +33,8 @@ const backendValues = Object.freeze({
   MODAL_SLM_BASE_URL: 'https://modal.run/v1',
   MODAL_API_KEY: 'private-modal-key',
   MODAL_SLM_MODEL: 'qwen-2.5-7b',
+  MODAL_SLM_FALLBACK_MODEL: 'qwen-2.5-3b-awq',
+  MODAL_TIMEOUT_SECONDS: '18',
   SMTP_HOST: 'smtp.example.com',
   SMTP_PORT: '587',
   SMTP_USER: 'user@example.com',
@@ -109,6 +111,8 @@ describe('service environment ownership', () => {
       'MODAL_SLM_BASE_URL',
       'MODAL_API_KEY',
       'MODAL_SLM_MODEL',
+      'MODAL_SLM_FALLBACK_MODEL',
+      'MODAL_TIMEOUT_SECONDS',
       'UNKNOWN_SECRET',
       'UNRELATED_SECRET',
       'UV_CACHE_DIR',
@@ -137,6 +141,8 @@ describe('service environment ownership', () => {
       'MODAL_SLM_BASE_URL',
       'MODAL_API_KEY',
       'MODAL_SLM_MODEL',
+      'MODAL_SLM_FALLBACK_MODEL',
+      'MODAL_TIMEOUT_SECONDS',
       'UNKNOWN_SECRET',
       'UNRELATED_SECRET',
       'UV_CACHE_DIR',
@@ -162,6 +168,8 @@ describe('service environment ownership', () => {
     expect(environment.LLM_MODEL).toBe('gpt-4o');
     expect(environment.MODAL_API_KEY).toBe('injected-modal-key');
     expect(environment.MODAL_SLM_MODEL).toBe('qwen-2.5-7b');
+    expect(environment.MODAL_SLM_FALLBACK_MODEL).toBe('qwen-2.5-3b-awq');
+    expect(environment.MODAL_TIMEOUT_SECONDS).toBe('18');
     for (const key of [
       'DATABASE_URL',
       'WAHA_API_KEY',

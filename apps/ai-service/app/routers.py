@@ -19,6 +19,7 @@ from app.contracts import (
     SentimentPredictResponse,
 )
 from app.errors import AppProblemError
+from app.insight.service import BusinessInsightService, build_default_insight_service
 from app.ml.relevance.inference import (
     ModelArtifactMissingError,
     RelevanceClassifierService,
@@ -51,6 +52,50 @@ def get_relevance_service(request: Request) -> RelevanceClassifierService:
     service = RelevanceClassifierService()
     request.app.state.relevance_service = service
     return service
+
+
+def verify_admin_actor(request: Request) -> None:
+    """Enforce ADMIN-only RBAC for executive business insight generation.
+
+    Always rejects non-ADMIN X-Actor-Role headers with 403 Forbidden. When running in
+    production or with INTERNAL_SERVICE_SECRET configured, requires X-Actor-Role: ADMIN.
+    """
+    raw_role = request.headers.get("x-actor-role")
+    normalized_role = raw_role.strip().upper() if raw_role is not None else ""
+    if normalized_role and normalized_role != "ADMIN":
+        raise AppProblemError(
+            status_code=403,
+            detail="Only ADMIN users are authorized to generate AI Business Insights.",
+        )
+
+    settings = getattr(request.app.state, "settings", None)
+    if settings is None:
+        return
+
+    requires_strict_role = bool(getattr(settings, "internal_service_secret", "")) or (
+        getattr(settings, "app_env", "development") == "production"
+    )
+    if requires_strict_role and normalized_role != "ADMIN":
+        raise AppProblemError(
+            status_code=403,
+            detail="Missing or unauthorized X-Actor-Role header; ADMIN role is required.",
+        )
+
+
+def get_insight_service(request: Request) -> BusinessInsightService:
+    """Resolve BusinessInsightService via FastAPI dependency injection."""
+    service = getattr(request.app.state, "insight_service", None)
+    if isinstance(service, BusinessInsightService):
+        return service
+    settings = getattr(request.app.state, "settings", None)
+    if settings is None:
+        raise AppProblemError(
+            status_code=503,
+            detail="Business insight generation service is not initialized.",
+        )
+    resolved = build_default_insight_service(settings)
+    request.app.state.insight_service = resolved
+    return resolved
 
 
 v1_router = APIRouter(prefix="/api/v1")
@@ -195,12 +240,12 @@ async def rag_chat(
     response_model=InsightGenerateResponse,
     tags=["Insights"],
     summary="Generate catering operational business insights",
-    dependencies=[Depends(verify_internal_token)],
+    dependencies=[Depends(verify_internal_token), Depends(verify_admin_actor)],
 )
 async def generate_business_insights(
+    request: Request,
     payload: InsightGenerateRequest,
-) -> InsightGenerateResponse:
-    raise AppProblemError(
-        status_code=503,
-        detail="Business insight generation capability is temporarily unavailable.",
-    )
+    insight_service: BusinessInsightService = Depends(get_insight_service),  # noqa: B008
+) -> Response:
+    result = await insight_service.generate(payload, request_id=get_request_id(request))
+    return create_success_response(request, result)

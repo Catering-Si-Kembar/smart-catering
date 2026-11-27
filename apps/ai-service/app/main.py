@@ -26,6 +26,7 @@ from app.errors import (
     create_problem_response,
     register_exception_handlers,
 )
+from app.insight.service import BusinessInsightService, build_default_insight_service
 from app.ml.relevance.inference import RelevanceClassifierService
 from app.openapi import build_openapi_schema
 from app.rag.service import AgenticRagService, build_default_rag_service
@@ -160,6 +161,7 @@ def create_app(
     env: Mapping[str, str | None] | None = None,
     env_file: Path | str | None = None,
     relevance_service: RelevanceClassifierService | None = None,
+    insight_service: BusinessInsightService | None = None,
     rag_service: AgenticRagService | None = None,
 ) -> FastAPI:
     """Create a configured FastAPI application instance with isolated settings."""
@@ -177,6 +179,11 @@ def create_app(
     app.state.settings = resolved_settings
     app.state.relevance_service = (
         relevance_service if relevance_service is not None else RelevanceClassifierService()
+    )
+    app.state.insight_service = (
+        insight_service
+        if insight_service is not None
+        else build_default_insight_service(resolved_settings)
     )
     app.state.rag_service = (
         rag_service if rag_service is not None else build_default_rag_service(resolved_settings)

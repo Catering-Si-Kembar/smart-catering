@@ -148,9 +148,18 @@ _V1_EXAMPLES: Final[dict[str, dict[str, Any]]] = {
     "/api/v1/insight/generate": {
         "data": {
             "period": "November 2026",
-            "executive_summary": "Sepanjang November 2026 tercatat 38 pesanan.",
-            "key_highlights": ["Tingkat penyelesaian mencapai 89.4%."],
-            "operational_recommendations": ["Lakukan penagihan pelunasan H-1."],
+            "executive_summary": (
+                "Sepanjang November 2026 tercatat 38 pesanan dengan total omzet Rp24.500.000 "
+                "dan tingkat penyelesaian 89.5% (34 dari 38 pesanan selesai)."
+            ),
+            "key_highlights": [
+                "Tingkat penyelesaian pesanan 89.5% (34 dari 38 pesanan).",
+                "Menu terlaris Nasi Box Ayam Lengkuas sebanyak 620 porsi.",
+            ],
+            "operational_recommendations": [
+                "Lakukan penagihan pelunasan H-1 untuk 4 invoice belum lunas.",
+                "Siapkan bahan baku untuk proyeksi minggu depan sebesar 450 porsi.",
+            ],
             "model_used": "Qwen2.5-7B-Instruct-vLLM-Modal",
             "latency_ms": 3420,
             "is_fallback": False,
@@ -226,6 +235,8 @@ def _add_protocol_responses(paths: dict[str, Any]) -> dict[str, Any]:
                 responses["422"] = {"$ref": "#/components/responses/UnprocessableContentProblem"}
             if path in {"/api/v1/rag/chat", "/api/v1/insight/generate"}:
                 responses["504"] = {"$ref": "#/components/responses/GatewayTimeoutProblem"}
+            if path == "/api/v1/insight/generate":
+                responses["403"] = {"$ref": "#/components/responses/ForbiddenProblem"}
 
             success = responses.get("200", {})
             success_content = success.get("content", {}).get("application/json", {})
@@ -239,10 +250,16 @@ def _add_protocol_responses(paths: dict[str, Any]) -> dict[str, Any]:
                 for p in operation.get("parameters", [])
                 if not (
                     isinstance(p, dict)
-                    and p.get("$ref") == "#/components/parameters/RequestIdHeader"
+                    and p.get("$ref")
+                    in {
+                        "#/components/parameters/RequestIdHeader",
+                        "#/components/parameters/ActorRoleHeader",
+                    }
                 )
             ]
             existing_params.append({"$ref": "#/components/parameters/RequestIdHeader"})
+            if path == "/api/v1/insight/generate":
+                existing_params.append({"$ref": "#/components/parameters/ActorRoleHeader"})
 
             return {
                 **operation,
@@ -419,6 +436,21 @@ def build_openapi_schema(document: dict[str, Any]) -> dict[str, Any]:
                         "type": "string",
                         "format": "uuid",
                         "examples": [EXAMPLE_REQUEST_ID],
+                    },
+                },
+                "ActorRoleHeader": {
+                    "name": "X-Actor-Role",
+                    "in": "header",
+                    "required": False,
+                    "description": (
+                        "Backend-verified actor role forwarded by Express (FS-08). Required as "
+                        "`ADMIN` for `/api/v1/insight/generate` when internal authentication or "
+                        "production mode is active; non-ADMIN values are rejected with 403."
+                    ),
+                    "schema": {
+                        "type": "string",
+                        "enum": ["ADMIN"],
+                        "examples": ["ADMIN"],
                     },
                 },
                 "PageQueryParam": {
