@@ -1,25 +1,25 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --background: #f9f9f8;
+  --foreground: #21201c;
   --card: #ffffff;
-  --card-foreground: #0f172a;
+  --card-foreground: #21201c;
   --popover: #ffffff;
-  --popover-foreground: #0f172a;
-  --primary: #166534;
-  --primary-foreground: #ffffff;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
-  --muted: #f1f5f9;
-  --muted-foreground: #475569;
-  --accent: #f1f5f9;
-  --accent-foreground: #0f172a;
+  --popover-foreground: #21201c;
+  --primary: #fbcc04;
+  --primary-foreground: #21201c;
+  --secondary: #ffffff;
+  --secondary-foreground: #21201c;
+  --muted: #f1f0ef;
+  --muted-foreground: #63635e;
+  --accent: #f1f0ef;
+  --accent-foreground: #21201c;
   --destructive: #b91c1c;
   --destructive-foreground: #ffffff;
-  --border: #cbd5e1;
-  --input: #cbd5e1;
-  --ring: #1d4ed8;
+  --border: #dad9d6;
+  --input: #dad9d6;
+  --ring: #fbcc04;
   --radius: 0.5rem;
 }
 
@@ -47,20 +47,19 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
 html {
   font-family:
+    var(--font-sans),
+    Inter,
     system-ui,
     -apple-system,
     BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
     sans-serif;
-  line-height: 1.6;
+  line-height: 1.5;
   color: var(--foreground);
   background-color: var(--background);
   -webkit-font-smoothing: antialiased;
@@ -99,6 +98,9 @@ button:focus-visible,
   top: -3rem;
   left: 1rem;
   z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   padding: 0.5rem 1rem;
   background-color: var(--foreground);
   color: #ffffff;

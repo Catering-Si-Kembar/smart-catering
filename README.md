@@ -387,7 +387,9 @@ Reverse proxy, TLS, DNS, backup, rahasia, dan akses server dikelola operator. Sc
 | Dokumen                                                                            | Isi                                                     |
 | ---------------------------------------------------------------------------------- | ------------------------------------------------------- |
 | [Indeks dokumentasi](docs/README.md)                                               | Navigasi dan bukti validasi                             |
-| [PRD Fase 0](docs/PRD_FASE_0.md)                                                   | Scope dan acceptance criteria                           |
+| [PRD Utama](docs/PRD.md)                                                           | Master PRD Capstone A26-CS105                           |
+| [PRD Fase 0](docs/PRD_FASE_0.md)                                                   | Scope dan acceptance criteria fondasi awal              |
+| [Mockup UI & Desain Responsif (`FS-01`)](docs/spec/ui-mockup-fs-01.md)             | Wireframe alur layar, peta rute, dan alasan desain UI   |
 | [Spesifikasi teknis & issues](docs/spec/README.md)                                 | Indeks spesifikasi teknis dan 27 issue untuk 4 area tim |
 | [Struktur repository](docs/repository-structure.md)                                | Pemilik source, entry point, dan artefak generated      |
 | [Arsitektur](docs/architecture.md)                                                 | Diagram, boundary, kontrak API, dan topologi            |
@@ -396,6 +398,14 @@ Reverse proxy, TLS, DNS, backup, rahasia, dan akses server dikelola operator. Sc
 | [Architecture Decision Records](docs/decisions/README.md)                          | Alasan keputusan arsitektur                             |
 | [Rencana implementasi](docs/superpowers/plans/2026-11-04-fase-0-setup-monorepo.md) | Rencana Fase 0 yang diterima                            |
 | [Changelog](CHANGELOG.md)                                                          | Riwayat perubahan                                       |
+
+### Keputusan desain responsif ramah staf senior (`FS-01`)
+
+App Shell di `apps/web` dirancang khusus untuk operasional dapur **Catering Si Kembar** agar mudah digunakan staf senior di desktop (`1440×900`) maupun ponsel (`390×844`):
+
+- **Navigasi ≤ 2 ketukan:** Sidebar vertikal tetap pada desktop (`>= 1024px`) dan bottom bar 5 slot + laci menu pada mobile (`< 768px`), dengan label familiar (_Jadwal Hari Ini_, _Pesanan_, _Menu & Bahan_, _Tagihan_) dan tombol kata kerja lugas (_Simpan Pesanan_, _Hitung Bahan_, _Cetak Invoice_).
+- **Aksesibilitas & keterbacaan dapur:** Area sentuh minimal **`44×44 px`**, teks isi `16px` dengan angka `tabular-nums`, tema terang ber-kontras tinggi **WCAG AA (≥ 4.5:1)** tanpa dark mode berlebih, dan indikator status jelas (_memuat_, _berhasil_, _gagal_, serta status koneksi jaringan).
+- **Keterpisahan tampilan peran:** Menu _Tagihan_ dan _Analitik_ disembunyikan pada pratinjau peran `STAFF` (otorisasi resmi ditegakkan di backend `FS-03`). Rincian wireframe dan tabel alasan desain tersedia di [Mockup UI & Desain Responsif (`FS-01`)](docs/spec/ui-mockup-fs-01.md).
 
 ## Kontribusi
 
