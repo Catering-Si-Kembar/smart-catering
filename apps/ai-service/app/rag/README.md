@@ -26,7 +26,7 @@ Request (/api/v1/rag/chat)
 
 - `schemas.py`: Domain model Pydantic strict (`RelevanceDecision`, `KnowledgeChunk`, `OperationalToolResult`, `LLMResponse`, `AgentContext`, `RetrievalEvalSample`, `RetrievalEvalReport`).
 - `ports.py`: Protocol/Interface (_Dependency Inversion_) untuk classifier `AI-02`, ChromaDB `AI-04`, Express read-only backend `FS-07`, dan API LLM.
-- `guardrails.py`: Deteksi _prompt injection_, _SQL injection/SQL bebas_, eksfiltrasi kredensial, sanitasi _indirect injection_ + delimiter `<TOOL_OUTPUT>`, audit logger JSON (`smart_catering.ai_service.security`), dan `DomainRelevanceClassifier` (memuat artefak `AI-02` `joblib` bila ada dengan fallback deterministik).
+- `guardrails.py`: Deteksi _prompt injection_, _SQL injection/SQL bebas_, eksfiltrasi kredensial, sanitasi _indirect injection_ + delimiter `<TOOL_OUTPUT>`, audit logger JSON (`smart_catering.ai_service.security`), dan `DomainRelevanceClassifier` (terintegrasi dengan `RelevanceClassifierService` dual-artifact `AI-02`: joblib + portable JSON dengan threshold `0.60` dan fallback deterministik).
 - `prompts.py`: System prompt terstruktur, contoh _few-shot_ (tanpa klasifikasi intent), dan pesan respons standar.
 - `tools.py`: `ToolRegistry` berbasis allowlist (4 read-only tools) mendukung OpenAI tool schema dan `langchain_core.tools.StructuredTool`.
 - `adapters.py`: Adapter konkret `ChromaKnowledgeBaseAdapter`, `ExpressReadOnlyToolsAdapter` (HTTP `GET` only), dan `OpenAICompatibleLLMClient` (API LLM proprietary saja; tidak pernah mengalihkan RAG ke SLM Modal GPU).
@@ -40,7 +40,7 @@ Request (/api/v1/rag/chat)
 
 ## Hasil Evaluasi Otomatis (`AI-05`)
 
-> **Catatan Transparansi:** Evaluasi berikut dijalankan pada suite otomatis `tests/test_agentic_rag.py` (dengan runtime live `langgraph==1.2.19` & `langchain-core==1.7.5`). Pengujian live penuh terhadap koleksi ChromaDB tervalidasi PIC, model `joblib` latih sendiri, dan endpoint Express read-only akan divalidasi ulang setelah `AI-02`, `AI-04`, dan `FS-07` selesai terintegrasi.
+> **Catatan Transparansi:** Evaluasi berikut dijalankan pada suite otomatis `tests/test_agentic_rag.py` (dengan runtime live `langgraph==1.2.19` & `langchain-core==1.7.5`). `DomainRelevanceClassifier` kini terintegrasi langsung dengan `RelevanceClassifierService` dual-artifact `AI-02` (joblib + portable JSON) dengan serving threshold `0.60`. Pengujian live penuh terhadap koleksi ChromaDB tervalidasi PIC dan endpoint Express read-only akan divalidasi ulang setelah `AI-04` dan `FS-07` selesai terintegrasi.
 
 ### 1. Evaluasi Retrieval `Hit@3` & Kelengkapan 4 Metadata PIC
 

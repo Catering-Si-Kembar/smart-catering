@@ -241,7 +241,10 @@ def get_rag_service(request: Request) -> AgenticRagService:
             status_code=503,
             detail="RAG chat assistant service is not initialized.",
         )
-    resolved = build_default_rag_service(settings)
+    resolved = build_default_rag_service(
+        settings,
+        relevance_service=get_relevance_service(request),
+    )
     request.app.state.rag_service = resolved
     return resolved
 

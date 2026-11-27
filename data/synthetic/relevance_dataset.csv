@@ -1,440 +1,482 @@
 id,text,label,category,is_synthetic,split
-rel_syn_0001,Apakah tim katering menyediakan tempat sampah dan kantong plastik di lokasi?,relevant,sop_kebijakan,true,train
-rel_syn_0002,Mau pesan karangan bunga ucapan selamat atas pembukaan toko baru rekan.,out_of_domain,hard_negatives,true,train
-rel_syn_0003,Berapa harga paket nasi kuning ulang tahun anak per pack?,relevant,harga_porsi,true,train
-rel_syn_0004,Apakah tim katering prasmanan standby di lokasi selama acara berlangsung?,relevant,jadwal_delivery,true,train
-rel_syn_0005,Tolong rekomendasi paket nasi box budget 25 ribu dengan lauk ayam goreng.,relevant,menu_paket,true,train
-rel_syn_0006,Tolong kirimkan katalog paket nasi box reguler dan VIP Catering Si Kembar.,relevant,menu_paket,true,train
-rel_syn_0007,Bisa pesan tumpeng karakter kartun untuk ulang tahun anak pertama?,relevant,menu_paket,true,train
-rel_syn_0008,Apakah air minum kemasan cup atau botol sudah include dalam paket katering?,relevant,sop_kebijakan,true,train
-rel_syn_0009,Apakah ada diskon potongan harga untuk pelanggan langganan mingguan?,relevant,harga_porsi,true,train
-rel_syn_0010,Apakah kurir katering mengantarkan nasi box langsung ke lantai 5 kantor?,relevant,jadwal_delivery,true,train
-rel_syn_0011,Apakah armada katering dilengkapi pemanas makanan agar sajian tetap hangat?,relevant,jadwal_delivery,true,train
-rel_syn_0012,"Bagaimana jika kami membatalkan pesanan, apakah DP dipotong separuh?",relevant,pembayaran,true,train
-rel_syn_0013,Berapa harga tumpeng tampah besar ukuran porsi 50 orang?,relevant,harga_porsi,true,train
-rel_syn_0014,Apakah pelunasan katering wajib dilakukan maksimal H-1 sebelum acara?,relevant,pembayaran,true,train
-rel_syn_0015,Bisa minta bumbu sambal dipisah agar anak-anak bisa makan lauknya?,relevant,sop_kebijakan,true,train
-rel_syn_0016,Kapan film animasi sekuel produksi studio Pixar mulai tayang di bioskop?,out_of_domain,sastra_hiburan,true,train
-rel_syn_0017,Siapa menteri koordinator bidang perekonomian yang dilantik presiden kabinet baru?,out_of_domain,politik_pemerintahan,true,train
-rel_syn_0018,Bisa minta surat keterangan laik higiene sanitasi jasaboga dari dinkes?,relevant,sop_kebijakan,true,train
-rel_syn_0019,Bagaimana pertolongan pertama pada korban yang mengalami henti jantung mendadak?,out_of_domain,kesehatan_medis,true,train
-rel_syn_0020,Apa perbedaan mitosis dan meiosis dalam pembelahan sel makhluk hidup?,out_of_domain,sains_matematika,true,train
-rel_syn_0021,Apa sungai terpanjang di benua afrika yang mengalir melintasi sebelas negara?,out_of_domain,sejarah_geografi,true,train
-rel_syn_0022,Berapa durasi tidur malam yang ideal bagi kesehatan mental dan fisik orang dewasa?,out_of_domain,kesehatan_medis,true,train
-rel_syn_0023,Kapan kurir katering mengonfirmasi estimasi waktu tiba di lokasi pengiriman?,relevant,jadwal_delivery,true,train
-rel_syn_0024,Berapa biaya katering nasi box sehat rendah kolesterol 40 porsi?,relevant,harga_porsi,true,train
-rel_syn_0025,Apa fungsi hooks useEffect dan useMemo pada framework frontend React?,out_of_domain,programming_tech,true,train
-rel_syn_0026,klo mau sewa gubukan siomay aja 100 porsi bs gak min,relevant,informal_wa,true,train
-rel_syn_0027,Apa manfaat asupan vitamin D dan kalsium untuk menjaga kepadatan massa tulang?,out_of_domain,kesehatan_medis,true,train
-rel_syn_0028,Bagaimana proses terbentuknya badai siklon tropis di perairan samudra hindia?,out_of_domain,cuaca,true,train
-rel_syn_0029,Berapa biaya tambahan untuk kemasan nasi box custom sablon logo kantor?,relevant,harga_porsi,true,train
-rel_syn_0030,Berapa biaya tambahan bila memesan nasi box dengan wadah bento sekat?,relevant,harga_porsi,true,train
-rel_syn_0031,Kami ingin tumpeng robyong untuk ritual adat syukuran rumah baru.,relevant,menu_paket,true,train
-rel_syn_0032,Bagaimana cara membatalkan langganan aplikasi streaming musik di ponsel pintar?,out_of_domain,hard_negatives,true,train
-rel_syn_0033,Bisa pesan snack box sehat isi roti gandum dan buah potong segar?,relevant,menu_paket,true,train
-rel_syn_0034,Apa dampak kenaikan tarif pajak pertambahan nilai terhadap daya beli masyarakat?,out_of_domain,politik_pemerintahan,true,train
-rel_syn_0035,Bagaimana prosedur menutup kartu kredit perbankan tanpa dikenakan denda tahunan?,out_of_domain,hard_negatives,true,train
-rel_syn_0036,Bagaimana SOP penanganan makanan sisa prasmanan yang belum tersentuh tamu?,relevant,sop_kebijakan,true,train
-rel_syn_0037,Apakah peralatan makan katering seperti piring dan sendok dicuci higienis?,relevant,sop_kebijakan,true,train
-rel_syn_0038,Bagaimana cara menyelesaikan persamaan diferensial linier orde satu non-homogen?,out_of_domain,sains_matematika,true,train
-rel_syn_0039,Bagaimana kebijakan jika ada pengurangan atau penambahan jumlah porsi katering?,relevant,sop_kebijakan,true,train
-rel_syn_0040,Tersedia paket nasi tumpeng putih gurih untuk syukuran aqiqah bayi?,relevant,menu_paket,true,train
-rel_syn_0041,Bagaimana cara mencegah penularan penyakit tuberkulosis paru di lingkungan keluarga?,out_of_domain,kesehatan_medis,true,train
-rel_syn_0042,min tumpeng tampah buat 25 org bs kirim sabtu pagi jam 8 gak,relevant,informal_wa,true,train
-rel_syn_0043,Apakah jadwal pengantaran nasi box bisa dijadwalkan setiap hari kerja?,relevant,jadwal_delivery,true,train
-rel_syn_0044,Bisa ubah jadwal pengantaran makan siang dari jam 12 jadi jam 11 siang?,relevant,jadwal_delivery,true,train
-rel_syn_0045,Apa isi pokok naskah proklamasi kemerdekaan Republik Indonesia 17 Agustus 1945?,out_of_domain,politik_pemerintahan,true,train
-rel_syn_0046,Batas akhir konfirmasi bukti pembayaran DP pesanan katering tanggal berapa?,relevant,pembayaran,true,train
-rel_syn_0047,Bisa ceritakan dongeng fabel kancil dan buaya yang cerdik untuk anak?,out_of_domain,sastra_hiburan,true,train
-rel_syn_0048,Saya mau pesan jasa teknisi cuci dan servis AC ruangan pendingin tiga unit.,out_of_domain,hard_negatives,true,train
-rel_syn_0049,Berapa harga sewa alat makan tambahan jika tamu prasmanan bertambah?,relevant,harga_porsi,true,train
-rel_syn_0050,Bagaimana peran perwakilan diplomasi Indonesia di forum sidang umum PBB?,out_of_domain,politik_pemerintahan,true,train
-rel_syn_0051,Berapa hari lead time minimal untuk pemesanan katering prasmanan 200 pax?,relevant,jadwal_delivery,true,train
-rel_syn_0052,Bagaimana cara meredakan gejala asam lambung gerd yang kambuh di malam hari?,out_of_domain,kesehatan_medis,true,train
-rel_syn_0053,Kami butuh nasi box isi rendang daging dan perkedel untuk 80 orang.,relevant,menu_paket,true,train
-rel_syn_0054,Apakah instrumen pasar uang cocok untuk menyimpan dana darurat keluarga?,out_of_domain,finansial_kripto,true,train
-rel_syn_0055,Apa saja gejala klinis demam berdarah dengue akibat gigitan nyamuk Aedes aegypti?,out_of_domain,kesehatan_medis,true,train
-rel_syn_0056,Apakah katering melayani sertifikasi bebas babi dan minyak non-halal?,relevant,sop_kebijakan,true,train
-rel_syn_0057,Bisa request menu tumpeng mini untuk syukuran wisuda anak?,relevant,menu_paket,true,train
-rel_syn_0058,Bagaimana cara membuat schema migration database menggunakan Alembic di Python?,out_of_domain,programming_tech,true,train
-rel_syn_0059,Tersedia paket nasi kuning box untuk acara peresmian kantor cabang baru?,relevant,menu_paket,true,train
-rel_syn_0060,klo mau nambah porsi prasmanan pas hari h msh bs dilayani gak min,relevant,informal_wa,true,train
-rel_syn_0061,Berapa harga paket prasmanan mewah lauk lidah sapi dan sup iga?,relevant,harga_porsi,true,train
-rel_syn_0062,Tolong info paket makan siang harian untuk karyawan pabrik 50 porsi.,relevant,menu_paket,true,train
-rel_syn_0063,Kapan jadwal praktek dokter spesialis anak di rumah sakit Hermina pasteur?,out_of_domain,hard_negatives,true,train
-rel_syn_0064,Siapakah klub sepak bola yang menjuarai kompetisi Liga Champions Eropa musim lalu?,out_of_domain,olahraga,true,train
-rel_syn_0065,Bagaimana aturan pergantian pemain cadangan pada pertandingan sepak bola resmi FIFA?,out_of_domain,olahraga,true,train
-rel_syn_0066,Bagaimana aturan penentuan pemenang adu tendangan penalti dalam laga knockout turnamen?,out_of_domain,olahraga,true,train
-rel_syn_0067,Apakah ada variasi menu ikan gurame asam manis di paket prasmanan?,relevant,menu_paket,true,train
-rel_syn_0068,Berapa total estimasi belanja nasi box 300 pax untuk konferensi nasional?,relevant,harga_porsi,true,train
-rel_syn_0069,min porsi nasi tumpeng nya apa nampung buat org dewasa kenyang,relevant,informal_wa,true,train
-rel_syn_0070,Berapa harga tumpeng jajan pasar tradisional untuk perayaan 17 agustus?,relevant,harga_porsi,true,train
-rel_syn_0071,Bagaimana teknik akting teater monolog membawakan emosi karakter protagonis?,out_of_domain,sastra_hiburan,true,train
-rel_syn_0072,Siapakah pahlawan nasional dari Maluku yang memimpin perlawanan benteng Duurstede?,out_of_domain,sejarah_geografi,true,train
-rel_syn_0073,Apakah ada pilihan menu vegetarian atau sayuran dalam paket prasmanan?,relevant,menu_paket,true,train
-rel_syn_0074,Apakah koki dan staf dapur katering menerapkan standar higienitas GMP?,relevant,sop_kebijakan,true,train
-rel_syn_0075,Apakah ada jaminan uang kembali jika pesanan katering tidak sesuai kesepakatan?,relevant,sop_kebijakan,true,train
-rel_syn_0076,Bisa pesan nasi tumpeng kuning komplit untuk perayaan ulang tahun kantor?,relevant,menu_paket,true,train
-rel_syn_0077,blh minta katalog foto paket prasmanan dekorasi sunda min,relevant,informal_wa,true,train
-rel_syn_0078,Menu ayam geprek sambal bawang apakah tersedia untuk pilihan nasi box?,relevant,menu_paket,true,train
-rel_syn_0079,Bagaimana mekanisme pengajuan rancangan undang-undang dalam sidang paripurna DPR?,out_of_domain,politik_pemerintahan,true,train
-rel_syn_0080,Bagaimana ketentuan denda jika pelunasan katering melewati jatuh tempo?,relevant,pembayaran,true,train
-rel_syn_0081,Bagaimana proses fotosintesis menghasilkan oksigen dan glukosa pada kloroplas daun?,out_of_domain,sains_matematika,true,train
-rel_syn_0082,Bagaimana cara setup CI CD pipeline menggunakan GitHub Actions untuk deploy aplikasi?,out_of_domain,programming_tech,true,train
-rel_syn_0083,Siapa atlet renang gaya bebas yang memecahkan rekor dunia di olimpiade musim panas?,out_of_domain,olahraga,true,train
-rel_syn_0084,"Kami ingin pesan snack box isi lemper ayam, pastel, dan bolu gulung.",relevant,menu_paket,true,train
-rel_syn_0085,Bagaimana cara pembayaran katering via QRIS atau virtual account?,relevant,pembayaran,true,train
-rel_syn_0086,Berapa harga sewa lapangan futsal rumput sintetis per jam di akhir pekan?,out_of_domain,hard_negatives,true,train
-rel_syn_0087,Apa strategi diversifikasi portofolio reksadana pendapatan tetap dan reksadana saham?,out_of_domain,finansial_kripto,true,train
-rel_syn_0088,Tolong jelaskan arsitektur Transformer dan mekanisme self-attention pada LLM.,out_of_domain,programming_tech,true,train
-rel_syn_0089,Bagaimana mekanisme replikasi rantai DNA pada inti sel eukariotik?,out_of_domain,sains_matematika,true,train
-rel_syn_0090,Berapa biaya paket prasmanan sederhana lauk ayam bakar dan capcay?,relevant,harga_porsi,true,train
-rel_syn_0091,Kapan awal musim hujan diperkirakan melanda pulau Jawa menurut rilis BMKG?,out_of_domain,cuaca,true,train
-rel_syn_0092,Apakah sendok garpu dan tisu sudah disediakan lengkap di setiap nasi box?,relevant,sop_kebijakan,true,train
-rel_syn_0093,Berapa tarif ongkir kirim paket kilat dokumen satu hari sampai antar kota?,out_of_domain,hard_negatives,true,train
-rel_syn_0094,Siapa aktor pemeran utama superhero laba-laba dalam trilogi film hollywood?,out_of_domain,sastra_hiburan,true,train
-rel_syn_0095,Bagaimana proses penghitungan suara pemilu legislatif dengan metode Sainte-Lague?,out_of_domain,politik_pemerintahan,true,train
-rel_syn_0096,Kapan batas waktu pelunasan sisa pembayaran pesanan katering prasmanan?,relevant,pembayaran,true,train
-rel_syn_0097,Apakah invoice katering bisa dikirim via email berformat PDF?,relevant,pembayaran,true,train
-rel_syn_0098,Berapa tinggi puncak gunung Everest di pegunungan Himalaya dari permukaan laut?,out_of_domain,sejarah_geografi,true,train
-rel_syn_0099,Berapa harga porsi prasmanan khitanan anak include meja dan dekorasi?,relevant,harga_porsi,true,train
-rel_syn_0100,Paket kursus intensif persiapan ujian TOEFL di lembaga bahasa biayanya berapa?,out_of_domain,hard_negatives,true,train
-rel_syn_0101,hrg paket nasi liwet komplit brp ya kl buat 40 porsi,relevant,informal_wa,true,train
-rel_syn_0102,Jadwal bus bandara DAMRI rute terminal Soekarno Hatta menuju pusat kota jam berapa?,out_of_domain,hard_negatives,true,train
-rel_syn_0103,Bisa pesan nasi liwet pincuk untuk gathering komunitas di taman?,relevant,menu_paket,true,train
-rel_syn_0104,Apakah disediakan wadah take away untuk sisa makanan prasmanan resepsi?,relevant,sop_kebijakan,true,train
-rel_syn_0105,Bagaimana analisis indikator moving average convergence divergence MACD pada grafik?,out_of_domain,finansial_kripto,true,train
-rel_syn_0106,Berapa harga paket snack box manis dan asin untuk seminar kampus?,relevant,menu_paket,true,train
-rel_syn_0107,Berapa biaya tambahan jika ingin menambah menu gubukan sate 100 porsi?,relevant,harga_porsi,true,train
-rel_syn_0108,Berapa harga tumpeng mini per box kalau pesan 60 porsi?,relevant,harga_porsi,true,train
-rel_syn_0109,Bagaimana teknik servis smash menukik yang efektif pada permainan bola voli?,out_of_domain,olahraga,true,train
-rel_syn_0110,Bagaimana sejarah transisi pemerintahan orde lama menuju orde baru di Indonesia?,out_of_domain,politik_pemerintahan,true,train
-rel_syn_0111,nasi box nya apa udh dpt sendok garpu sm tisu dlm kotaknya min,relevant,informal_wa,true,train
-rel_syn_0112,Bagaimana cara menghitung determinan dan invers matriks ordo tiga kali tiga?,out_of_domain,sains_matematika,true,train
-rel_syn_0113,Apakah ada biaya charge tambahan jika membayar invoice katering via kartu kredit?,relevant,pembayaran,true,train
-rel_syn_0114,Apakah menu gado gado pengantin bisa disajikan di buffet prasmanan?,relevant,menu_paket,true,train
-rel_syn_0115,Tolong jelaskan algoritma pencarian binary search beserta kompleksitas waktu Big-O.,out_of_domain,programming_tech,true,train
-rel_syn_0116,Berapa harga paket makan malam prasmanan untuk gathering keluarga 60 pax?,relevant,harga_porsi,true,train
-rel_syn_0117,Bagaimana hukum Kepler ketiga menjelaskan periode orbit planet mengelilingi matahari?,out_of_domain,sains_matematika,true,train
-rel_syn_0118,Bagaimana syarat pengajuan term of payment 14 hari untuk instansi BUMN?,relevant,pembayaran,true,train
-rel_syn_0119,Menu sayur sop bakso apakah bisa diganti lodeh dalam paket prasmanan?,relevant,menu_paket,true,train
-rel_syn_0120,Bisa sediakan paket gubukan siomay bandung dan bakso malang?,relevant,menu_paket,true,train
-rel_syn_0121,Bagaimana mekanisme transaksi obligasi negara ritel ORI bagi investor perorangan?,out_of_domain,finansial_kripto,true,train
-rel_syn_0122,Berapa estimasi biaya servis motor matic berkala di bengkel resmi?,out_of_domain,hard_negatives,true,train
-rel_syn_0123,Berapakah nilai konstanta gravitasi universal menurut hukum gravitasi Newton?,out_of_domain,sains_matematika,true,train
-rel_syn_0124,Bisa request makanan katering tanpa bahan pengawet dan micin berlebih?,relevant,sop_kebijakan,true,train
-rel_syn_0125,Bisa request jam tiba pengantaran nasi box tepat sebelum briefing peserta?,relevant,jadwal_delivery,true,train
-rel_syn_0126,Berapa biaya perpanjangan surat izin mengemudi SIM C di mobil keliling?,out_of_domain,hard_negatives,true,train
-rel_syn_0127,Bagaimana ketentuan denda jika peralatan katering pecah atau hilang saat acara?,relevant,sop_kebijakan,true,train
-rel_syn_0128,Apa perbedaan sistem presidensial dengan sistem parlementer di negara demokrasi?,out_of_domain,politik_pemerintahan,true,train
-rel_syn_0129,Kami butuh paket nasi liwet sunda lengkap dengan tahu tempe dan sambal.,relevant,menu_paket,true,train
-rel_syn_0130,Bagaimana kebijakan penggantian jika ada kotak nasi yang rusak saat perjalanan?,relevant,sop_kebijakan,true,train
-rel_syn_0131,Berapakah kecepatan rambat cahaya di ruang hampa udara dalam meter per detik?,out_of_domain,sains_matematika,true,train
-rel_syn_0132,Bisa pesan catering prasmanan mendadak H-1 jika menu standar?,relevant,jadwal_delivery,true,train
-rel_syn_0133,Bisa cetak kwitansi fisik dengan stempel basah Catering Si Kembar?,relevant,pembayaran,true,train
-rel_syn_0134,Bagaimana cara meminta pengembalian kelebihan transfer dana pembayaran katering?,relevant,pembayaran,true,train
-rel_syn_0135,Berapa tingkat kelembaban udara dan kecepatan hembusan angin di bandara hari ini?,out_of_domain,cuaca,true,train
-rel_syn_0136,Apakah pengiriman katering prasmanan ke gedung resepsi sudah punya surat jalan?,relevant,jadwal_delivery,true,train
-rel_syn_0137,Apa perbedaan microservices architecture dengan monolithic architecture pada software?,out_of_domain,programming_tech,true,train
-rel_syn_0138,klo rubah jumlah pesanan h-2 sblm acara msh blh gak ya,relevant,informal_wa,true,train
-rel_syn_0139,Apakah sambal goreng ati kentang termasuk dalam lauk paket prasmanan?,relevant,menu_paket,true,train
-rel_syn_0140,min mau tny apa sewa alat makan prasmanan udh free biaya cuci,relevant,informal_wa,true,train
-rel_syn_0141,Bagaimana prosedur pembatalan tiket pesawat terbang domestik agar dapat refund?,out_of_domain,hard_negatives,true,train
-rel_syn_0142,Bagaimana konfirmasi jadwal jika pengantaran katering dibagi ke dua gedung berbeda?,relevant,jadwal_delivery,true,train
-rel_syn_0143,Tolong buatkan sinopsis film drama petualangan fiksi ilmiah luar angkasa.,out_of_domain,sastra_hiburan,true,train
-rel_syn_0144,Tolong rincian rekening bank BNI atau BRI untuk pembayaran tagihan nasi box.,relevant,pembayaran,true,train
-rel_syn_0145,Kami mau paket prasmanan gathering alumni 100 pax menu nusantara.,relevant,menu_paket,true,train
-rel_syn_0146,Berapa selisih harga antara paket nasi box hemat dan paket komplit?,relevant,harga_porsi,true,train
-rel_syn_0147,Bagaimana tren inflasi bulanan mempengaruhi keputusan investasi di pasar modal?,out_of_domain,finansial_kripto,true,train
-rel_syn_0148,Apa saja pantangan makan bagi pasien yang menderita asam urat tinggi?,out_of_domain,kesehatan_medis,true,train
-rel_syn_0149,Apakah invoice pesanan katering bisa mencantumkan nomor PO pengadaan kantor?,relevant,pembayaran,true,train
-rel_syn_0150,Tolong konfirmasi apakah transfer pembayaran pelunasan pesanan katering sudah masuk.,relevant,pembayaran,true,train
-rel_syn_0151,Berapa jumlah anggota Dewan Perwakilan Rakyat Republik Indonesia periode sekarang?,out_of_domain,politik_pemerintahan,true,train
-rel_syn_0152,Bagaimana SOP kebersihan pengolahan makanan dan sanitasi dapur katering?,relevant,sop_kebijakan,true,train
-rel_syn_0153,Siapa pemain sepak bola peraih penghargaan Ballon d'Or terbanyak sepanjang sejarah?,out_of_domain,olahraga,true,train
-rel_syn_0154,Bagaimana struktur komisi pemilihan umum dan bawaslu dalam menyelenggarakan pemilu?,out_of_domain,politik_pemerintahan,true,train
-rel_syn_0155,Apakah ada biaya minimum transaksi untuk pesan catering makan siang?,relevant,harga_porsi,true,train
-rel_syn_0156,halo min blh tny paket coffee break utk workshop 2 hari,relevant,informal_wa,true,train
-rel_syn_0157,Apakah wadah prasmanan roll top chating dish selalu dipanaskan selama acara?,relevant,sop_kebijakan,true,train
-rel_syn_0158,blh minta rek mandiri utk transfer pelunasan invoice catering,relevant,informal_wa,true,train
-rel_syn_0159,Apakah ada biaya administrasi tambahan untuk pembayaran lewat transfer bank?,relevant,pembayaran,true,train
-rel_syn_0160,Bisa pesan katering nasi box untuk dikirim ke rumah duka malam ini?,relevant,jadwal_delivery,true,train
-rel_syn_0161,halo min mau tanya paket prasmanan nikahan paling murah brp,relevant,informal_wa,true,train
-rel_syn_0162,brp no wa kurir katering yg anter nasi box ke gedung dinas,relevant,informal_wa,true,train
-rel_syn_0163,Bagaimana pembagian kewenangan antara pemerintah pusat dan pemerintah daerah otonom?,out_of_domain,politik_pemerintahan,true,train
-rel_syn_0164,Bagaimana tata cara penjadwalan test food menu katering sebelum pernikahan?,relevant,sop_kebijakan,true,train
-rel_syn_0165,Tolong jelaskan sifat dualisme gelombang partikel foton dalam mekanika kuantum.,out_of_domain,sains_matematika,true,train
-rel_syn_0166,Berapa skor akhir pertandingan final turnamen bulutangkis All England kemarin malam?,out_of_domain,olahraga,true,train
-rel_syn_0167,Jadwal keberangkatan kereta api cepat Whoosh stasiun Halim sore ini jam berapa?,out_of_domain,hard_negatives,true,train
-rel_syn_0168,Apakah jadwal penerbangan maskapai Garuda ke Bali besok pagi tepat waktu?,out_of_domain,hard_negatives,true,train
-rel_syn_0169,Apakah pengantaran nasi box untuk acara car free day bisa masuk area pagi hari?,relevant,jadwal_delivery,true,train
-rel_syn_0170,blh minta tester makanan katering dl gak sblm fiks pesen,relevant,informal_wa,true,train
-rel_syn_0171,Berapa estimasi biaya renovasi genteng atap rumah yang bocor di musim hujan?,out_of_domain,hard_negatives,true,train
-rel_syn_0172,Bagaimana konfigurasi Dockerfile multi-stage build untuk memperkecil image Python?,out_of_domain,programming_tech,true,train
-rel_syn_0173,min menu sop kimlo apa bs diganti soto bandung di prasmanan,relevant,informal_wa,true,train
-rel_syn_0174,Apakah ada paket tour wisata liburan ke Jepang lima hari empat malam?,out_of_domain,hard_negatives,true,train
-rel_syn_0175,tlg cek transferan dp katering an budi santoso udh masuk blm ya,relevant,informal_wa,true,train
-rel_syn_0176,Bisa minta nomor kontak supir atau kurir yang mengantar katering hari ini?,relevant,jadwal_delivery,true,train
-rel_syn_0177,Bisa pesan nasi tumpeng H-2 sebelum hari syukuran peresmian?,relevant,jadwal_delivery,true,train
-rel_syn_0178,Bagaimana cara menghitung rasio price to earnings ratio pada saham emiten perbankan?,out_of_domain,finansial_kripto,true,train
-rel_syn_0179,Apakah lauk ayam rica rica sangat pedas atau bisa disesuaikan levelnya?,relevant,menu_paket,true,train
-rel_syn_0180,Berapa kisaran harga nasi box lauk rendang sapi untuk makan siang?,relevant,harga_porsi,true,train
-rel_syn_0181,blh minta rincian menu prasmanan yg halal dan hrg per porsinya,relevant,informal_wa,true,train
-rel_syn_0182,Bagaimana pergerakan nilai tukar rupiah terhadap dollar di pasar spot valuta asing?,out_of_domain,finansial_kripto,true,train
-rel_syn_0183,Berapa harga porsi catering diet sehat langganan dua minggu?,relevant,harga_porsi,true,train
-rel_syn_0184,Menu ayam bakar bumbu rujak apakah tersedia dalam paket hemat kantor?,relevant,menu_paket,true,train
-rel_syn_0185,Berapa jarak lari maraton standar internasional yang wajib ditempuh pelari?,out_of_domain,olahraga,true,train
-rel_syn_0186,Bagaimana aturan pengembalian piring dan sendok prasmanan yang hilang?,relevant,sop_kebijakan,true,train
-rel_syn_0187,Berapa harga per porsi paket prasmanan standar dan paket premium?,relevant,harga_porsi,true,train
-rel_syn_0188,Bagaimana cara membuat fungsi asynchronous di JavaScript dengan async await?,out_of_domain,programming_tech,true,train
-rel_syn_0189,Apakah pelanggan boleh membawa makanan luar untuk digabung dengan prasmanan?,relevant,sop_kebijakan,true,train
-rel_syn_0190,Apakah pembayaran catering bisa melalui transfer bank BCA atau Mandiri?,relevant,pembayaran,true,train
-rel_syn_0191,Berapa harga sewa kamar apartemen studio bulanan di kawasan Jakarta Selatan?,out_of_domain,hard_negatives,true,train
-rel_syn_0192,Berapa kadar kolesterol total yang dianjurkan dalam hasil pemeriksaan darah?,out_of_domain,kesehatan_medis,true,train
-rel_syn_0193,Bisa pesan nasi box lauk empal gentong dan sambal terasi segar?,relevant,menu_paket,true,train
-rel_syn_0194,Apakah menerima pembayaran katering dengan sistem uang muka bertahap?,relevant,pembayaran,true,train
-rel_syn_0195,Apakah semua menu makanan di Catering Si Kembar dijamin 100 persen halal?,relevant,sop_kebijakan,true,train
-rel_syn_0196,Apakah Catering Si Kembar menyediakan menu rendang daging sapi empuk?,relevant,menu_paket,true,train
-rel_syn_0197,Apakah bisa bayar DP katering 50 persen dulu dan sisanya setelah acara?,relevant,pembayaran,true,train
-rel_syn_0198,Bisa minta invoice resmi dan kwitansi bermaterai untuk klaim kantor?,relevant,pembayaran,true,train
-rel_syn_0199,Berapa estimasi biaya makan siang prasmanan 80 staf kantor sebulan?,relevant,harga_porsi,true,train
-rel_syn_0200,Berapa minimal order menu gubukan dimsum dan es doger?,relevant,harga_porsi,true,train
-rel_syn_0201,Bagaimana cara pesan tiket bioskop secara online lewat aplikasi smartphone?,out_of_domain,hard_negatives,true,train
-rel_syn_0202,Apa arti majas personifikasi dan metafora dalam sebuah karya sastra puisi?,out_of_domain,sastra_hiburan,true,train
-rel_syn_0203,Berapa estimasi harga katering nasi box untuk study tour 4 bus sekolah?,relevant,harga_porsi,true,train
-rel_syn_0204,Apakah Catering Si Kembar punya paket prasmanan buka puasa bersama?,relevant,menu_paket,true,train
-rel_syn_0205,Siapa penulis naskah drama panggung legendaris Romeo and Juliet dari Inggris?,out_of_domain,sastra_hiburan,true,train
-rel_syn_0206,Apakah pengiriman nasi box ke gedung pertemuan di Bandung gratis ongkir?,relevant,jadwal_delivery,true,train
-rel_syn_0207,halo min catering si kembar hari minggu ttp buka delivery kan,relevant,informal_wa,true,train
-rel_syn_0208,Kami butuh nasi box isi ayam kalasan dan tempe orek 120 kotak.,relevant,menu_paket,true,train
-rel_syn_0209,Kapan invoice pelunasan nasi box diterbitkan setelah pesanan diantar?,relevant,pembayaran,true,train
-rel_syn_0210,Kapan batas waktu konfirmasi perubahan alamat pengiriman katering?,relevant,jadwal_delivery,true,train
-rel_syn_0211,Berapa minimal order paket prasmanan luar kota seperti Cimahi?,relevant,harga_porsi,true,train
-rel_syn_0212,Estimasi biaya pemasangan instalasi listrik rumah daya dua ribu dua ratus volt ampere.,out_of_domain,hard_negatives,true,train
-rel_syn_0213,Minimal order tumpeng ulang tahun apakah bisa untuk 20 orang saja?,relevant,harga_porsi,true,train
-rel_syn_0214,Berapa harga satu porsi menu hidangan penutup es krim dan buah?,relevant,harga_porsi,true,train
-rel_syn_0215,Bagaimana struktur ikatan kimia kovalen koordinasi pada senyawa kompleks?,out_of_domain,sains_matematika,true,train
-rel_syn_0216,Berapa minimum pemesanan gubukan bakso untuk pelengkap prasmanan?,relevant,harga_porsi,true,train
-rel_syn_0217,Apakah menu ayam goreng serundeng tersedia untuk pesanan 150 porsi?,relevant,menu_paket,true,train
-rel_syn_0218,Apakah paket prasmanan seminar sudah termasuk air mineral galon dan dispenser?,relevant,menu_paket,true,train
-rel_syn_0219,Bagaimana prosedur pengantaran makanan katering saat cuaca hujan lebat?,relevant,jadwal_delivery,true,train
-rel_syn_0220,Tolong info daftar menu prasmanan khas sunda untuk hajatan keluarga.,relevant,menu_paket,true,train
-rel_syn_0221,Berapa batas waktu paling lambat pemesanan tumpeng mini untuk akhir pekan?,relevant,jadwal_delivery,true,train
-rel_syn_0222,Berapa biaya paket prasmanan syukuran wisuda untuk 50 porsi?,relevant,harga_porsi,true,train
-rel_syn_0223,Bagaimana mengatasi error CORS origin saat fetching API dari browser?,out_of_domain,programming_tech,true,train
-rel_syn_0224,brp biaya ongkir kirim catering nasi box ke cimahi min,relevant,informal_wa,true,train
-rel_syn_0225,Berapa ongkos kirim pengantaran katering ke daerah Dago dan Lembang?,relevant,jadwal_delivery,true,train
-rel_syn_0226,Berapa harga per kotak snack box premium isi 4 macam kue?,relevant,harga_porsi,true,train
-rel_syn_0227,Bisa sediakan paket coffee break kue basah untuk meeting direksi?,relevant,menu_paket,true,train
-rel_syn_0228,Saya mau pesan seragam kerja kantor ukuran custom ke penjahit konveksi.,out_of_domain,hard_negatives,true,train
-rel_syn_0229,Apakah paket prasmanan sudah termasuk hidangan penutup puding buah?,relevant,menu_paket,true,train
-rel_syn_0230,Berapa poin yang dicetak pemain bintang basket NBA pada kuarter penentuan?,out_of_domain,olahraga,true,train
-rel_syn_0231,Berapa harga nasi tumpeng tampah porsi 15 orang untuk syukuran kecil?,relevant,harga_porsi,true,train
-rel_syn_0232,Kapan jadwal balapan Formula 1 Grand Prix Monaco berlangsung akhir pekan ini?,out_of_domain,olahraga,true,train
-rel_syn_0233,min invoice katering nya tlg di email kuitansi kantor ya,relevant,informal_wa,true,train
-rel_syn_0234,Apakah ada biaya lembur jika pengantaran katering prasmanan dilakukan subuh?,relevant,jadwal_delivery,true,train
-rel_syn_0235,Apa fungsi smart contract pada jaringan blockchain Ethereum dalam ekosistem DeFi?,out_of_domain,finansial_kripto,true,train
-rel_syn_0236,Apakah kemasan nasi box yang digunakan ramah lingkungan dan food grade?,relevant,sop_kebijakan,true,train
-rel_syn_0237,Berapa harga tumpeng barokah porsi 25 orang di akhir pekan?,relevant,harga_porsi,true,train
-rel_syn_0238,Bagaimana cara pesan tiket kapal feri penyeberangan pelabuhan Merak secara daring?,out_of_domain,hard_negatives,true,train
-rel_syn_0239,Apakah Catering Si Kembar memiliki sertifikat halal resmi dari BPJPH Kemenag?,relevant,sop_kebijakan,true,train
-rel_syn_0240,Bagaimana cara menurunkan rumus turunan fungsi trigonometri sin x dan cos x?,out_of_domain,sains_matematika,true,train
-rel_syn_0241,Berapa lama waktu yang dibutuhkan tim katering untuk set up meja buffet?,relevant,jadwal_delivery,true,train
-rel_syn_0242,Kalau mau ubah jumlah porsi dari 50 jadi 80 nasi box H-3 masih bisa?,relevant,sop_kebijakan,true,train
-rel_syn_0243,Berapa total harga nasi box 75 kotak lauk ayam goreng kremes?,relevant,harga_porsi,true,train
-rel_syn_0244,Apa perbedaan tema cerita pendek cerpen dengan novel fiksi bertema romansa?,out_of_domain,sastra_hiburan,true,train
-rel_syn_0245,halo admin brp hrg nasi box ayam bakar utk 50 org ya,relevant,informal_wa,true,train
-rel_syn_0246,Bagaimana prakiraan cuaca ekstrim di wilayah Jabodetabek selama sepekan ke depan?,out_of_domain,cuaca,true,train
-rel_syn_0247,Siapa juara dunia tinju kelas berat sejati yang mempertahankan sabuk gelarnya?,out_of_domain,olahraga,true,train
-rel_syn_0248,Jelaskan prinsip SOLID dalam perancangan perangkat lunak berorientasi objek.,out_of_domain,programming_tech,true,train
-rel_syn_0249,Bisa berikan contoh query SQL join dan group by pada database PostgreSQL?,out_of_domain,programming_tech,true,train
-rel_syn_0250,Apakah tim katering yang melayani prasmanan menggunakan sarung tangan dan masker?,relevant,sop_kebijakan,true,train
-rel_syn_0251,Bagaimana kebijakan pengembalian dana deposit sewa alat makan katering?,relevant,pembayaran,true,train
-rel_syn_0252,Bagaimana pengaruh anomali iklim El Nino terhadap kekeringan lahan pertanian?,out_of_domain,cuaca,true,train
-rel_syn_0253,Bagaimana kebijakan pembatalan katering akibat bencana alam atau darurat?,relevant,sop_kebijakan,true,train
-rel_syn_0254,Berapa jumlah provinsi di wilayah kepulauan Republik Indonesia saat ini?,out_of_domain,sejarah_geografi,true,train
-rel_syn_0255,Bisa jadwalkan pengantaran katering sarapan pagi jam 6.30 WIB di hotel?,relevant,jadwal_delivery,true,train
-rel_syn_0256,sy mau pesen snack box 100 kotak utk seminar kampus jumat bsk,relevant,informal_wa,true,train
-rel_syn_0257,Kapan pesanan katering mulai diproduksi di dapur Catering Si Kembar?,relevant,jadwal_delivery,true,train
-rel_syn_0258,Apakah ada panduan waktu konsumsi terbaik pada kemasan nasi box katering?,relevant,sop_kebijakan,true,train
-rel_syn_0259,Jam berapa batas toleransi keterlambatan pengiriman makanan katering?,relevant,jadwal_delivery,true,train
-rel_syn_0260,Berapa harga pasang behel kawat gigi pada klinik dokter gigi ortodontis?,out_of_domain,hard_negatives,true,train
-rel_syn_0261,Bisa pesan paket nasi bento anak sekolah lauk nugget dan sosis telur?,relevant,menu_paket,true,train
-rel_syn_0262,Apakah ada konfirmasi otomatis setelah pembayaran transfer katering berhasil?,relevant,pembayaran,true,train
-rel_syn_0263,Apa yang dimaksud dengan bilangan prima kembar dalam teori bilangan matematika?,out_of_domain,sains_matematika,true,train
-rel_syn_0264,Berapa harga sewa mobil rental lepas kunci selama tiga hari di Bandung?,out_of_domain,hard_negatives,true,train
-rel_syn_0265,Apakah pelayan katering prasmanan mengenakan seragam rapi dan sopan?,relevant,sop_kebijakan,true,train
-rel_syn_0266,"Apa perbedaan unit testing, integration testing, dan end-to-end testing pada aplikasi?",out_of_domain,programming_tech,true,train
-rel_syn_0267,Bagaimana kebijakan katering mengenai protokol kesehatan saat menyajikan makanan?,relevant,sop_kebijakan,true,train
-rel_syn_0268,Berapa luas permukaan dan volume bola jika diketahui jari-jari sepuluh centimeter?,out_of_domain,sains_matematika,true,train
-rel_syn_0269,"Bagaimana jika jalanan macet parah, apakah ada antisipasi jadwal pengantaran?",relevant,jadwal_delivery,true,train
-rel_syn_0270,Apakah ada biaya kirim tambahan untuk pengantaran di luar jam operasional?,relevant,jadwal_delivery,true,train
-rel_syn_0271,Apakah ada batas minimal pemesanan snack box isi 2 kue dan air?,relevant,harga_porsi,true,train
-rel_syn_0272,Berapa jam sebelum acara dimulai makanan katering prasmanan siap disajikan?,relevant,jadwal_delivery,true,train
-rel_syn_0273,Apakah ada pengantaran katering ke luar kota Bandung seperti Padalarang?,relevant,jadwal_delivery,true,train
-rel_syn_0274,Siapa komposer lagu simfoni klasik terkenal asal Austria di era romantis?,out_of_domain,sastra_hiburan,true,train
-rel_syn_0275,Kapan candi Borobudur diperkirakan selesai dibangun pada masa dinasti Syailendra?,out_of_domain,sejarah_geografi,true,train
-rel_syn_0276,Bisa terbitkan faktur pajak elektronik untuk pesanan katering perusahaan?,relevant,pembayaran,true,train
-rel_syn_0277,klo mau order tumpeng mini 30 porsi minimal hrg brp per box,relevant,informal_wa,true,train
-rel_syn_0278,klo pesen tumpeng karakter ultah anak minimal brp porsi ya,relevant,informal_wa,true,train
-rel_syn_0279,Menu ayam lengkuas dan sayur asem apakah bisa masuk paket nasi box?,relevant,menu_paket,true,train
-rel_syn_0280,Bagaimana SOP penanganan keluhan pelanggan jika makanan katering rusak?,relevant,sop_kebijakan,true,train
-rel_syn_0281,Apakah pengantaran catering nasi box tersedia di hari libur nasional?,relevant,jadwal_delivery,true,train
-rel_syn_0282,Apakah ada paket prasmanan akad nikah lengkap dengan gubukan soto?,relevant,menu_paket,true,train
-rel_syn_0283,Bagaimana cara refund uang pembelian tiket konser musik yang dibatalkan panitia?,out_of_domain,hard_negatives,true,train
-rel_syn_0284,Bagaimana cara kerja mekanisme konsensus proof of stake pada aset kripto?,out_of_domain,finansial_kripto,true,train
-rel_syn_0285,Apakah menu takjil kolak pisang bisa dipesan saat bulan ramadhan?,relevant,menu_paket,true,train
-rel_syn_0286,Berapa estimasi biaya pengecatan ulang bodi mobil sedan di bengkel ketok magic?,out_of_domain,hard_negatives,true,train
-rel_syn_0287,Bagaimana pola olahraga aerobik yang aman bagi penderita penyakit jantung koroner?,out_of_domain,kesehatan_medis,true,train
-rel_syn_0288,Bisa antar pesanan tumpeng besar dengan mobil khusus agar bentuknya aman?,relevant,jadwal_delivery,true,train
-rel_syn_0289,Tolong jelaskan hukum termodinamika pertama tentang kekekalan energi sistem tertutup.,out_of_domain,sains_matematika,true,train
-rel_syn_0290,Apakah DP pesanan tumpeng harus lunas saat pemesanan dikonfirmasi?,relevant,pembayaran,true,train
-rel_syn_0291,Apa penyebab umum terjadinya penyakit radang usus buntu appendicitis akut?,out_of_domain,kesehatan_medis,true,train
-rel_syn_0292,Apakah ada denda keterlambatan pelunasan tagihan katering prasmanan?,relevant,pembayaran,true,train
-rel_syn_0293,Bagaimana cara mengatasi memory leak pada aplikasi Node.js di server produksi?,out_of_domain,programming_tech,true,train
-rel_syn_0294,Bisa bayar uang muka katering sebesar 60 persen via internet banking?,relevant,pembayaran,true,train
-rel_syn_0295,Bagaimana SOP keamanan pangan katering untuk mencegah basi pada makanan bersantan?,relevant,sop_kebijakan,true,train
-rel_syn_0296,Bagaimana mekanisme kerja vaksin mrna dalam membentuk antibodi kekebalan tubuh?,out_of_domain,kesehatan_medis,true,train
-rel_syn_0297,Berapa jumlah set untuk mengakhiri pertandingan tenis tunggal putra grand slam?,out_of_domain,olahraga,true,train
-rel_syn_0298,Tolong paket nasi box ekonomis untuk bakti sosial panti asuhan.,relevant,menu_paket,true,train
-rel_syn_0299,Bagaimana alur plot twist cerita misteri detektif memecahkan teka teki pembunuhan?,out_of_domain,sastra_hiburan,true,train
-rel_syn_0300,Apa efek samping obat antibiotik amoksisilin jika dikonsumsi tanpa resep dokter?,out_of_domain,kesehatan_medis,true,train
-rel_syn_0301,Apakah ada staf katering yang bertugas menjaga kebersihan area buffet makanan?,relevant,sop_kebijakan,true,train
-rel_syn_0302,Bagaimana sejarah kerajaan Majapahit mencapai kejayaan di bawah Mahapatih Gajah Mada?,out_of_domain,sejarah_geografi,true,train
-rel_syn_0303,Apakah menu sate ayam bisa ditambahkan ke paket prasmanan khitanan?,relevant,menu_paket,true,train
-rel_syn_0304,Bagaimana indeks kualitas udara dan konsentrasi partikel PM2.5 di kota metropolitan?,out_of_domain,cuaca,true,train
-rel_syn_0305,Apakah harga yang tercantum di brosur katering sudah nett tanpa PPN?,relevant,harga_porsi,true,train
-rel_syn_0306,Apa resiko investasi cryptocurrency altcoin dibandingkan aset safe haven emas?,out_of_domain,finansial_kripto,true,train
-rel_syn_0307,makanan katering nya tahan brp jam min klo santan gak basi kan,relevant,informal_wa,true,train
-rel_syn_0308,Bisa pesan tumpeng tampah porsi 30 orang dengan lauk ayam rica rica?,relevant,menu_paket,true,train
-rel_syn_0309,Kami perlu nasi box 200 porsi lauk ayam bakar kecap dan oseng buncis.,relevant,menu_paket,true,train
-rel_syn_0310,klo batal pesen catering uang dp nya bs balik brp persen min,relevant,informal_wa,true,train
-rel_syn_0311,Tolong kirimkan nomor rekening resmi Catering Si Kembar untuk transfer DP.,relevant,pembayaran,true,train
-rel_syn_0312,Berapa biaya per porsi paket prasmanan aqiqah anak di rumah?,relevant,harga_porsi,true,train
-rel_syn_0313,Apakah pengiriman snack box rapat bisa langsung diantar ke ruang meeting?,relevant,jadwal_delivery,true,train
-rel_syn_0314,Apa syarat formil pencalonan presiden dan wakil presiden menurut konstitusi?,out_of_domain,politik_pemerintahan,true,train
-rel_syn_0315,Berapa curah hujan maksimum yang tercatat pada stasiun klimatologi lokal?,out_of_domain,cuaca,true,train
-rel_syn_0316,Berapa harga paket nasi box per kotak untuk pesanan 100 orang?,relevant,harga_porsi,true,train
-rel_syn_0317,Berapa harga saham bank BCA dan BRI di bursa efek hari ini?,out_of_domain,hard_negatives,true,train
-rel_syn_0318,Kapan batas pembayaran DP untuk mengunci tanggal jadwal prasmanan pernikahan?,relevant,pembayaran,true,train
-rel_syn_0319,Apakah batas akhir konfirmasi pesanan katering adalah H-3 sebelum acara?,relevant,jadwal_delivery,true,train
+rel_syn_0001,Bagaimana prosedur menutup kartu kredit perbankan tanpa dikenakan denda tahunan?,out_of_domain,hard_negatives,true,train
+rel_syn_0002,Bagaimana cara mengajukan perubahan pilihan menu lauk nasi box sebelum H-2?,relevant,sop_kebijakan,true,train
+rel_syn_0003,Apakah menu sate ayam bisa ditambahkan ke paket prasmanan khitanan?,relevant,menu_paket,true,train
+rel_syn_0004,Bisa jadwalkan pengantaran katering sarapan pagi jam 6.30 WIB di hotel?,relevant,jadwal_delivery,true,train
+rel_syn_0005,Apakah ada batas minimal pemesanan snack box isi 2 kue dan air?,relevant,harga_porsi,true,train
+rel_syn_0006,Status pesanan katering ORD-202612-0009 apakah masih menunggu DP atau sudah fix?,relevant,operasional_staf,true,train
+rel_syn_0007,Apakah tren harga saham bursa efek sedang menunjukkan kenaikan grafik perdagangan?,out_of_domain,hard_negatives,true,train
+rel_syn_0008,tlg cek transferan dp katering an budi santoso udh masuk blm ya,relevant,informal_wa,true,train
+rel_syn_0009,Berapa kisaran harga nasi box lauk rendang sapi untuk makan siang?,relevant,harga_porsi,true,train
+rel_syn_0010,Tersedia paket nasi kuning box untuk acara peresmian kantor cabang baru?,relevant,menu_paket,true,train
+rel_syn_0011,Apakah ada biaya kirim tambahan untuk pengantaran di luar jam operasional?,relevant,jadwal_delivery,true,train
+rel_syn_0012,Tolong tampilkan daftar pesanan buffet prasmanan yang aktif minggu ini.,relevant,operasional_staf,true,train
+rel_syn_0013,Bagaimana prosedur konfirmasi perubahan jam acara katering di hari H?,relevant,sop_kebijakan,true,train
+rel_syn_0014,Apa arti majas personifikasi dan metafora dalam sebuah karya sastra puisi?,out_of_domain,sastra_hiburan,true,train
+rel_syn_0015,Bagaimana SOP keamanan pangan katering untuk mencegah basi pada makanan bersantan?,relevant,sop_kebijakan,true,train
+rel_syn_0016,Bagaimana pembagian kewenangan antara pemerintah pusat dan pemerintah daerah otonom?,out_of_domain,politik_pemerintahan,true,train
+rel_syn_0017,Paket kursus intensif persiapan ujian TOEFL di lembaga bahasa biayanya berapa?,out_of_domain,hard_negatives,true,train
+rel_syn_0018,Ada promo atau diskon harga untuk pesanan nasi box di atas 200 pax?,relevant,harga_porsi,true,train
+rel_syn_0019,Cek daftar antrean pesanan katering berstatus CONFIRMED minggu ini.,relevant,operasional_staf,true,train
+rel_syn_0020,"Apa perbedaan unit testing, integration testing, dan end-to-end testing pada aplikasi?",out_of_domain,programming_tech,true,train
+rel_syn_0021,Kapan pesanan katering mulai diproduksi di dapur Catering Si Kembar?,relevant,jadwal_delivery,true,train
+rel_syn_0022,Bagaimana struktur ikatan kimia kovalen koordinasi pada senyawa kompleks?,out_of_domain,sains_matematika,true,train
+rel_syn_0023,Bisa bayar uang muka katering sebesar 60 persen via internet banking?,relevant,pembayaran,true,train
+rel_syn_0024,Jadwal keberangkatan kereta api cepat Whoosh stasiun Halim sore ini jam berapa?,out_of_domain,hard_negatives,true,train
+rel_syn_0025,Bagaimana aturan pengembalian piring dan sendok prasmanan yang hilang?,relevant,sop_kebijakan,true,train
+rel_syn_0026,Berapa jam sebelum acara dimulai makanan katering prasmanan siap disajikan?,relevant,jadwal_delivery,true,train
+rel_syn_0027,Apakah ada bukti tanda terima resmi saat DP katering diserahkan tunai?,relevant,pembayaran,true,train
+rel_syn_0028,Berapa skor akhir pertandingan final turnamen bulutangkis All England kemarin malam?,out_of_domain,olahraga,true,train
+rel_syn_0029,Apakah ada harga khusus paket nasi box untuk yayasan amal dan panti?,relevant,harga_porsi,true,train
+rel_syn_0030,Apakah Catering Si Kembar punya paket prasmanan buka puasa bersama?,relevant,menu_paket,true,train
+rel_syn_0031,Bagaimana prakiraan cuaca ekstrim di wilayah Jabodetabek selama sepekan ke depan?,out_of_domain,cuaca,true,train
+rel_syn_0032,Menu ayam geprek sambal bawang apakah tersedia untuk pilihan nasi box?,relevant,menu_paket,true,train
+rel_syn_0033,Berapa jarak lari maraton standar internasional yang wajib ditempuh pelari?,out_of_domain,olahraga,true,train
+rel_syn_0034,Bagaimana tren inflasi bulanan mempengaruhi keputusan investasi di pasar modal?,out_of_domain,finansial_kripto,true,train
+rel_syn_0035,min tumpeng tampah buat 25 org bs kirim sabtu pagi jam 8 gak,relevant,informal_wa,true,train
+rel_syn_0036,Kapan pesta olahraga Asian Games berikutnya diselenggarakan di negara tuan rumah?,out_of_domain,olahraga,true,train
+rel_syn_0037,Apakah ada variasi menu ikan gurame asam manis di paket prasmanan?,relevant,menu_paket,true,train
+rel_syn_0038,Siapa menteri koordinator bidang perekonomian yang dilantik presiden kabinet baru?,out_of_domain,politik_pemerintahan,true,train
+rel_syn_0039,Bisa minta nomor kontak supir atau kurir yang mengantar katering hari ini?,relevant,jadwal_delivery,true,train
+rel_syn_0040,dp katering brp persen ya min apa bs transfer via bca,relevant,informal_wa,true,train
+rel_syn_0041,Tolong jelaskan sifat dualisme gelombang partikel foton dalam mekanika kuantum.,out_of_domain,sains_matematika,true,train
+rel_syn_0042,Berapa minimal pemesanan nasi box untuk wilayah pengantaran Bandung kota?,relevant,harga_porsi,true,train
+rel_syn_0043,Berapa poin yang dicetak pemain bintang basket NBA pada kuarter penentuan?,out_of_domain,olahraga,true,train
+rel_syn_0044,Berapa lama waktu yang dibutuhkan tim katering untuk set up meja buffet?,relevant,jadwal_delivery,true,train
+rel_syn_0045,Siapakah klub sepak bola yang menjuarai kompetisi Liga Champions Eropa musim lalu?,out_of_domain,olahraga,true,train
+rel_syn_0046,Berapa persen potongan pph 23 yang dipotong dari tagihan katering?,relevant,pembayaran,true,train
+rel_syn_0047,Apakah Catering Si Kembar memiliki sertifikat halal resmi dari BPJPH Kemenag?,relevant,sop_kebijakan,true,train
+rel_syn_0048,Estimasi biaya pemasangan instalasi listrik rumah daya dua ribu dua ratus volt ampere.,out_of_domain,hard_negatives,true,train
+rel_syn_0049,Tolong jelaskan algoritma pencarian binary search beserta kompleksitas waktu Big-O.,out_of_domain,programming_tech,true,train
+rel_syn_0050,Apakah ada pengantaran katering ke luar kota Bandung seperti Padalarang?,relevant,jadwal_delivery,true,train
+rel_syn_0051,Kapan batas waktu pelunasan sisa pembayaran pesanan katering prasmanan?,relevant,pembayaran,true,train
+rel_syn_0052,Apakah pengiriman snack box rapat bisa langsung diantar ke ruang meeting?,relevant,jadwal_delivery,true,train
+rel_syn_0053,Bagaimana sejarah transisi pemerintahan orde lama menuju orde baru di Indonesia?,out_of_domain,politik_pemerintahan,true,train
+rel_syn_0054,Kami butuh nasi box isi rendang daging dan perkedel untuk 80 orang.,relevant,menu_paket,true,train
+rel_syn_0055,Apakah invoice katering INV-202612-0011 sudah diterbitkan tanda lunasnya?,relevant,operasional_staf,true,train
+rel_syn_0056,Bagaimana cara mencegah penularan penyakit tuberkulosis paru di lingkungan keluarga?,out_of_domain,kesehatan_medis,true,train
+rel_syn_0057,Bagaimana teknik servis smash menukik yang efektif pada permainan bola voli?,out_of_domain,olahraga,true,train
+rel_syn_0058,Apakah pengantaran catering nasi box tersedia di hari libur nasional?,relevant,jadwal_delivery,true,train
+rel_syn_0059,Berapa kadar kolesterol total yang dianjurkan dalam hasil pemeriksaan darah?,out_of_domain,kesehatan_medis,true,train
+rel_syn_0060,Apakah ada jaminan uang kembali jika pesanan katering tidak sesuai kesepakatan?,relevant,sop_kebijakan,true,train
+rel_syn_0061,Bisa cetak kwitansi fisik dengan stempel basah Catering Si Kembar?,relevant,pembayaran,true,train
+rel_syn_0062,Apakah jadwal pengantaran nasi box bisa dijadwalkan setiap hari kerja?,relevant,jadwal_delivery,true,train
+rel_syn_0063,Apakah pelayan katering prasmanan mengenakan seragam rapi dan sopan?,relevant,sop_kebijakan,true,train
+rel_syn_0064,Berapa luas permukaan dan volume bola jika diketahui jari-jari sepuluh centimeter?,out_of_domain,sains_matematika,true,train
+rel_syn_0065,Siapa pemain sepak bola peraih penghargaan Ballon d'Or terbanyak sepanjang sejarah?,out_of_domain,olahraga,true,train
+rel_syn_0066,min apa bs antar nasi box jam 7 pagi ke dago bbrp hari lg,relevant,informal_wa,true,train
+rel_syn_0067,Berapa harga sewa mobil rental lepas kunci selama tiga hari di Bandung?,out_of_domain,hard_negatives,true,train
+rel_syn_0068,Cek kesiapan produksi dapur untuk menu ayam bakar madu 250 kotak besok.,relevant,operasional_staf,true,train
+rel_syn_0069,Apakah koki dan staf dapur katering menerapkan standar higienitas GMP?,relevant,sop_kebijakan,true,train
+rel_syn_0070,Berapa biaya paket prasmanan syukuran wisuda untuk 50 porsi?,relevant,harga_porsi,true,train
+rel_syn_0071,Apakah bukti potong pajak PPh pasal 23 bisa kami serahkan bulan depan?,relevant,pembayaran,true,train
+rel_syn_0072,Apakah invoice pesanan katering bisa mencantumkan nomor PO pengadaan kantor?,relevant,pembayaran,true,train
+rel_syn_0073,Kami mau paket prasmanan gathering alumni 100 pax menu nusantara.,relevant,menu_paket,true,train
+rel_syn_0074,Apakah pengantaran nasi box untuk acara car free day bisa masuk area pagi hari?,relevant,jadwal_delivery,true,train
+rel_syn_0075,min menu sop kimlo apa bs diganti soto bandung di prasmanan,relevant,informal_wa,true,train
+rel_syn_0076,Bagaimana prosedur pembatalan tiket pesawat terbang domestik agar dapat refund?,out_of_domain,hard_negatives,true,train
+rel_syn_0077,Berapa tinggi puncak gunung Everest di pegunungan Himalaya dari permukaan laut?,out_of_domain,sejarah_geografi,true,train
+rel_syn_0078,Kapan batas waktu konfirmasi perubahan alamat pengiriman katering?,relevant,jadwal_delivery,true,train
+rel_syn_0079,halo min blh tny paket coffee break utk workshop 2 hari,relevant,informal_wa,true,train
+rel_syn_0080,Bagaimana cara membatalkan langganan aplikasi streaming musik di ponsel pintar?,out_of_domain,hard_negatives,true,train
+rel_syn_0081,mhn info pricelist katering nasi box hemat buat rapat kantor dong,relevant,informal_wa,true,train
+rel_syn_0082,min invoice katering nya tlg di email kuitansi kantor ya,relevant,informal_wa,true,train
+rel_syn_0083,Berapa minimal order paket prasmanan luar kota seperti Cimahi?,relevant,harga_porsi,true,train
+rel_syn_0084,Bagaimana SOP kebersihan pengolahan makanan dan sanitasi dapur katering?,relevant,sop_kebijakan,true,train
+rel_syn_0085,Bagaimana struktur komisi pemilihan umum dan bawaslu dalam menyelenggarakan pemilu?,out_of_domain,politik_pemerintahan,true,train
+rel_syn_0086,Apakah harga bitcoin dan aset kripto ethereum sedang naik tajam di bursa derivatif?,out_of_domain,hard_negatives,true,train
+rel_syn_0087,Berapa biaya paket langganan internet wifi berkecepatan tinggi per bulan?,out_of_domain,hard_negatives,true,train
+rel_syn_0088,Berapa total porsi nasi box yang harus dimasak tim dapur pagi ini?,relevant,operasional_staf,true,train
+rel_syn_0089,Jadwal produksi dapur untuk orderan snack box 300 kotak jam berapa mulai?,relevant,operasional_staf,true,train
+rel_syn_0090,Bagaimana cara setup CI CD pipeline menggunakan GitHub Actions untuk deploy aplikasi?,out_of_domain,programming_tech,true,train
+rel_syn_0091,Apakah ada biaya minimum transaksi untuk pesan catering makan siang?,relevant,harga_porsi,true,train
+rel_syn_0092,Menu ayam bakar bumbu rujak apakah tersedia dalam paket hemat kantor?,relevant,menu_paket,true,train
+rel_syn_0093,Bagaimana pola olahraga aerobik yang aman bagi penderita penyakit jantung koroner?,out_of_domain,kesehatan_medis,true,train
+rel_syn_0094,Berapa hari lead time minimal untuk pemesanan katering prasmanan 200 pax?,relevant,jadwal_delivery,true,train
+rel_syn_0095,klo mau nambah porsi prasmanan pas hari h msh bs dilayani gak min,relevant,informal_wa,true,train
+rel_syn_0096,Apa sungai terpanjang di benua afrika yang mengalir melintasi sebelas negara?,out_of_domain,sejarah_geografi,true,train
+rel_syn_0097,Tampilkan rincian pesanan katering ORD-202611-0077 beserta catatan alergi.,relevant,operasional_staf,true,train
+rel_syn_0098,Bagaimana mekanisme pengajuan rancangan undang-undang dalam sidang paripurna DPR?,out_of_domain,politik_pemerintahan,true,train
+rel_syn_0099,Tolong buatkan sinopsis film drama petualangan fiksi ilmiah luar angkasa.,out_of_domain,sastra_hiburan,true,train
+rel_syn_0100,Berapa biaya tambahan untuk kemasan nasi box custom sablon logo kantor?,relevant,harga_porsi,true,train
+rel_syn_0101,Berapa estimasi biaya servis motor matic berkala di bengkel resmi?,out_of_domain,hard_negatives,true,train
+rel_syn_0102,Tolong rekomendasi paket nasi box budget 25 ribu dengan lauk ayam goreng.,relevant,menu_paket,true,train
+rel_syn_0103,Bagaimana syarat pengajuan term of payment 14 hari untuk instansi BUMN?,relevant,pembayaran,true,train
+rel_syn_0104,Berapa tingkat kelembaban udara dan kecepatan hembusan angin di bandara hari ini?,out_of_domain,cuaca,true,train
+rel_syn_0105,Bisa minta invoice resmi dan kwitansi bermaterai untuk klaim kantor?,relevant,pembayaran,true,train
+rel_syn_0106,klo pesen tumpeng karakter ultah anak minimal brp porsi ya,relevant,informal_wa,true,train
+rel_syn_0107,Bisa berikan contoh query SQL join dan group by pada database PostgreSQL?,out_of_domain,programming_tech,true,train
+rel_syn_0108,Berapa harga porsi prasmanan khitanan anak include meja dan dekorasi?,relevant,harga_porsi,true,train
+rel_syn_0109,Apakah menu takjil kolak pisang bisa dipesan saat bulan ramadhan?,relevant,menu_paket,true,train
+rel_syn_0110,Berapa prediksi pergerakan harga bitcoin dan saham unggulan yang sedang naik daun?,out_of_domain,hard_negatives,true,train
+rel_syn_0111,Tolong jelaskan arsitektur Transformer dan mekanisme self-attention pada LLM.,out_of_domain,programming_tech,true,train
+rel_syn_0112,Berapa harga paket prasmanan mewah lauk lidah sapi dan sup iga?,relevant,harga_porsi,true,train
+rel_syn_0113,Bagaimana cara menurunkan rumus turunan fungsi trigonometri sin x dan cos x?,out_of_domain,sains_matematika,true,train
+rel_syn_0114,Berapa durasi tidur malam yang ideal bagi kesehatan mental dan fisik orang dewasa?,out_of_domain,kesehatan_medis,true,train
+rel_syn_0115,Tolong jelaskan hukum termodinamika pertama tentang kekekalan energi sistem tertutup.,out_of_domain,sains_matematika,true,train
+rel_syn_0116,Kapan jadwal persiapan bahan baku dapur untuk order nasi liwet 80 porsi?,relevant,operasional_staf,true,train
+rel_syn_0117,Kapan kurir katering mengonfirmasi estimasi waktu tiba di lokasi pengiriman?,relevant,jadwal_delivery,true,train
+rel_syn_0118,Bagaimana ketentuan denda jika pelunasan katering melewati jatuh tempo?,relevant,pembayaran,true,train
+rel_syn_0119,Apakah ada pilihan menu vegetarian atau sayuran dalam paket prasmanan?,relevant,menu_paket,true,train
+rel_syn_0120,Bagaimana cara membuat fungsi asynchronous di JavaScript dengan async await?,out_of_domain,programming_tech,true,train
+rel_syn_0121,Apakah ada paket tour wisata liburan ke Jepang lima hari empat malam?,out_of_domain,hard_negatives,true,train
+rel_syn_0122,Kapan jadwal balapan Formula 1 Grand Prix Monaco berlangsung akhir pekan ini?,out_of_domain,olahraga,true,train
+rel_syn_0123,Apakah pelunasan katering wajib dilakukan maksimal H-1 sebelum acara?,relevant,pembayaran,true,train
+rel_syn_0124,Berapa luas wilayah benua Asia dibandingkan total daratan bumi secara keseluruhan?,out_of_domain,sejarah_geografi,true,train
+rel_syn_0125,Siapa atlet renang gaya bebas yang memecahkan rekor dunia di olimpiade musim panas?,out_of_domain,olahraga,true,train
+rel_syn_0126,Berapa harga sewa kamar apartemen studio bulanan di kawasan Jakarta Selatan?,out_of_domain,hard_negatives,true,train
+rel_syn_0127,Apakah bisa bayar pelunasan katering secara tunai di lokasi saat pengantaran?,relevant,pembayaran,true,train
+rel_syn_0128,Siapakah pahlawan nasional dari Maluku yang memimpin perlawanan benteng Duurstede?,out_of_domain,sejarah_geografi,true,train
+rel_syn_0129,Apa fungsi lembaga Dewan Perwakilan Daerah dalam menyerap aspirasi daerah?,out_of_domain,politik_pemerintahan,true,train
+rel_syn_0130,Berapa harga tumpeng mini per box kalau pesan 60 porsi?,relevant,harga_porsi,true,train
+rel_syn_0131,Apa resiko investasi cryptocurrency altcoin dibandingkan aset safe haven emas?,out_of_domain,finansial_kripto,true,train
+rel_syn_0132,Berapa biaya per porsi paket prasmanan aqiqah anak di rumah?,relevant,harga_porsi,true,train
+rel_syn_0133,Apakah semua menu makanan di Catering Si Kembar dijamin 100 persen halal?,relevant,sop_kebijakan,true,train
+rel_syn_0134,blh minta tester makanan katering dl gak sblm fiks pesen,relevant,informal_wa,true,train
+rel_syn_0135,Tolong info daftar menu prasmanan khas sunda untuk hajatan keluarga.,relevant,menu_paket,true,train
+rel_syn_0136,Berapa jumlah anggota Dewan Perwakilan Rakyat Republik Indonesia periode sekarang?,out_of_domain,politik_pemerintahan,true,train
+rel_syn_0137,Berapa harga saham bank BCA dan BRI di bursa efek hari ini?,out_of_domain,hard_negatives,true,train
+rel_syn_0138,Apa perbedaan tema cerita pendek cerpen dengan novel fiksi bertema romansa?,out_of_domain,sastra_hiburan,true,train
+rel_syn_0139,Apakah ada paket tumpeng nasi uduk komplit dengan telur balado?,relevant,menu_paket,true,train
+rel_syn_0140,Tolong kirimkan katalog paket nasi box reguler dan VIP Catering Si Kembar.,relevant,menu_paket,true,train
+rel_syn_0141,Kapan awal musim hujan diperkirakan melanda pulau Jawa menurut rilis BMKG?,out_of_domain,cuaca,true,train
+rel_syn_0142,Apa efek samping obat antibiotik amoksisilin jika dikonsumsi tanpa resep dokter?,out_of_domain,kesehatan_medis,true,train
+rel_syn_0143,Bagaimana alur plot twist cerita misteri detektif memecahkan teka teki pembunuhan?,out_of_domain,sastra_hiburan,true,train
+rel_syn_0144,Bagaimana peran perwakilan diplomasi Indonesia di forum sidang umum PBB?,out_of_domain,politik_pemerintahan,true,train
+rel_syn_0145,Berapa dividen yield tahunan yang dibagikan oleh perusahaan tambang batubara?,out_of_domain,finansial_kripto,true,train
+rel_syn_0146,Bagaimana cara pesan layanan taksi dan ojek online lewat aplikasi peta navigasi?,out_of_domain,hard_negatives,true,train
+rel_syn_0147,Apa saja pantangan makan bagi pasien yang menderita asam urat tinggi?,out_of_domain,kesehatan_medis,true,train
+rel_syn_0148,Apa isi pokok naskah proklamasi kemerdekaan Republik Indonesia 17 Agustus 1945?,out_of_domain,politik_pemerintahan,true,train
+rel_syn_0149,Tolong paket nasi box ekonomis untuk bakti sosial panti asuhan.,relevant,menu_paket,true,train
+rel_syn_0150,Berapa sisa tagihan yang belum dibayar pada invoice INV-202611-0034?,relevant,operasional_staf,true,train
+rel_syn_0151,Apakah menu ayam goreng serundeng tersedia untuk pesanan 150 porsi?,relevant,menu_paket,true,train
+rel_syn_0152,min apa bs request sambal dipisah utk menu nasi liwet,relevant,informal_wa,true,train
+rel_syn_0153,Apa perbedaan mitosis dan meiosis dalam pembelahan sel makhluk hidup?,out_of_domain,sains_matematika,true,train
+rel_syn_0154,Bisa pesan nasi liwet pincuk untuk gathering komunitas di taman?,relevant,menu_paket,true,train
+rel_syn_0155,Bisa pesan nasi box lauk empal gentong dan sambal terasi segar?,relevant,menu_paket,true,train
+rel_syn_0156,Berapa curah hujan maksimum yang tercatat pada stasiun klimatologi lokal?,out_of_domain,cuaca,true,train
+rel_syn_0157,Bisa sediakan paket coffee break kue basah untuk meeting direksi?,relevant,menu_paket,true,train
+rel_syn_0158,Berapa estimasi biaya renovasi genteng atap rumah yang bocor di musim hujan?,out_of_domain,hard_negatives,true,train
+rel_syn_0159,Apakah menu katering aman untuk penderita alergi kacang dan seafood?,relevant,sop_kebijakan,true,train
+rel_syn_0160,Berapa minimal order menu gubukan dimsum dan es doger?,relevant,harga_porsi,true,train
+rel_syn_0161,Bagaimana rincian jadwal masak dan pengemasan pesanan ORD-202612-0041?,relevant,operasional_staf,true,train
+rel_syn_0162,Kapan film animasi sekuel produksi studio Pixar mulai tayang di bioskop?,out_of_domain,sastra_hiburan,true,train
+rel_syn_0163,Berapa biaya paket prasmanan sederhana lauk ayam bakar dan capcay?,relevant,harga_porsi,true,train
+rel_syn_0164,Apakah sistem katering menyediakan opsi pembayaran cash on delivery?,relevant,pembayaran,true,train
+rel_syn_0165,Bagaimana cara mengatasi memory leak pada aplikasi Node.js di server produksi?,out_of_domain,programming_tech,true,train
+rel_syn_0166,Apakah tim katering prasmanan standby di lokasi selama acara berlangsung?,relevant,jadwal_delivery,true,train
+rel_syn_0167,Berapa selisih harga antara paket nasi box hemat dan paket komplit?,relevant,harga_porsi,true,train
+rel_syn_0168,Berapa tarif per porsi untuk menu buffet prasmanan 150 tamu undangan?,relevant,harga_porsi,true,train
+rel_syn_0169,Berapa harga sewa alat makan tambahan jika tamu prasmanan bertambah?,relevant,harga_porsi,true,train
+rel_syn_0170,Bagaimana kebijakan penggantian jika ada kotak nasi yang rusak saat perjalanan?,relevant,sop_kebijakan,true,train
+rel_syn_0171,Bagaimana mekanisme replikasi rantai DNA pada inti sel eukariotik?,out_of_domain,sains_matematika,true,train
+rel_syn_0172,Kapan invoice pelunasan nasi box diterbitkan setelah pesanan diantar?,relevant,pembayaran,true,train
+rel_syn_0173,Apa fungsi smart contract pada jaringan blockchain Ethereum dalam ekosistem DeFi?,out_of_domain,finansial_kripto,true,train
+rel_syn_0174,Apa dampak kenaikan tarif pajak pertambahan nilai terhadap daya beli masyarakat?,out_of_domain,politik_pemerintahan,true,train
+rel_syn_0175,Bisa pesan tumpeng karakter kartun untuk ulang tahun anak pertama?,relevant,menu_paket,true,train
+rel_syn_0176,Menu sayur sop bakso apakah bisa diganti lodeh dalam paket prasmanan?,relevant,menu_paket,true,train
+rel_syn_0177,Berapa harga paket snack box paling murah per kotaknya?,relevant,harga_porsi,true,train
+rel_syn_0178,Bagaimana kebijakan pengembalian dana deposit sewa alat makan katering?,relevant,pembayaran,true,train
+rel_syn_0179,Bagaimana tata cara penjadwalan test food menu katering sebelum pernikahan?,relevant,sop_kebijakan,true,train
+rel_syn_0180,Apakah jadwal penerbangan pesawat carter sedang mengalami penundaan jadwal minggu ini?,out_of_domain,hard_negatives,true,train
+rel_syn_0181,Apakah paket prasmanan seminar sudah termasuk air mineral galon dan dispenser?,relevant,menu_paket,true,train
+rel_syn_0182,Kami perlu nasi box 200 porsi lauk ayam bakar kecap dan oseng buncis.,relevant,menu_paket,true,train
+rel_syn_0183,Cek jadwal masak dapur untuk katering syukuran 200 porsi lusa pagi.,relevant,operasional_staf,true,train
+rel_syn_0184,Bagaimana pergerakan nilai tukar rupiah terhadap dollar di pasar spot valuta asing?,out_of_domain,finansial_kripto,true,train
+rel_syn_0185,Bagaimana status pelunasan invoice INV-202611-0021 atas nama instansi dinas?,relevant,operasional_staf,true,train
+rel_syn_0186,Apakah ada konfirmasi otomatis setelah pembayaran transfer katering berhasil?,relevant,pembayaran,true,train
+rel_syn_0187,mhn info batas akhir bayar dp katering biar tgl gak diambil org,relevant,informal_wa,true,train
+rel_syn_0188,Bisa pesan nasi tumpeng H-2 sebelum hari syukuran peresmian?,relevant,jadwal_delivery,true,train
+rel_syn_0189,Bisa minta sendok plastik steril dan tisu dimasukkan ke dalam setiap snack box?,relevant,sop_kebijakan,true,train
+rel_syn_0190,Kapan jadwal praktek dokter spesialis anak di rumah sakit Hermina pasteur?,out_of_domain,hard_negatives,true,train
+rel_syn_0191,Bisa pesan paket snack box isi risoles mayo dan kue sus buah?,relevant,menu_paket,true,train
+rel_syn_0192,Berapa harga pasang behel kawat gigi pada klinik dokter gigi ortodontis?,out_of_domain,hard_negatives,true,train
+rel_syn_0193,Apakah pengiriman nasi box ke gedung pertemuan di Bandung gratis ongkir?,relevant,jadwal_delivery,true,train
+rel_syn_0194,Berapa tarif katering per porsi untuk acara buka puasa bersama 120 orang?,relevant,harga_porsi,true,train
+rel_syn_0195,Apakah ada paket prasmanan akad nikah lengkap dengan gubukan soto?,relevant,menu_paket,true,train
+rel_syn_0196,Berapa harga paket sarapan bubur ayam katering untuk 100 porsi?,relevant,harga_porsi,true,train
+rel_syn_0197,Bagaimana pertolongan pertama pada korban yang mengalami henti jantung mendadak?,out_of_domain,kesehatan_medis,true,train
+rel_syn_0198,Mau pesan karangan bunga ucapan selamat atas pembukaan toko baru rekan.,out_of_domain,hard_negatives,true,train
+rel_syn_0199,min ada paket snack box isi lemper pastel sm bolu gak brp hrgnya,relevant,informal_wa,true,train
+rel_syn_0200,Bagaimana SOP penanganan makanan sisa prasmanan yang belum tersentuh tamu?,relevant,sop_kebijakan,true,train
+rel_syn_0201,Apakah ada biaya lembur jika pengantaran katering prasmanan dilakukan subuh?,relevant,jadwal_delivery,true,train
+rel_syn_0202,Apa saja gejala klinis demam berdarah dengue akibat gigitan nyamuk Aedes aegypti?,out_of_domain,kesehatan_medis,true,train
+rel_syn_0203,Bisa order tumpeng mini personal box isi ayam suwir dan urap sayur?,relevant,menu_paket,true,train
+rel_syn_0204,Tersedia paket nasi tumpeng putih gurih untuk syukuran aqiqah bayi?,relevant,menu_paket,true,train
+rel_syn_0205,Menu ayam lengkuas dan sayur asem apakah bisa masuk paket nasi box?,relevant,menu_paket,true,train
+rel_syn_0206,Bagaimana proses terbentuknya badai siklon tropis di perairan samudra hindia?,out_of_domain,cuaca,true,train
+rel_syn_0207,Bagaimana mekanisme transaksi obligasi negara ritel ORI bagi investor perorangan?,out_of_domain,finansial_kripto,true,train
+rel_syn_0208,Bisa request makanan katering tanpa bahan pengawet dan micin berlebih?,relevant,sop_kebijakan,true,train
+rel_syn_0209,Kapan candi Borobudur diperkirakan selesai dibangun pada masa dinasti Syailendra?,out_of_domain,sejarah_geografi,true,train
+rel_syn_0210,Apakah ada staf katering yang bertugas menjaga kebersihan area buffet makanan?,relevant,sop_kebijakan,true,train
+rel_syn_0211,Apakah melayani pembayaran tempo dengan surat pesanan dinas atau PO?,relevant,pembayaran,true,train
+rel_syn_0212,Berapa batas waktu paling lambat pemesanan tumpeng mini untuk akhir pekan?,relevant,jadwal_delivery,true,train
+rel_syn_0213,"Kami ingin pesan snack box isi lemper ayam, pastel, dan bolu gulung.",relevant,menu_paket,true,train
+rel_syn_0214,Kalau mau ubah jumlah porsi dari 50 jadi 80 nasi box H-3 masih bisa?,relevant,sop_kebijakan,true,train
+rel_syn_0215,Bisa pesan snack box sehat isi roti gandum dan buah potong segar?,relevant,menu_paket,true,train
+rel_syn_0216,Bagaimana mengatasi error CORS origin saat fetching API dari browser?,out_of_domain,programming_tech,true,train
+rel_syn_0217,Berapa estimasi harga beli rumah cluster subsidi di kawasan pinggiran kota?,out_of_domain,hard_negatives,true,train
+rel_syn_0218,Apakah harga yang tercantum di brosur katering sudah nett tanpa PPN?,relevant,harga_porsi,true,train
+rel_syn_0219,Apakah pelanggan boleh membawa makanan luar untuk digabung dengan prasmanan?,relevant,sop_kebijakan,true,train
+rel_syn_0220,Siapa tokoh penjelajah samudera asal Portugis yang pertama kali mendarat di Malaka?,out_of_domain,sejarah_geografi,true,train
+rel_syn_0221,Apakah ada denda keterlambatan pelunasan tagihan katering prasmanan?,relevant,pembayaran,true,train
+rel_syn_0222,Bagaimana indeks kualitas udara dan konsentrasi partikel PM2.5 di kota metropolitan?,out_of_domain,cuaca,true,train
+rel_syn_0223,Apakah pembayaran catering bisa melalui transfer bank BCA atau Mandiri?,relevant,pembayaran,true,train
+rel_syn_0224,Apakah peralatan makan katering seperti piring dan sendok dicuci higienis?,relevant,sop_kebijakan,true,train
+rel_syn_0225,Apa yang dimaksud dengan bilangan prima kembar dalam teori bilangan matematika?,out_of_domain,sains_matematika,true,train
+rel_syn_0226,Tolong paket snack box sore untuk rapat koordinasi dinas pemda.,relevant,menu_paket,true,train
+rel_syn_0227,Berapa tarif ongkir kirim paket kilat dokumen satu hari sampai antar kota?,out_of_domain,hard_negatives,true,train
+rel_syn_0228,Bagaimana proses penghitungan suara pemilu legislatif dengan metode Sainte-Lague?,out_of_domain,politik_pemerintahan,true,train
+rel_syn_0229,halo admin brp hrg nasi box ayam bakar utk 50 org ya,relevant,informal_wa,true,train
+rel_syn_0230,Berapa harga satu porsi menu hidangan penutup es krim dan buah?,relevant,harga_porsi,true,train
+rel_syn_0231,Apakah jadwal penerbangan maskapai Garuda ke Bali besok pagi tepat waktu?,out_of_domain,hard_negatives,true,train
+rel_syn_0232,Mau pesan kamar kost putri dekat kampus perguruan tinggi negeri untuk semester baru.,out_of_domain,hard_negatives,true,train
+rel_syn_0233,Apakah ada biaya charge tambahan jika membayar invoice katering via kartu kredit?,relevant,pembayaran,true,train
+rel_syn_0234,Berapa kapasitas masak dapur utama untuk pesanan nasi kotak akhir pekan ini?,relevant,operasional_staf,true,train
+rel_syn_0235,Tolong info paket makan siang harian untuk karyawan pabrik 50 porsi.,relevant,menu_paket,true,train
+rel_syn_0236,Bagaimana cara menghitung determinan dan invers matriks ordo tiga kali tiga?,out_of_domain,sains_matematika,true,train
+rel_syn_0237,Bagaimana kebijakan pembatalan katering akibat bencana alam atau darurat?,relevant,sop_kebijakan,true,train
+rel_syn_0238,Berapa harga tumpeng jajan pasar tradisional untuk perayaan 17 agustus?,relevant,harga_porsi,true,train
+rel_syn_0239,Kapan batas pembayaran DP untuk mengunci tanggal jadwal prasmanan pernikahan?,relevant,pembayaran,true,train
+rel_syn_0240,Tolong rincian rekening bank BNI atau BRI untuk pembayaran tagihan nasi box.,relevant,pembayaran,true,train
+rel_syn_0241,Cek status faktur invoice INV-202611-0044 apakah sudah diverifikasi finance.,relevant,operasional_staf,true,train
+rel_syn_0242,Bagaimana cara kerja mekanisme konsensus proof of stake pada aset kripto?,out_of_domain,finansial_kripto,true,train
+rel_syn_0243,Kami ingin tumpeng robyong untuk ritual adat syukuran rumah baru.,relevant,menu_paket,true,train
+rel_syn_0244,blh minta rek mandiri utk transfer pelunasan invoice catering,relevant,informal_wa,true,train
+rel_syn_0245,Apakah wadah prasmanan roll top chating dish selalu dipanaskan selama acara?,relevant,sop_kebijakan,true,train
+rel_syn_0246,Bagaimana cara pembayaran katering via QRIS atau virtual account?,relevant,pembayaran,true,train
+rel_syn_0247,Bagaimana aturan pergantian pemain cadangan pada pertandingan sepak bola resmi FIFA?,out_of_domain,olahraga,true,train
+rel_syn_0248,Berapa harga per kotak snack box premium isi 4 macam kue?,relevant,harga_porsi,true,train
+rel_syn_0249,Jam berapa batas toleransi keterlambatan pengiriman makanan katering?,relevant,jadwal_delivery,true,train
+rel_syn_0250,Apa strategi diversifikasi portofolio reksadana pendapatan tetap dan reksadana saham?,out_of_domain,finansial_kripto,true,train
+rel_syn_0251,Berapa harga per porsi paket prasmanan standar dan paket premium?,relevant,harga_porsi,true,train
+rel_syn_0252,Batas akhir konfirmasi bukti pembayaran DP pesanan katering tanggal berapa?,relevant,pembayaran,true,train
+rel_syn_0253,Berapa harga tumpeng barokah porsi 25 orang di akhir pekan?,relevant,harga_porsi,true,train
+rel_syn_0254,klo mau order tumpeng mini 30 porsi minimal hrg brp per box,relevant,informal_wa,true,train
+rel_syn_0255,Berapakah nilai konstanta gravitasi universal menurut hukum gravitasi Newton?,out_of_domain,sains_matematika,true,train
+rel_syn_0256,Bagaimana prosedur verifikasi pembayaran katering yang belum masuk mutasi?,relevant,pembayaran,true,train
+rel_syn_0257,Saya mau pesan jasa teknisi cuci dan servis AC ruangan pendingin tiga unit.,out_of_domain,hard_negatives,true,train
+rel_syn_0258,Bagaimana SOP pengemasan makanan panas agar tidak berembun di dalam kotak?,relevant,sop_kebijakan,true,train
+rel_syn_0259,Berapa harga porsi catering diet sehat langganan dua minggu?,relevant,harga_porsi,true,train
+rel_syn_0260,Bagaimana cara menghitung rasio price to earnings ratio pada saham emiten perbankan?,out_of_domain,finansial_kripto,true,train
+rel_syn_0261,Berapa biaya tambahan jika ingin menambah menu gubukan sate 100 porsi?,relevant,harga_porsi,true,train
+rel_syn_0262,Siapa aktor pemeran utama superhero laba-laba dalam trilogi film hollywood?,out_of_domain,sastra_hiburan,true,train
+rel_syn_0263,Apakah instrumen pasar uang cocok untuk menyimpan dana darurat keluarga?,out_of_domain,finansial_kripto,true,train
+rel_syn_0264,Bisa antar pesanan tumpeng besar dengan mobil khusus agar bentuknya aman?,relevant,jadwal_delivery,true,train
+rel_syn_0265,Berapa jam ketahanan makanan nasi box sejak waktu pengantaran katering?,relevant,jadwal_delivery,true,train
+rel_syn_0266,blh minta katalog foto paket prasmanan dekorasi sunda min,relevant,informal_wa,true,train
+rel_syn_0267,klo pelunasan catering bayar pas makanan nyampe di lokasi bs gak,relevant,informal_wa,true,train
+rel_syn_0268,Kapan jadwal pengumuman seleksi mahasiswa baru jalur mandiri universitas?,out_of_domain,hard_negatives,true,train
+rel_syn_0269,Daftar pesanan dengan status IN_PRODUCTION hari ini ada berapa banyak?,relevant,operasional_staf,true,train
+rel_syn_0270,Apa manfaat asupan vitamin D dan kalsium untuk menjaga kepadatan massa tulang?,out_of_domain,kesehatan_medis,true,train
+rel_syn_0271,Apakah paket prasmanan sudah termasuk hidangan penutup puding buah?,relevant,menu_paket,true,train
+rel_syn_0272,hrg paket nasi liwet komplit brp ya kl buat 40 porsi,relevant,informal_wa,true,train
+rel_syn_0273,Bagaimana cara membuat schema migration database menggunakan Alembic di Python?,out_of_domain,programming_tech,true,train
+rel_syn_0274,Bagaimana sejarah kerajaan Majapahit mencapai kejayaan di bawah Mahapatih Gajah Mada?,out_of_domain,sejarah_geografi,true,train
+rel_syn_0275,Tolong kirimkan nomor rekening resmi Catering Si Kembar untuk transfer DP.,relevant,pembayaran,true,train
+rel_syn_0276,min porsi nasi tumpeng nya apa nampung buat org dewasa kenyang,relevant,informal_wa,true,train
+rel_syn_0277,klo rubah jumlah pesanan h-2 sblm acara msh blh gak ya,relevant,informal_wa,true,train
+rel_syn_0278,Bisa pesan paket nasi bento anak sekolah lauk nugget dan sosis telur?,relevant,menu_paket,true,train
+rel_syn_0279,Bisa minta salinan NPWP Catering Si Kembar untuk kelengkapan administrasi kantor?,relevant,pembayaran,true,train
+rel_syn_0280,sy mau pesen snack box 100 kotak utk seminar kampus jumat bsk,relevant,informal_wa,true,train
+rel_syn_0281,Kami butuh paket nasi liwet sunda lengkap dengan tahu tempe dan sambal.,relevant,menu_paket,true,train
+rel_syn_0282,Bisa ceritakan dongeng fabel kancil dan buaya yang cerdik untuk anak?,out_of_domain,sastra_hiburan,true,train
+rel_syn_0283,Bagaimana proses fotosintesis menghasilkan oksigen dan glukosa pada kloroplas daun?,out_of_domain,sains_matematika,true,train
+rel_syn_0284,Bagaimana ketentuan denda jika peralatan katering pecah atau hilang saat acara?,relevant,sop_kebijakan,true,train
+rel_syn_0285,Berapa total harga nasi box 75 kotak lauk ayam goreng kremes?,relevant,harga_porsi,true,train
+rel_syn_0286,Di manakah ibukota resmi negara federasi Australia yang menjadi pusat parlemen?,out_of_domain,sejarah_geografi,true,train
+rel_syn_0287,"Apakah paket prasmanan sudah mencakup sewa meja, taplak, dan alat saji?",relevant,sop_kebijakan,true,train
+rel_syn_0288,Bagaimana pergerakan harga saham emiten energi dan koin bitcoin minggu ini?,out_of_domain,hard_negatives,true,train
+rel_syn_0289,Siapa penulis naskah drama panggung legendaris Romeo and Juliet dari Inggris?,out_of_domain,sastra_hiburan,true,train
+rel_syn_0290,Bagaimana aturan penentuan pemenang adu tendangan penalti dalam laga knockout turnamen?,out_of_domain,olahraga,true,train
+rel_syn_0291,Apakah paket prasmanan pernikahan include es doger atau es teler?,relevant,menu_paket,true,train
+rel_syn_0292,"Bagaimana jika jalanan macet parah, apakah ada antisipasi jadwal pengantaran?",relevant,jadwal_delivery,true,train
+rel_syn_0293,Apa perbedaan sistem presidensial dengan sistem parlementer di negara demokrasi?,out_of_domain,politik_pemerintahan,true,train
+rel_syn_0294,Apakah harga emas murni batangan dan mata uang kripto sedang naik drastis?,out_of_domain,hard_negatives,true,train
+rel_syn_0295,Apakah invoice katering bisa dikirim via email berformat PDF?,relevant,pembayaran,true,train
+rel_syn_0296,Bagaimana konfigurasi Dockerfile multi-stage build untuk memperkecil image Python?,out_of_domain,programming_tech,true,train
+rel_syn_0297,Bisa request jam tiba pengantaran nasi box tepat sebelum briefing peserta?,relevant,jadwal_delivery,true,train
+rel_syn_0298,Bagaimana pengaruh anomali iklim El Nino terhadap kekeringan lahan pertanian?,out_of_domain,cuaca,true,train
+rel_syn_0299,Apakah pengiriman katering prasmanan ke gedung resepsi sudah punya surat jalan?,relevant,jadwal_delivery,true,train
+rel_syn_0300,Bisa pesan katering nasi box untuk dikirim ke rumah duka malam ini?,relevant,jadwal_delivery,true,train
+rel_syn_0301,Apakah Catering Si Kembar menyediakan menu rendang daging sapi empuk?,relevant,menu_paket,true,train
+rel_syn_0302,Bagaimana cara meminta pengembalian kelebihan transfer dana pembayaran katering?,relevant,pembayaran,true,train
+rel_syn_0303,Bagaimana cara meredakan gejala asam lambung gerd yang kambuh di malam hari?,out_of_domain,kesehatan_medis,true,train
+rel_syn_0304,Minimal order tumpeng ulang tahun apakah bisa untuk 20 orang saja?,relevant,harga_porsi,true,train
+rel_syn_0305,Tolong cek status pembayaran pesanan ORD-202611-0003 apakah sudah lunas.,relevant,operasional_staf,true,train
+rel_syn_0306,sy mau tny paket prasmanan buat acara lamaran tgl 20 bs gak,relevant,informal_wa,true,train
+rel_syn_0307,Apa fungsi hooks useEffect dan useMemo pada framework frontend React?,out_of_domain,programming_tech,true,train
+rel_syn_0308,Bagaimana kebijakan jika ada pengurangan atau penambahan jumlah porsi katering?,relevant,sop_kebijakan,true,train
+rel_syn_0309,Apakah sendok garpu dan tisu sudah disediakan lengkap di setiap nasi box?,relevant,sop_kebijakan,true,train
+rel_syn_0310,Bagaimana hukum Kepler ketiga menjelaskan periode orbit planet mengelilingi matahari?,out_of_domain,sains_matematika,true,train
+rel_syn_0311,Bagaimana teknik akting teater monolog membawakan emosi karakter protagonis?,out_of_domain,sastra_hiburan,true,train
+rel_syn_0312,Bagaimana konfirmasi jadwal jika pengantaran katering dibagi ke dua gedung berbeda?,relevant,jadwal_delivery,true,train
+rel_syn_0313,Apakah lauk ayam rica rica sangat pedas atau bisa disesuaikan levelnya?,relevant,menu_paket,true,train
+rel_syn_0314,Berapa biaya per pax paket prasmanan reuni akbar 250 orang?,relevant,harga_porsi,true,train
+rel_syn_0315,Apakah armada katering bisa masuk ke loading dock basement mall?,relevant,jadwal_delivery,true,train
+rel_syn_0316,Berapakah kecepatan rambat cahaya di ruang hampa udara dalam meter per detik?,out_of_domain,sains_matematika,true,train
+rel_syn_0317,Bisa minta bumbu sambal dipisah agar anak-anak bisa makan lauknya?,relevant,sop_kebijakan,true,train
+rel_syn_0318,Apakah ada diskon potongan harga untuk pelanggan langganan mingguan?,relevant,harga_porsi,true,train
+rel_syn_0319,Bagaimana cara pesan tiket kapal feri penyeberangan pelabuhan Merak secara daring?,out_of_domain,hard_negatives,true,train
 rel_syn_0320,Berapa perkiraan total biaya katering nasi box untuk workshop 3 hari?,relevant,harga_porsi,true,train
-rel_syn_0321,min apa bs antar nasi box jam 7 pagi ke dago bbrp hari lg,relevant,informal_wa,true,train
-rel_syn_0322,klo pesen 250 nasi box dpt bonus potongan hrg gak min,relevant,informal_wa,true,train
-rel_syn_0323,Bisa buatkan kuitansi bermaterai 10000 atas nama yayasan kami?,relevant,pembayaran,true,train
-rel_syn_0324,Berapa harga paket snack box paling murah per kotaknya?,relevant,harga_porsi,true,train
-rel_syn_0325,Mau pesan kamar kost putri dekat kampus perguruan tinggi negeri untuk semester baru.,out_of_domain,hard_negatives,true,train
-rel_syn_0326,Apakah paket prasmanan pernikahan include es doger atau es teler?,relevant,menu_paket,true,train
-rel_syn_0327,Bagaimana konfigurasi reverse proxy Nginx untuk load balancing request HTTP?,out_of_domain,programming_tech,true,train
-rel_syn_0328,Berapa harga paket sarapan bubur ayam katering untuk 100 porsi?,relevant,harga_porsi,true,train
-rel_syn_0329,Bisa pesan paket snack box isi risoles mayo dan kue sus buah?,relevant,menu_paket,true,train
-rel_syn_0330,klo pelunasan catering bayar pas makanan nyampe di lokasi bs gak,relevant,informal_wa,true,train
-rel_syn_0331,Siapa tokoh penjelajah samudera asal Portugis yang pertama kali mendarat di Malaka?,out_of_domain,sejarah_geografi,true,train
-rel_syn_0332,Berapa dividen yield tahunan yang dibagikan oleh perusahaan tambang batubara?,out_of_domain,finansial_kripto,true,train
-rel_syn_0333,Apakah ada harga khusus paket nasi box untuk yayasan amal dan panti?,relevant,harga_porsi,true,train
-rel_syn_0334,Apakah melayani pembayaran tempo dengan surat pesanan dinas atau PO?,relevant,pembayaran,true,train
-rel_syn_0335,Bisa minta salinan NPWP Catering Si Kembar untuk kelengkapan administrasi kantor?,relevant,pembayaran,true,train
-rel_syn_0336,Berapa luas wilayah benua Asia dibandingkan total daratan bumi secara keseluruhan?,out_of_domain,sejarah_geografi,true,train
-rel_syn_0337,Kapan pesta olahraga Asian Games berikutnya diselenggarakan di negara tuan rumah?,out_of_domain,olahraga,true,train
-rel_syn_0338,min ada paket snack box isi lemper pastel sm bolu gak brp hrgnya,relevant,informal_wa,true,train
-rel_syn_0339,Bagaimana SOP pengemasan makanan panas agar tidak berembun di dalam kotak?,relevant,sop_kebijakan,true,train
-rel_syn_0340,Bisa request menu diet rendah garam untuk peserta lansia di acara keluarga?,relevant,sop_kebijakan,true,train
-rel_syn_0341,Apakah ada paket nasi box ayam bakar madu untuk makan siang kantor?,relevant,menu_paket,true,train
-rel_syn_0342,Di manakah ibukota resmi negara federasi Australia yang menjadi pusat parlemen?,out_of_domain,sejarah_geografi,true,train
-rel_syn_0343,Apakah menu katering aman untuk penderita alergi kacang dan seafood?,relevant,sop_kebijakan,true,train
-rel_syn_0344,"Apakah paket prasmanan sudah mencakup sewa meja, taplak, dan alat saji?",relevant,sop_kebijakan,true,train
-rel_syn_0345,Apa fungsi lembaga Dewan Perwakilan Daerah dalam menyerap aspirasi daerah?,out_of_domain,politik_pemerintahan,true,train
-rel_syn_0346,Berapa persen potongan pph 23 yang dipotong dari tagihan katering?,relevant,pembayaran,true,train
-rel_syn_0347,Berapa biaya per pax paket prasmanan reuni akbar 250 orang?,relevant,harga_porsi,true,train
-rel_syn_0348,Kapan perjanjian Roem-Royen ditandatangani untuk menghentikan agresi militer Belanda?,out_of_domain,sejarah_geografi,true,train
-rel_syn_0349,Apakah armada katering bisa masuk ke loading dock basement mall?,relevant,jadwal_delivery,true,train
-rel_syn_0350,Ada promo atau diskon harga untuk pesanan nasi box di atas 200 pax?,relevant,harga_porsi,true,train
-rel_syn_0351,Apakah ada garansi makanan tiba tepat waktu sebelum jam makan siang?,relevant,jadwal_delivery,true,train
-rel_syn_0352,sy mau pesan nasi box ayam kremes 80 kotak utk syukuran kantor,relevant,informal_wa,true,test
-rel_syn_0353,min apa bs request sambal dipisah utk menu nasi liwet,relevant,informal_wa,true,test
-rel_syn_0354,Mengapa sering terjadi kabut tebal di kawasan pegunungan saat pagi hari?,out_of_domain,cuaca,true,test
-rel_syn_0355,Berapa lead time pemesanan nasi box 500 kotak untuk acara jalan santai?,relevant,jadwal_delivery,true,test
-rel_syn_0356,Saya mau pesan hotel murah dekat stasiun kereta untuk liburan.,out_of_domain,hard_negatives,true,test
-rel_syn_0357,Apakah juru masak katering sudah terlatih dan bersertifikasi keahlian kuliner?,relevant,sop_kebijakan,true,test
-rel_syn_0358,Berapa jam ketahanan makanan nasi box sejak waktu pengantaran katering?,relevant,jadwal_delivery,true,test
-rel_syn_0359,Apakah bukti transfer DP katering harus dikonfirmasi lewat WhatsApp admin?,relevant,pembayaran,true,test
-rel_syn_0360,Berapa tarif per porsi untuk menu buffet prasmanan 150 tamu undangan?,relevant,harga_porsi,true,test
-rel_syn_0361,min apa ada menu khusus vegetarian buat tamu asing di prasmanan,relevant,informal_wa,true,test
-rel_syn_0362,Kapan tagihan katering makan siang kantor bulanan jatuh tempo?,relevant,pembayaran,true,test
-rel_syn_0363,mhn info menu ayam lengkuas sm rendang apa ada di paket hemat,relevant,informal_wa,true,test
-rel_syn_0364,dp katering brp persen ya min apa bs transfer via bca,relevant,informal_wa,true,test
-rel_syn_0365,Apakah Catering Si Kembar melayani pengantaran katering ke area kampus Jatinangor?,relevant,jadwal_delivery,true,test
-rel_syn_0366,Bagaimana struktur bait sajak puisi soneta klasik empat belas baris?,out_of_domain,sastra_hiburan,true,test
-rel_syn_0367,Apa perbedaan pasar saham primer initial public offering dengan pasar sekunder?,out_of_domain,finansial_kripto,true,test
-rel_syn_0368,Di manakah letak palung laut terdalam Mariana di samudera pasifik timur?,out_of_domain,sejarah_geografi,true,test
-rel_syn_0369,min alamat dapur katering nya di mana mau mampir liat menu,relevant,informal_wa,true,test
-rel_syn_0370,Bagaimana sejarah pembentukan sistem pemerintahan parlementer pada awal kemerdekaan?,out_of_domain,politik_pemerintahan,true,test
-rel_syn_0371,Apakah minyak goreng yang digunakan di dapur katering selalu baru dan bersih?,relevant,sop_kebijakan,true,test
-rel_syn_0372,Apakah pesanan nasi box bisa diantar jam 7 pagi tepat ke lokasi kantor?,relevant,jadwal_delivery,true,test
-rel_syn_0373,Berapa suku bunga acuan BI rate yang ditetapkan dewan gubernur bank indonesia?,out_of_domain,finansial_kripto,true,test
-rel_syn_0374,Berapa biaya penggantian oli mesin dan filter udara kendaraan roda empat?,out_of_domain,hard_negatives,true,test
-rel_syn_0375,Bisa minta sendok plastik steril dan tisu dimasukkan ke dalam setiap snack box?,relevant,sop_kebijakan,true,test
-rel_syn_0376,Jam berapa tim katering tiba di gedung untuk menata meja prasmanan?,relevant,jadwal_delivery,true,test
-rel_syn_0377,Bagaimana cara profiling performa query database yang lambat di MySQL?,out_of_domain,programming_tech,true,test
-rel_syn_0378,Tolong paket snack box sore untuk rapat koordinasi dinas pemda.,relevant,menu_paket,true,test
-rel_syn_0379,Berapa harga sewa tenda camping kemah di kawasan wisata alam pegunungan?,out_of_domain,hard_negatives,true,test
-rel_syn_0380,Bagaimana cara pesan layanan taksi dan ojek online lewat aplikasi peta navigasi?,out_of_domain,hard_negatives,true,test
-rel_syn_0381,Siapakah pengarang novel Laskar Pelangi yang menceritakan kehidupan anak Belitung?,out_of_domain,sastra_hiburan,true,test
-rel_syn_0382,Bagaimana prosedur verifikasi pembayaran katering yang belum masuk mutasi?,relevant,pembayaran,true,test
-rel_syn_0383,Apakah uang DP katering bisa kembali jika terjadi force majeure?,relevant,pembayaran,true,test
-rel_syn_0384,Apa wewenang dan tugas Mahkamah Konstitusi dalam menguji undang-undang?,out_of_domain,politik_pemerintahan,true,test
-rel_syn_0385,Bisa kirim pesanan snack box bertahap jam 9 pagi dan jam 2 siang?,relevant,jadwal_delivery,true,test
-rel_syn_0386,Apakah sistem katering menyediakan opsi pembayaran cash on delivery?,relevant,pembayaran,true,test
-rel_syn_0387,Bisa minta kantong kresek tambahan untuk membagikan sisa snack box?,relevant,sop_kebijakan,true,test
-rel_syn_0388,Tolong jelaskan teori relativitas khusus Einstein tentang dilatasi waktu dan panjang.,out_of_domain,sains_matematika,true,test
-rel_syn_0389,mhn info batas akhir bayar dp katering biar tgl gak diambil org,relevant,informal_wa,true,test
-rel_syn_0390,Bisa minta label nama menu di setiap chafing dish meja prasmanan?,relevant,sop_kebijakan,true,test
-rel_syn_0391,Berapa estimasi biaya snack box coffee break untuk 2 sesi pagi dan sore?,relevant,harga_porsi,true,test
-rel_syn_0392,Apakah pembayaran katering bisa dicicil dua kali sebelum hari H?,relevant,pembayaran,true,test
-rel_syn_0393,Berapa harga nasi liwet daun pisang per porsi untuk 40 orang?,relevant,harga_porsi,true,test
-rel_syn_0394,Tolong jelaskan perbedaan mendasar antara inheritance dan composition pada OOP Java.,out_of_domain,programming_tech,true,test
-rel_syn_0395,Apakah bukti potong pajak PPh pasal 23 bisa kami serahkan bulan depan?,relevant,pembayaran,true,test
-rel_syn_0396,Apa faktor penyebab utama meletusnya perang dunia pertama di benua eropa?,out_of_domain,sejarah_geografi,true,test
-rel_syn_0397,Bagaimana cara mengajukan perubahan pilihan menu lauk nasi box sebelum H-2?,relevant,sop_kebijakan,true,test
-rel_syn_0398,Bisa minta jadwal pengantaran dipercepat satu jam dari jadwal awal?,relevant,jadwal_delivery,true,test
-rel_syn_0399,tgl 15 msh ada slot kosong gak min utk pesanan prasmanan 150 pax,relevant,informal_wa,true,test
-rel_syn_0400,Berapa suhu rata-rata permukaan bumi akibat fenomena pemanasan global saat ini?,out_of_domain,cuaca,true,test
-rel_syn_0401,Kapan jadwal bongkar dan pembersihan meja prasmanan setelah acara resepsi selesai?,relevant,jadwal_delivery,true,test
-rel_syn_0402,Tersedia paket prasmanan murah untuk acara syukuran kelulusan?,relevant,menu_paket,true,test
-rel_syn_0403,Berapa estimasi biaya prasmanan untuk resepsi pernikahan 300 pax?,relevant,harga_porsi,true,test
-rel_syn_0404,Jadwal pertandingan sepak bola Liga Inggris malam ini disiarkan jam berapa?,out_of_domain,hard_negatives,true,test
-rel_syn_0405,Kapan tim catering mengambil kembali wadah dan peralatan prasmanan?,relevant,jadwal_delivery,true,test
-rel_syn_0406,Berapa minimal order nasi tumpeng besar di Catering Si Kembar?,relevant,harga_porsi,true,test
-rel_syn_0407,sy mau tny paket prasmanan buat acara lamaran tgl 20 bs gak,relevant,informal_wa,true,test
-rel_syn_0408,Apa perbedaan diabetes mellitus tipe satu dengan diabetes mellitus tipe dua?,out_of_domain,kesehatan_medis,true,test
-rel_syn_0409,Kapan matahari berada tepat di garis khatulistiwa saat fenomena ekuinoks terjadi?,out_of_domain,cuaca,true,test
-rel_syn_0410,Berapa tarif katering per porsi untuk acara buka puasa bersama 120 orang?,relevant,harga_porsi,true,test
-rel_syn_0411,Bagaimana prosedur konfirmasi perubahan jam acara katering di hari H?,relevant,sop_kebijakan,true,test
-rel_syn_0412,Berapa biaya paket langganan internet wifi berkecepatan tinggi per bulan?,out_of_domain,hard_negatives,true,test
-rel_syn_0413,Apakah ada peringatan dini gelombang pasang tinggi di perairan selat sunda?,out_of_domain,cuaca,true,test
-rel_syn_0414,Berapa minimal pemesanan nasi box untuk wilayah pengantaran Bandung kota?,relevant,harga_porsi,true,test
-rel_syn_0415,Bisa rekomendasikan judul buku novel nonfiksi motivasi self improvement terlaris?,out_of_domain,sastra_hiburan,true,test
-rel_syn_0416,Kapan jadwal kirim makanan untuk acara sahur bersama bulan ramadhan?,relevant,jadwal_delivery,true,test
-rel_syn_0417,Minimal pemesanan snack box untuk acara kantor berapa box ya?,relevant,harga_porsi,true,test
-rel_syn_0418,Sebutkan nama-nama negara pendiri perhimpunan bangsa asia tenggara ASEAN.,out_of_domain,sejarah_geografi,true,test
-rel_syn_0419,Bagaimana kronologi peristiwa sumpah pemuda 28 oktober 1928 di Jakarta?,out_of_domain,sejarah_geografi,true,test
-rel_syn_0420,Jadwal pemberian vaksin flu dan hepatitis di puskesmas kelurahan hari apa saja?,out_of_domain,hard_negatives,true,test
-rel_syn_0421,Bagaimana prosedur pembayaran uang muka DP katering apakah 60 persen?,relevant,pembayaran,true,test
-rel_syn_0422,Apakah menerima pembayaran katering via kartu kredit korporat?,relevant,pembayaran,true,test
-rel_syn_0423,mhn info pricelist katering nasi box hemat buat rapat kantor dong,relevant,informal_wa,true,test
-rel_syn_0424,Tolong tuliskan lirik lagu daerah Rasa Sayange yang berasal dari kepulauan Maluku.,out_of_domain,sastra_hiburan,true,test
-rel_syn_0425,Berapa estimasi harga beli rumah cluster subsidi di kawasan pinggiran kota?,out_of_domain,hard_negatives,true,test
-rel_syn_0426,Bagaimana prosedur pembatalan pesanan katering jika acara keluarga ditunda?,relevant,sop_kebijakan,true,test
-rel_syn_0427,Apakah bisa bayar pelunasan katering secara tunai di lokasi saat pengantaran?,relevant,pembayaran,true,test
-rel_syn_0428,Bagaimana strategi formasi menyerang empat tiga tiga pada pertandingan sepak bola modern?,out_of_domain,olahraga,true,test
-rel_syn_0429,Menu nasi box bento ayam teriyaki apakah bisa dipesan untuk anak sekolah?,relevant,menu_paket,true,test
-rel_syn_0430,Apakah ada bukti tanda terima resmi saat DP katering diserahkan tunai?,relevant,pembayaran,true,test
-rel_syn_0431,Apakah ada potensi hujan disertai kilat petir melanda kawasan pesisir utara?,out_of_domain,cuaca,true,test
-rel_syn_0432,Berapa target pergerakan indeks harga saham gabungan IHSG di bursa efek hari ini?,out_of_domain,finansial_kripto,true,test
-rel_syn_0433,Kapan jadwal pengumuman seleksi mahasiswa baru jalur mandiri universitas?,out_of_domain,hard_negatives,true,test
-rel_syn_0434,Apakah ada paket tumpeng nasi uduk komplit dengan telur balado?,relevant,menu_paket,true,test
-rel_syn_0435,Tolong kirimkan proforma invoice untuk persetujuan anggaran katering rapat.,relevant,pembayaran,true,test
-rel_syn_0436,Bisa order tumpeng mini personal box isi ayam suwir dan urap sayur?,relevant,menu_paket,true,test
-rel_syn_0437,Berapa kadar tekanan darah normal untuk orang dewasa usia produktif saat istirahat?,out_of_domain,kesehatan_medis,true,test
-rel_syn_0438,Kapan batas paling lambat pelunasan invoice nasi box seminar kampus?,relevant,pembayaran,true,test
-rel_syn_0439,Apakah ada pengawasan mutu dan food testing sebelum makanan katering dikirim?,relevant,sop_kebijakan,true,test
+rel_syn_0321,Berapa estimasi biaya makan siang prasmanan 80 staf kantor sebulan?,relevant,harga_porsi,true,train
+rel_syn_0322,Apakah tim katering menyediakan tempat sampah dan kantong plastik di lokasi?,relevant,sop_kebijakan,true,train
+rel_syn_0323,Bisa sediakan paket gubukan siomay bandung dan bakso malang?,relevant,menu_paket,true,train
+rel_syn_0324,Berapa biaya tambahan bila memesan nasi box dengan wadah bento sekat?,relevant,harga_porsi,true,train
+rel_syn_0325,Bagaimana cara menyelesaikan persamaan diferensial linier orde satu non-homogen?,out_of_domain,sains_matematika,true,train
+rel_syn_0326,Siapa komposer lagu simfoni klasik terkenal asal Austria di era romantis?,out_of_domain,sastra_hiburan,true,train
+rel_syn_0327,Berapa harga tumpeng tampah besar ukuran porsi 50 orang?,relevant,harga_porsi,true,train
+rel_syn_0328,Bisa pesan tumpeng tampah porsi 30 orang dengan lauk ayam rica rica?,relevant,menu_paket,true,train
+rel_syn_0329,min alamat dapur katering nya di mana mau mampir liat menu,relevant,informal_wa,true,train
+rel_syn_0330,brp biaya ongkir kirim catering nasi box ke cimahi min,relevant,informal_wa,true,train
+rel_syn_0331,Apakah ada panduan waktu konsumsi terbaik pada kemasan nasi box katering?,relevant,sop_kebijakan,true,train
+rel_syn_0332,Berapa harga paket nasi kuning ulang tahun anak per pack?,relevant,harga_porsi,true,train
+rel_syn_0333,Berapa estimasi harga katering nasi box untuk study tour 4 bus sekolah?,relevant,harga_porsi,true,train
+rel_syn_0334,Bagaimana cara refund uang pembelian tiket konser musik yang dibatalkan panitia?,out_of_domain,hard_negatives,true,train
+rel_syn_0335,Apa perbedaan microservices architecture dengan monolithic architecture pada software?,out_of_domain,programming_tech,true,train
+rel_syn_0336,Berapa lead time pemesanan nasi box 500 kotak untuk acara jalan santai?,relevant,jadwal_delivery,true,train
+rel_syn_0337,Apakah kurir katering mengantarkan nasi box langsung ke lantai 5 kantor?,relevant,jadwal_delivery,true,train
+rel_syn_0338,Apa penyebab umum terjadinya penyakit radang usus buntu appendicitis akut?,out_of_domain,kesehatan_medis,true,train
+rel_syn_0339,Berapa harga sewa tenda camping kemah di kawasan wisata alam pegunungan?,out_of_domain,hard_negatives,true,train
+rel_syn_0340,Apakah pesanan katering ORD-202611-0045 sudah berstatus CONFIRMED di sistem?,relevant,operasional_staf,true,train
+rel_syn_0341,Berapa jumlah provinsi di wilayah kepulauan Republik Indonesia saat ini?,out_of_domain,sejarah_geografi,true,train
+rel_syn_0342,Apakah ada biaya administrasi tambahan untuk pembayaran lewat transfer bank?,relevant,pembayaran,true,train
+rel_syn_0343,Siapa juara dunia tinju kelas berat sejati yang mempertahankan sabuk gelarnya?,out_of_domain,olahraga,true,train
+rel_syn_0344,Bisa request menu diet rendah garam untuk peserta lansia di acara keluarga?,relevant,sop_kebijakan,true,train
+rel_syn_0345,Berapa ongkos kirim pengantaran katering ke daerah Dago dan Lembang?,relevant,jadwal_delivery,true,train
+rel_syn_0346,Bagaimana konfigurasi reverse proxy Nginx untuk load balancing request HTTP?,out_of_domain,programming_tech,true,train
+rel_syn_0347,klo mau sewa gubukan siomay aja 100 porsi bs gak min,relevant,informal_wa,true,train
+rel_syn_0348,halo min catering si kembar hari minggu ttp buka delivery kan,relevant,informal_wa,true,train
+rel_syn_0349,Berapa harga paket nasi box per kotak untuk pesanan 100 orang?,relevant,harga_porsi,true,train
+rel_syn_0350,Bagaimana mekanisme kerja vaksin mrna dalam membentuk antibodi kekebalan tubuh?,out_of_domain,kesehatan_medis,true,train
+rel_syn_0351,Jadwal bus bandara DAMRI rute terminal Soekarno Hatta menuju pusat kota jam berapa?,out_of_domain,hard_negatives,true,train
+rel_syn_0352,Bisa terbitkan faktur pajak elektronik untuk pesanan katering perusahaan?,relevant,pembayaran,true,train
+rel_syn_0353,Bagaimana analisis indikator moving average convergence divergence MACD pada grafik?,out_of_domain,finansial_kripto,true,train
+rel_syn_0354,Berapa jumlah set untuk mengakhiri pertandingan tenis tunggal putra grand slam?,out_of_domain,olahraga,true,train
+rel_syn_0355,Bisa ubah jadwal pengantaran makan siang dari jam 12 jadi jam 11 siang?,relevant,jadwal_delivery,true,train
+rel_syn_0356,Bagaimana prosedur pengantaran makanan katering saat cuaca hujan lebat?,relevant,jadwal_delivery,true,train
+rel_syn_0357,Jelaskan prinsip SOLID dalam perancangan perangkat lunak berorientasi objek.,out_of_domain,programming_tech,true,train
+rel_syn_0358,Bisa pesan catering prasmanan mendadak H-1 jika menu standar?,relevant,jadwal_delivery,true,train
+rel_syn_0359,"Bagaimana jika kami membatalkan pesanan, apakah DP dipotong separuh?",relevant,pembayaran,true,train
+rel_syn_0360,Apakah harga saham perbankan dan koin bitcoin sedang mengalami kenaikan tren pasar?,out_of_domain,hard_negatives,true,train
+rel_syn_0361,Menu nasi box bento ayam teriyaki apakah bisa dipesan untuk anak sekolah?,relevant,menu_paket,true,train
+rel_syn_0362,Berapa biaya perpanjangan surat izin mengemudi SIM C di mobil keliling?,out_of_domain,hard_negatives,true,train
+rel_syn_0363,Apakah ada garansi makanan tiba tepat waktu sebelum jam makan siang?,relevant,jadwal_delivery,true,train
+rel_syn_0364,Apakah ada paket nasi box ayam bakar madu untuk makan siang kantor?,relevant,menu_paket,true,train
+rel_syn_0365,Bisa request menu tumpeng mini untuk syukuran wisuda anak?,relevant,menu_paket,true,train
+rel_syn_0366,brp no wa kurir katering yg anter nasi box ke gedung dinas,relevant,informal_wa,true,train
+rel_syn_0367,Kami butuh nasi box isi ayam kalasan dan tempe orek 120 kotak.,relevant,menu_paket,true,train
+rel_syn_0368,mhn info menu ayam lengkuas sm rendang apa ada di paket hemat,relevant,informal_wa,true,train
+rel_syn_0369,Apakah DP pesanan tumpeng harus lunas saat pemesanan dikonfirmasi?,relevant,pembayaran,true,train
+rel_syn_0370,min mau tny apa sewa alat makan prasmanan udh free biaya cuci,relevant,informal_wa,true,train
+rel_syn_0371,Apakah sambal goreng ati kentang termasuk dalam lauk paket prasmanan?,relevant,menu_paket,true,train
+rel_syn_0372,Kapan perjanjian Roem-Royen ditandatangani untuk menghentikan agresi militer Belanda?,out_of_domain,sejarah_geografi,true,train
+rel_syn_0373,Apa syarat formil pencalonan presiden dan wakil presiden menurut konstitusi?,out_of_domain,politik_pemerintahan,true,train
+rel_syn_0374,Apakah disediakan wadah take away untuk sisa makanan prasmanan resepsi?,relevant,sop_kebijakan,true,train
+rel_syn_0375,Apakah bisa bayar DP katering 50 persen dulu dan sisanya setelah acara?,relevant,pembayaran,true,train
+rel_syn_0376,Kapan jadwal final basket playoff dan turnamen sepak bola disiarkan minggu ini?,out_of_domain,hard_negatives,true,train
+rel_syn_0377,Apakah uang DP katering bisa kembali jika terjadi force majeure?,relevant,pembayaran,true,train
+rel_syn_0378,Apakah menu gado gado pengantin bisa disajikan di buffet prasmanan?,relevant,menu_paket,true,train
+rel_syn_0379,Apakah pesanan tumpeng tampah ORD-202612-0022 sudah mulai diproses dapur?,relevant,operasional_staf,true,train
+rel_syn_0380,Apakah katering melayani sertifikasi bebas babi dan minyak non-halal?,relevant,sop_kebijakan,true,train
+rel_syn_0381,Berapa harga paket snack box manis dan asin untuk seminar kampus?,relevant,menu_paket,true,train
+rel_syn_0382,Saya mau pesan seragam kerja kantor ukuran custom ke penjahit konveksi.,out_of_domain,hard_negatives,true,train
+rel_syn_0383,Bagaimana kebijakan katering mengenai protokol kesehatan saat menyajikan makanan?,relevant,sop_kebijakan,true,train
+rel_syn_0384,Tolong cek rincian menu dan alamat pengiriman pesanan ORD-202611-0012.,relevant,operasional_staf,true,train
+rel_syn_0385,Tolong jelaskan teori relativitas khusus Einstein tentang dilatasi waktu dan panjang.,out_of_domain,sains_matematika,true,test
+rel_syn_0386,Berapa biaya katering nasi box sehat rendah kolesterol 40 porsi?,relevant,harga_porsi,true,test
+rel_syn_0387,Apakah ada pengawasan mutu dan food testing sebelum makanan katering dikirim?,relevant,sop_kebijakan,true,test
+rel_syn_0388,Bagaimana strategi formasi menyerang empat tiga tiga pada pertandingan sepak bola modern?,out_of_domain,olahraga,true,test
+rel_syn_0389,Kapan jadwal bongkar dan pembersihan meja prasmanan setelah acara resepsi selesai?,relevant,jadwal_delivery,true,test
+rel_syn_0390,Apakah minyak goreng yang digunakan di dapur katering selalu baru dan bersih?,relevant,sop_kebijakan,true,test
+rel_syn_0391,Kapan tagihan katering makan siang kantor bulanan jatuh tempo?,relevant,pembayaran,true,test
+rel_syn_0392,sy mau pesan nasi box ayam kremes 80 kotak utk syukuran kantor,relevant,informal_wa,true,test
+rel_syn_0393,Bagaimana cara pesan tiket bioskop secara online lewat aplikasi smartphone?,out_of_domain,hard_negatives,true,test
+rel_syn_0394,Apakah air minum kemasan cup atau botol sudah include dalam paket katering?,relevant,sop_kebijakan,true,test
+rel_syn_0395,Tampilkan rekap jadwal produksi menu prasmanan tanggal 20 November besok.,relevant,operasional_staf,true,test
+rel_syn_0396,Kapan tim catering mengambil kembali wadah dan peralatan prasmanan?,relevant,jadwal_delivery,true,test
+rel_syn_0397,Berapa estimasi biaya snack box coffee break untuk 2 sesi pagi dan sore?,relevant,harga_porsi,true,test
+rel_syn_0398,Tersedia paket prasmanan murah untuk acara syukuran kelulusan?,relevant,menu_paket,true,test
+rel_syn_0399,Bisa minta jadwal pengantaran dipercepat satu jam dari jadwal awal?,relevant,jadwal_delivery,true,test
+rel_syn_0400,Apakah ada potensi hujan disertai kilat petir melanda kawasan pesisir utara?,out_of_domain,cuaca,true,test
+rel_syn_0401,Bagaimana sejarah pembentukan sistem pemerintahan parlementer pada awal kemerdekaan?,out_of_domain,politik_pemerintahan,true,test
+rel_syn_0402,Berapa harga nasi liwet daun pisang per porsi untuk 40 orang?,relevant,harga_porsi,true,test
+rel_syn_0403,Apakah juru masak katering sudah terlatih dan bersertifikasi keahlian kuliner?,relevant,sop_kebijakan,true,test
+rel_syn_0404,Jam berapa tim katering tiba di gedung untuk menata meja prasmanan?,relevant,jadwal_delivery,true,test
+rel_syn_0405,Apakah fluktuasi harga komoditas tambang dan saham batu bara sedang stabil minggu ini?,out_of_domain,hard_negatives,true,test
+rel_syn_0406,Berapa porsi kapasitas masak tersisa di dapur untuk tanggal 25 Desember?,relevant,operasional_staf,true,test
+rel_syn_0407,Mengapa sering terjadi kabut tebal di kawasan pegunungan saat pagi hari?,out_of_domain,cuaca,true,test
+rel_syn_0408,Apa faktor penyebab utama meletusnya perang dunia pertama di benua eropa?,out_of_domain,sejarah_geografi,true,test
+rel_syn_0409,Apakah menerima pembayaran katering via kartu kredit korporat?,relevant,pembayaran,true,test
+rel_syn_0410,Cek invoice INV-202612-0008 apakah bukti transfer pelunasan sudah masuk.,relevant,operasional_staf,true,test
+rel_syn_0411,klo pesen 250 nasi box dpt bonus potongan hrg gak min,relevant,informal_wa,true,test
+rel_syn_0412,Di manakah letak palung laut terdalam Mariana di samudera pasifik timur?,out_of_domain,sejarah_geografi,true,test
+rel_syn_0413,Bisa kirim pesanan snack box bertahap jam 9 pagi dan jam 2 siang?,relevant,jadwal_delivery,true,test
+rel_syn_0414,Bisa buatkan kuitansi bermaterai 10000 atas nama yayasan kami?,relevant,pembayaran,true,test
+rel_syn_0415,Apakah kemasan nasi box yang digunakan ramah lingkungan dan food grade?,relevant,sop_kebijakan,true,test
+rel_syn_0416,Apakah pesanan katering ORD-202611-0062 sudah selesai dimasak tim koki?,relevant,operasional_staf,true,test
+rel_syn_0417,Jadwal pemberian vaksin flu dan hepatitis di puskesmas kelurahan hari apa saja?,out_of_domain,hard_negatives,true,test
+rel_syn_0418,Apakah bukti transfer DP katering harus dikonfirmasi lewat WhatsApp admin?,relevant,pembayaran,true,test
+rel_syn_0419,Bagaimana SOP penanganan keluhan pelanggan jika makanan katering rusak?,relevant,sop_kebijakan,true,test
+rel_syn_0420,Apakah Catering Si Kembar melayani pengantaran katering ke area kampus Jatinangor?,relevant,jadwal_delivery,true,test
+rel_syn_0421,Apakah batas akhir konfirmasi pesanan katering adalah H-3 sebelum acara?,relevant,jadwal_delivery,true,test
+rel_syn_0422,nasi box nya apa udh dpt sendok garpu sm tisu dlm kotaknya min,relevant,informal_wa,true,test
+rel_syn_0423,klo batal pesen catering uang dp nya bs balik brp persen min,relevant,informal_wa,true,test
+rel_syn_0424,Bagaimana jadwal produksi katering pernikahan untuk shift Sabtu siang?,relevant,operasional_staf,true,test
+rel_syn_0425,Bisa minta label nama menu di setiap chafing dish meja prasmanan?,relevant,sop_kebijakan,true,test
+rel_syn_0426,Berapa target pergerakan indeks harga saham gabungan IHSG di bursa efek hari ini?,out_of_domain,finansial_kripto,true,test
+rel_syn_0427,Bisa rekomendasikan judul buku novel nonfiksi motivasi self improvement terlaris?,out_of_domain,sastra_hiburan,true,test
+rel_syn_0428,Apa perbedaan pasar saham primer initial public offering dengan pasar sekunder?,out_of_domain,finansial_kripto,true,test
+rel_syn_0429,Berapa minimum pemesanan gubukan bakso untuk pelengkap prasmanan?,relevant,harga_porsi,true,test
+rel_syn_0430,Bagaimana struktur bait sajak puisi soneta klasik empat belas baris?,out_of_domain,sastra_hiburan,true,test
+rel_syn_0431,Apa wewenang dan tugas Mahkamah Konstitusi dalam menguji undang-undang?,out_of_domain,politik_pemerintahan,true,test
+rel_syn_0432,Berapa suku bunga acuan BI rate yang ditetapkan dewan gubernur bank indonesia?,out_of_domain,finansial_kripto,true,test
+rel_syn_0433,Apakah uang muka DP untuk pesanan ORD-202612-0015 sudah terverifikasi admin?,relevant,operasional_staf,true,test
+rel_syn_0434,Berapa harga nasi tumpeng tampah porsi 15 orang untuk syukuran kecil?,relevant,harga_porsi,true,test
+rel_syn_0435,Berapa estimasi biaya prasmanan untuk resepsi pernikahan 300 pax?,relevant,harga_porsi,true,test
+rel_syn_0436,Saya mau pesan hotel murah dekat stasiun kereta untuk liburan.,out_of_domain,hard_negatives,true,test
+rel_syn_0437,Berapa estimasi biaya pengecatan ulang bodi mobil sedan di bengkel ketok magic?,out_of_domain,hard_negatives,true,test
+rel_syn_0438,blh minta rincian menu prasmanan yg halal dan hrg per porsinya,relevant,informal_wa,true,test
+rel_syn_0439,Bagaimana cara profiling performa query database yang lambat di MySQL?,out_of_domain,programming_tech,true,test
+rel_syn_0440,tgl 15 msh ada slot kosong gak min utk pesanan prasmanan 150 pax,relevant,informal_wa,true,test
+rel_syn_0441,Berapa minimal order nasi tumpeng besar di Catering Si Kembar?,relevant,harga_porsi,true,test
+rel_syn_0442,Berapa harga paket makan malam prasmanan untuk gathering keluarga 60 pax?,relevant,harga_porsi,true,test
+rel_syn_0443,Berapa kekurangan pembayaran pada pesanan katering ORD-202612-0030?,relevant,operasional_staf,true,test
+rel_syn_0444,Kapan batas paling lambat pelunasan invoice nasi box seminar kampus?,relevant,pembayaran,true,test
+rel_syn_0445,Bagaimana prosedur pembatalan pesanan katering jika acara keluarga ditunda?,relevant,sop_kebijakan,true,test
+rel_syn_0446,Minimal pemesanan snack box untuk acara kantor berapa box ya?,relevant,harga_porsi,true,test
+rel_syn_0447,Bisa minta kantong kresek tambahan untuk membagikan sisa snack box?,relevant,sop_kebijakan,true,test
+rel_syn_0448,Tolong konfirmasi apakah transfer pembayaran pelunasan pesanan katering sudah masuk.,relevant,pembayaran,true,test
+rel_syn_0449,Sebutkan nama-nama negara pendiri perhimpunan bangsa asia tenggara ASEAN.,out_of_domain,sejarah_geografi,true,test
+rel_syn_0450,Apakah armada katering dilengkapi pemanas makanan agar sajian tetap hangat?,relevant,jadwal_delivery,true,test
+rel_syn_0451,halo min mau tanya paket prasmanan nikahan paling murah brp,relevant,informal_wa,true,test
+rel_syn_0452,Apakah pesanan nasi box bisa diantar jam 7 pagi tepat ke lokasi kantor?,relevant,jadwal_delivery,true,test
+rel_syn_0453,Apakah biaya sewa kamar hotel berbintang sedang naik harga saat liburan akhir pekan?,out_of_domain,hard_negatives,true,test
+rel_syn_0454,Tolong tuliskan lirik lagu daerah Rasa Sayange yang berasal dari kepulauan Maluku.,out_of_domain,sastra_hiburan,true,test
+rel_syn_0455,Tolong kirimkan proforma invoice untuk persetujuan anggaran katering rapat.,relevant,pembayaran,true,test
+rel_syn_0456,Apakah pembayaran katering bisa dicicil dua kali sebelum hari H?,relevant,pembayaran,true,test
+rel_syn_0457,Berapa suhu rata-rata permukaan bumi akibat fenomena pemanasan global saat ini?,out_of_domain,cuaca,true,test
+rel_syn_0458,Rincian item menu untuk order katering ORD-202611-0050 apa saja?,relevant,operasional_staf,true,test
+rel_syn_0459,Bagaimana prosedur pembayaran uang muka DP katering apakah 60 persen?,relevant,pembayaran,true,test
+rel_syn_0460,Kapan matahari berada tepat di garis khatulistiwa saat fenomena ekuinoks terjadi?,out_of_domain,cuaca,true,test
+rel_syn_0461,min apa ada menu khusus vegetarian buat tamu asing di prasmanan,relevant,informal_wa,true,test
+rel_syn_0462,Berapa kadar tekanan darah normal untuk orang dewasa usia produktif saat istirahat?,out_of_domain,kesehatan_medis,true,test
+rel_syn_0463,Bisa pesan nasi tumpeng kuning komplit untuk perayaan ulang tahun kantor?,relevant,menu_paket,true,test
+rel_syn_0464,Apakah nilai tukar saham teknologi dan bitcoin sedang terkoreksi turun minggu ini?,out_of_domain,hard_negatives,true,test
+rel_syn_0465,Apakah menerima pembayaran katering dengan sistem uang muka bertahap?,relevant,pembayaran,true,test
+rel_syn_0466,Berapa total estimasi belanja nasi box 300 pax untuk konferensi nasional?,relevant,harga_porsi,true,test
+rel_syn_0467,Tolong periksa detail pesanan ORD-202611-0088 apakah sudah siap kirim.,relevant,operasional_staf,true,test
+rel_syn_0468,Apa perbedaan diabetes mellitus tipe satu dengan diabetes mellitus tipe dua?,out_of_domain,kesehatan_medis,true,test
+rel_syn_0469,Tolong cek invoice INV-202611-0090 terkait pelunasan katering seminar.,relevant,operasional_staf,true,test
+rel_syn_0470,Jadwal pertandingan sepak bola Liga Inggris malam ini disiarkan jam berapa?,out_of_domain,hard_negatives,true,test
+rel_syn_0471,Apakah tim katering yang melayani prasmanan menggunakan sarung tangan dan masker?,relevant,sop_kebijakan,true,test
+rel_syn_0472,Tolong jelaskan perbedaan mendasar antara inheritance dan composition pada OOP Java.,out_of_domain,programming_tech,true,test
+rel_syn_0473,Bagaimana kronologi peristiwa sumpah pemuda 28 oktober 1928 di Jakarta?,out_of_domain,sejarah_geografi,true,test
+rel_syn_0474,Berapa biaya penggantian oli mesin dan filter udara kendaraan roda empat?,out_of_domain,hard_negatives,true,test
+rel_syn_0475,Apakah ada peringatan dini gelombang pasang tinggi di perairan selat sunda?,out_of_domain,cuaca,true,test
+rel_syn_0476,makanan katering nya tahan brp jam min klo santan gak basi kan,relevant,informal_wa,true,test
+rel_syn_0477,Bisa minta surat keterangan laik higiene sanitasi jasaboga dari dinkes?,relevant,sop_kebijakan,true,test
+rel_syn_0478,Apakah jadwal rilis indeks harga saham gabungan sedang diumumkan analis keuangan?,out_of_domain,hard_negatives,true,test
+rel_syn_0479,Siapakah pengarang novel Laskar Pelangi yang menceritakan kehidupan anak Belitung?,out_of_domain,sastra_hiburan,true,test
+rel_syn_0480,Berapa harga sewa lapangan futsal rumput sintetis per jam di akhir pekan?,out_of_domain,hard_negatives,true,test
+rel_syn_0481,Kapan jadwal kirim makanan untuk acara sahur bersama bulan ramadhan?,relevant,jadwal_delivery,true,test

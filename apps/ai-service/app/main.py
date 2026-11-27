@@ -191,7 +191,12 @@ def create_app(
         else build_default_insight_service(resolved_settings)
     )
     app.state.rag_service = (
-        rag_service if rag_service is not None else build_default_rag_service(resolved_settings)
+        rag_service
+        if rag_service is not None
+        else build_default_rag_service(
+            resolved_settings,
+            relevance_service=app.state.relevance_service,
+        )
     )
 
     register_exception_handlers(app)
