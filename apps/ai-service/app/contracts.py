@@ -9,6 +9,7 @@ from pydantic import (
     ConfigDict,
     Field,
     StringConstraints,
+    field_validator,
     model_validator,
 )
 
@@ -443,4 +444,144 @@ class InsightGenerateResponse(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
     data: InsightGenerateData
+    meta: ApiMeta
+
+
+# AI-04: Chroma Knowledge Base Contracts
+ChromaCategory = Literal["menu", "faq", "sop", "payment"]
+
+
+class ChromaChunkMetadata(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    doc_id: str = Field(
+        description="Canonical knowledge document identifier.",
+    )
+    source: str = Field(
+        description="Source markdown file name.",
+    )
+    category: str = Field(
+        description="Curated knowledge domain category.",
+    )
+    version: str = Field(
+        description="Document version identifier.",
+    )
+    validated_at: str = Field(
+        description="Date of PIC validation.",
+    )
+    validation_status: Literal["verified", "draft"] = Field(
+        description="PIC verification status string.",
+    )
+    is_verified: bool = Field(
+        description="Boolean indicating whether chunk is verified by PIC.",
+    )
+
+
+class ChromaQueryRequest(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    query: NonEmptyText = Field(
+        description="Search query across curated catering knowledge base.",
+    )
+    top_k: int = Field(
+        default=3,
+        ge=1,
+        le=20,
+        description="Number of top matching chunks to retrieve.",
+    )
+    category: ChromaCategory | None = Field(
+        default=None,
+        description="Optional domain category filter.",
+    )
+
+
+class ChromaQueryResultItem(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    chunk_id: str = Field(
+        description="Unique identifier for the knowledge chunk.",
+    )
+    content: str = Field(
+        description="Chunk text content.",
+    )
+    distance: float = Field(
+        ge=0.0,
+        description="Cosine distance from query vector (lower is more relevant).",
+    )
+    metadata: ChromaChunkMetadata = Field(
+        description="4-field PIC validation metadata.",
+    )
+
+
+class ChromaQueryData(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    query: str = Field(
+        description="Echoed normalized query string.",
+    )
+    total_hits: int = Field(
+        ge=0,
+        description="Total number of hits meeting similarity threshold.",
+    )
+    results: list[ChromaQueryResultItem] = Field(
+        description="List of matching knowledge chunks ordered by similarity.",
+    )
+
+
+class ChromaQueryResponse(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    data: ChromaQueryData
+    meta: ApiMeta
+
+
+class ChromaIngestRequest(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    knowledge_dir: str | None = Field(
+        default=None,
+        description="Optional directory path containing curated markdown files.",
+    )
+
+    @field_validator("knowledge_dir")
+    @classmethod
+    def _validate_knowledge_dir(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        trimmed = value.strip()
+        if not trimmed:
+            return None
+        if ".." in trimmed or trimmed.startswith(("/", "\\")) or ":" in trimmed:
+            raise ValueError("Path traversal or absolute directory path is not permitted.")
+        return trimmed
+
+
+class ChromaIngestData(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    collection_name: str = Field(
+        description="Name of the ChromaDB collection.",
+    )
+    files_processed: int = Field(
+        ge=0,
+        description="Number of knowledge markdown files parsed.",
+    )
+    chunks_upserted: int = Field(
+        ge=0,
+        description="Number of chunks upserted in this ingest run.",
+    )
+    total_chunks: int = Field(
+        ge=0,
+        description="Total chunks currently stored in the collection.",
+    )
+    idempotent: bool = Field(
+        default=True,
+        description="Indicates whether repeated ingest runs yield identical collection state.",
+    )
+
+
+class ChromaIngestResponse(BaseModel):
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    data: ChromaIngestData
     meta: ApiMeta

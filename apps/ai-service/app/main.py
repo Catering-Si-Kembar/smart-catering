@@ -11,6 +11,10 @@ from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
+from app.chroma.client import (
+    ChromaKnowledgeService,
+    build_default_chroma_service,
+)
 from app.config import AppSettings, load_settings
 from app.context import (
     REQUEST_ID_HEADER,
@@ -165,6 +169,7 @@ def create_app(
     sentiment_service: SentimentClassifierService | None = None,
     insight_service: BusinessInsightService | None = None,
     rag_service: AgenticRagService | None = None,
+    chroma_service: ChromaKnowledgeService | None = None,
 ) -> FastAPI:
     """Create a configured FastAPI application instance with isolated settings."""
     resolved_settings = (
@@ -197,6 +202,11 @@ def create_app(
             resolved_settings,
             relevance_service=app.state.relevance_service,
         )
+    )
+    app.state.chroma_service = (
+        chroma_service
+        if chroma_service is not None
+        else build_default_chroma_service(resolved_settings)
     )
 
     register_exception_handlers(app)

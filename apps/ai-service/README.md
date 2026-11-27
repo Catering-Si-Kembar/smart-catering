@@ -43,9 +43,11 @@ Untuk menyelesaikan masalah di atas, sistem Smart Catering mengintegrasikan laya
 | `POST`         | `/api/v1/ml/predict-sentiment`       | `Sentiment` | `X-Internal-Token`                         | Klasifikasi sentimen ulasan tunggal.                                                                                       |
 | `POST`         | `/api/v1/ml/predict-sentiment/batch` | `Sentiment` | `X-Internal-Token`                         | Klasifikasi sentimen ulasan secara batch.                                                                                  |
 | `POST`         | `/api/v1/rag/chat`                   | `RAG`       | `X-Internal-Token`                         | Tanya-jawab SOP & operasional berbasis RAG.                                                                                |
+| `POST`         | `/api/v1/chroma/query`               | `Knowledge` | `X-Internal-Token`                         | Query retrieval basis data vektor ChromaDB tervalidasi PIC (`AI-04`).                                                      |
+| `POST`         | `/api/v1/chroma/ingest`              | `Knowledge` | `X-Internal-Token`                         | Ingest idempoten dokumen knowledge base terkurasi (`AI-04`).                                                               |
 | `POST`         | `/api/v1/insight/generate`           | `Insights`  | `X-Internal-Token` + `X-Actor-Role: ADMIN` | Sintesis laporan wawasan bisnis katering via Modal SLM (`AI-06`, aktif dengan numeric guardrail & fallback deterministik). |
 
-> Endpoint retrieval ChromaDB (`/api/v1/chroma/*` — `AI-04`) dan inferensi forecasting (`/api/v1/ml/forecast/demand` — `DS-05`) ditambahkan pada modul `app/chroma/` dan `app/ml/forecasting/` pada tahap implementasi masing-masing. Dokumentasi lengkap modul AI Business Insight (`AI-06`) dan hasil evaluasi 10 laporan tersedia di [`app/insight/README.md`](app/insight/README.md).
+> Dokumentasi lengkap modul retrieval ChromaDB (`AI-04`) dan evaluasi Hit@3 tersedia di [`app/chroma/README.md`](app/chroma/README.md). Inferensi forecasting (`/api/v1/ml/forecast/demand` — `DS-05`) ditambahkan pada modul `app/ml/forecasting/` pada tahap implementasi terkait. Dokumentasi modul AI Business Insight (`AI-06`) dan hasil evaluasi 10 laporan tersedia di [`app/insight/README.md`](app/insight/README.md).
 
 ### Standar Wire Contract
 
@@ -174,6 +176,23 @@ Meskipun `MultinomialNB` memperoleh F1 baseline sedikit lebih tinggi pada holdou
 - **Confusion Matrix Holdout:** 52 True Positive, 30 True Negative, 0 False Positive, 2 False Negative.
 - **Ulasan Campuran (_Mixed Sentiment_):** Pada pengujian ulasan dengan nada campuran (memuji rasa hidangan tetapi mengeluhkan pengantaran/kemasan), model 2 kelas memprioritaskan bobot leksikal terkuat dari kata kunci keluhan (`terlambat`, `penyok`, `basi`), sehingga mampu menandai keluhan dengan akurat.
 - **Notebook Eksperimen:** Rincian kode pelatihan, kurva evaluasi, dan error analysis selengkapnya terdokumentasi secara reproducible pada [`notebooks/05_sentiment_analysis.ipynb`](../../notebooks/05_sentiment_analysis.ipynb).
+
+---
+
+### Evaluasi Retrieval Knowledge Base ChromaDB (AI-04)
+
+Sebagai deliverable **`AI-04`** (Issue `#19`: Kurasi Knowledge Base Tervalidasi PIC & Retrieval ChromaDB), modul `app/chroma/` menyediakan 4 dokumen terkurasi (`data/knowledge/{menus,faq,sop,payment_policy}.md`) lengkap dengan 4 metadata PIC (`source`, `validated_at`, `version`, `validation_status`/`is_verified`), chunking berbasis konteks heading (300–500 karakter), serta embedding deterministik pure-Python (`LocalHashEmbeddingFunction`) dengan ambang anti-halusinasi `max_distance = 0.65`.
+
+#### Hasil Evaluasi Hit@3 & Negative Rejection (CLI `--eval`)
+
+- **Total Positive Queries:** 16 (4 domain: menu, faq, sop, payment)
+- **Hits @ 3:** 16 / 16
+- **Hit Rate @ 3:** `1.0` (100.0%, target `>= 0.85`)
+- **Metadata Complete Ratio:** `1.0` (100.0% kelengkapan 4 metadata PIC)
+- **Total Negative Queries:** 4 (di luar domain katering)
+- **Negative Rejected:** 4 / 4
+- **Negative Rejection Rate:** `1.0` (100.0% penolakan sempurna, `results: []`)
+- **Rujukan Modul:** [`apps/ai-service/app/chroma/README.md`](app/chroma/README.md).
 
 ---
 

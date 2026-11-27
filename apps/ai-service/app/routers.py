@@ -1,11 +1,25 @@
 from __future__ import annotations
 
 import hmac
+from pathlib import Path
 
 from fastapi import APIRouter, Depends, Request, Response
 
+from app.chroma.client import ChromaKnowledgeService, build_default_chroma_service
+from app.chroma.schemas import (
+    ChromaCollectionNotFoundError,
+    ChromaUnavailableError,
+)
 from app.context import get_request_id
 from app.contracts import (
+    ChromaChunkMetadata,
+    ChromaIngestData,
+    ChromaIngestRequest,
+    ChromaIngestResponse,
+    ChromaQueryData,
+    ChromaQueryRequest,
+    ChromaQueryResponse,
+    ChromaQueryResultItem,
     InsightGenerateRequest,
     InsightGenerateResponse,
     RagChatRequest,
@@ -249,6 +263,22 @@ def get_rag_service(request: Request) -> AgenticRagService:
     return resolved
 
 
+def get_chroma_service(request: Request) -> ChromaKnowledgeService:
+    """Resolve ChromaKnowledgeService via FastAPI dependency injection."""
+    service = getattr(request.app.state, "chroma_service", None)
+    if isinstance(service, ChromaKnowledgeService):
+        return service
+    settings = getattr(request.app.state, "settings", None)
+    if settings is None:
+        raise AppProblemError(
+            status_code=503,
+            detail="Chroma knowledge service is not initialized.",
+        )
+    resolved = build_default_chroma_service(settings)
+    request.app.state.chroma_service = resolved
+    return resolved
+
+
 @v1_router.post(
     "/rag/chat",
     response_model=RagChatResponse,
@@ -279,3 +309,95 @@ async def generate_business_insights(
 ) -> Response:
     result = await insight_service.generate(payload, request_id=get_request_id(request))
     return create_success_response(request, result)
+
+
+@v1_router.post(
+    "/chroma/query",
+    response_model=ChromaQueryResponse,
+    tags=["Knowledge"],
+    summary="Query PIC-validated ChromaDB knowledge base",
+    dependencies=[Depends(verify_internal_token)],
+)
+async def post_chroma_query(
+    request: Request,
+    payload: ChromaQueryRequest,
+    service: ChromaKnowledgeService = Depends(get_chroma_service),  # noqa: B008
+) -> Response:
+    try:
+        hits = service.query(
+            payload.query,
+            top_k=payload.top_k,
+            category=payload.category,
+        )
+    except ChromaCollectionNotFoundError as exc:
+        raise AppProblemError(
+            status_code=404,
+            detail=f"Knowledge collection not found. Please run ingest first: {exc}",
+        ) from exc
+    except ChromaUnavailableError as exc:
+        raise AppProblemError(
+            status_code=503,
+            detail=f"ChromaDB vector store is currently unavailable: {exc}",
+        ) from exc
+
+    results = [
+        ChromaQueryResultItem(
+            chunk_id=hit.chunk_id,
+            content=hit.content,
+            distance=hit.distance,
+            metadata=ChromaChunkMetadata(
+                doc_id=hit.metadata.doc_id,
+                source=hit.metadata.source,
+                category=hit.metadata.category,
+                version=hit.metadata.version,
+                validated_at=hit.metadata.validated_at,
+                validation_status="verified"
+                if hit.metadata.validation_status == "verified"
+                else "draft",
+                is_verified=hit.metadata.is_verified,
+            ),
+        )
+        for hit in hits
+    ]
+    data = ChromaQueryData(
+        query=payload.query,
+        total_hits=len(results),
+        results=results,
+    )
+    return create_success_response(request, data)
+
+
+@v1_router.post(
+    "/chroma/ingest",
+    response_model=ChromaIngestResponse,
+    tags=["Knowledge"],
+    summary="Ingest and index curated knowledge base markdown documents into ChromaDB",
+    dependencies=[Depends(verify_internal_token)],
+)
+async def post_chroma_ingest(
+    request: Request,
+    payload: ChromaIngestRequest,
+    service: ChromaKnowledgeService = Depends(get_chroma_service),  # noqa: B008
+) -> Response:
+    try:
+        target_dir = Path(payload.knowledge_dir) if payload.knowledge_dir else None
+        summary = service.ingest_directory(target_dir)
+    except (ValueError, FileNotFoundError) as exc:
+        raise AppProblemError(
+            status_code=422,
+            detail=f"Invalid knowledge directory path: {exc}",
+        ) from exc
+    except ChromaUnavailableError as exc:
+        raise AppProblemError(
+            status_code=503,
+            detail=f"ChromaDB vector store is currently unavailable: {exc}",
+        ) from exc
+
+    data = ChromaIngestData(
+        collection_name=summary.collection_name,
+        files_processed=summary.files_processed,
+        chunks_upserted=summary.chunks_upserted,
+        total_chunks=summary.total_chunks,
+        idempotent=summary.idempotent,
+    )
+    return create_success_response(request, data)

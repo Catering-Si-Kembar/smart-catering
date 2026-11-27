@@ -5,6 +5,14 @@ from typing import Any, Final
 from pydantic import BaseModel
 
 from app.contracts import (
+    ChromaChunkMetadata,
+    ChromaIngestData,
+    ChromaIngestRequest,
+    ChromaIngestResponse,
+    ChromaQueryData,
+    ChromaQueryRequest,
+    ChromaQueryResponse,
+    ChromaQueryResultItem,
     InsightGenerateData,
     InsightGenerateRequest,
     InsightGenerateResponse,
@@ -75,6 +83,14 @@ _SCHEMA_MODELS: Final[tuple[type[BaseModel], ...]] = (
     InsightGenerateRequest,
     InsightGenerateData,
     InsightGenerateResponse,
+    ChromaChunkMetadata,
+    ChromaQueryRequest,
+    ChromaQueryResultItem,
+    ChromaQueryData,
+    ChromaQueryResponse,
+    ChromaIngestRequest,
+    ChromaIngestData,
+    ChromaIngestResponse,
 )
 
 _V1_EXAMPLES: Final[dict[str, dict[str, Any]]] = {
@@ -167,6 +183,42 @@ _V1_EXAMPLES: Final[dict[str, dict[str, Any]]] = {
         },
         "meta": {"requestId": EXAMPLE_REQUEST_ID},
     },
+    "/api/v1/chroma/query": {
+        "data": {
+            "query": "Berapa ketentuan minimal DP pembayaran katering?",
+            "total_hits": 1,
+            "results": [
+                {
+                    "chunk_id": "kb_payment_01_c0",
+                    "content": (
+                        "Ketentuan Uang Muka DP Pemesanan. Pemesan wajib "
+                        "membayarkan uang muka down payment DP minimal 60%..."
+                    ),
+                    "distance": 0.3059,
+                    "metadata": {
+                        "doc_id": "kb_payment_01",
+                        "source": "payment_policy.md",
+                        "category": "payment",
+                        "version": "1.0",
+                        "validated_at": "2026-11-27",
+                        "validation_status": "verified",
+                        "is_verified": True,
+                    },
+                }
+            ],
+        },
+        "meta": {"requestId": EXAMPLE_REQUEST_ID},
+    },
+    "/api/v1/chroma/ingest": {
+        "data": {
+            "collection_name": "catering_knowledge",
+            "files_processed": 4,
+            "chunks_upserted": 20,
+            "total_chunks": 20,
+            "idempotent": True,
+        },
+        "meta": {"requestId": EXAMPLE_REQUEST_ID},
+    },
 }
 
 
@@ -238,6 +290,8 @@ def _add_protocol_responses(paths: dict[str, Any]) -> dict[str, Any]:
                 responses["504"] = {"$ref": "#/components/responses/GatewayTimeoutProblem"}
             if path == "/api/v1/insight/generate":
                 responses["403"] = {"$ref": "#/components/responses/ForbiddenProblem"}
+            if path == "/api/v1/chroma/query":
+                responses["404"] = {"$ref": "#/components/responses/NotFoundProblem"}
 
             success = responses.get("200", {})
             success_content = success.get("content", {}).get("application/json", {})
@@ -396,6 +450,10 @@ def build_openapi_schema(document: dict[str, Any]) -> dict[str, Any]:
             {
                 "name": "Insights",
                 "description": "Operational and executive business insight generation.",
+            },
+            {
+                "name": "Knowledge",
+                "description": "ChromaDB vector store and PIC-validated knowledge retrieval.",
             },
         ],
         "paths": _add_protocol_responses(document.get("paths", {})),
