@@ -15,6 +15,7 @@ Fondasi Fase 0 menggunakan **Hybrid Minimal Monorepo**: empat aplikasi dan dua s
 | [Struktur repository](repository-structure.md)                                | Pemilik source, entry point, dan artefak generated                          |
 | [Development](development.md)                                                 | Install npm + uv, menjalankan aplikasi, dan troubleshooting                 |
 | [Environment](environment.md)                                                 | Dua sumber env (`.env` root + `apps/web/.env`), allowlist, dan gerbang docs |
+| [Tata Kelola CI, Secrets & Kelayakan M1 (`OPS-01`)](feasibility-m1.md)        | Status CI/ruleset, `security:check`, uji kelayakan layanan M1, & keputusan  |
 | [Arsitektur](architecture.md)                                                 | Boundary aplikasi, dependency, dan kontrak wire REST                        |
 | [Diagram arsitektur](architecture.md#diagram-arsitektur)                      | Infografik kondisi Fase 0; tersedia dalam PNG dan SVG                       |
 | [Deployment Vercel](deployment-vercel.md)                                     | Deployment frontend saja                                                    |

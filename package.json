@@ -42,6 +42,7 @@
     "start:api": "npm run start --workspace=@smart-catering/api",
     "start:worker": "npm run start --workspace=@smart-catering/worker",
     "start:ai": "npm run start --workspace=@smart-catering/ai-service",
+    "security:check": "node scripts/check-secrets-hygiene.mjs",
     "smoke": "node scripts/smoke.mjs"
   },
   "allowScripts": {
